@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
@@ -23,22 +26,27 @@ import javax.persistence.Transient;
 @ManagedBean
 public class Person {
 	
-	long id;
-	String firstName, lastName;
-	String homePhone, cellPhone;
-	String email;
-	String address, address2;
-	String city, province, postCode;
-	Country country = Country.CA;
+	private long id;
+	private String firstName, lastName;
+	private String homePhone, cellPhone;
+	private String email;
+	private String address, address2;
+	private String city, province, postCode;
+	private Country country = Country.CA;
+	private MemberType memberType;
 	/** If they have an executive position */
-	String position;
-	Date expiryDate;
+	private String position;
+	private Date expiryDate;
+	/** Only if memberType is MemberType.Secondary */
+	private Person masterMember;
+	/** Only if this is MemberType.Family */
+	private Set<Person> secondaryMembers;
 	
 	/** 
 	 * "A very public Person"
 	 */
 	public Person() {
-		
+		// Everybody loves an empty constructor
 	}
 
 	/**
@@ -80,6 +88,46 @@ public class Person {
 	@Transient
 	public String getName() {
 		return getFirstName() + ' ' + getLastName();
+	}
+
+	@Enumerated(EnumType.STRING)
+	public MemberType getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(MemberType memberType) {
+		this.memberType = memberType;
+	}
+
+	/** 
+	 * If this Member is a MemberType.Secondary member, this
+	 * Property will refer to the Master (e.g., paying!) member.
+	 * @return The master member
+	 */
+	@ManyToOne
+	public Person getMasterMember() {
+		return masterMember;
+	}
+
+	public void setMasterMember(Person masterMember) {
+		this.masterMember = masterMember;
+		if (masterMember != null) {
+			masterMember.getSecondaryMembers().add(this);
+		}
+	}
+
+	/** 
+	 * OTOH, if this Member is a MemberType.Family member, this
+	 * Property will refer to the Secondary member(s).
+	 * @return The secondary members
+	 */
+	@OneToMany(mappedBy="masterMember")
+	public Set<Person> getSecondaryMembers() {
+		return secondaryMembers;
+	}
+
+	public void setSecondaryMembers(Set<Person> secondaryMembers) {
+		this.secondaryMembers = secondaryMembers;
 	}
 
 	public String getHomePhone() {
