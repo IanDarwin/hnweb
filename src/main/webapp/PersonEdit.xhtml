@@ -33,7 +33,17 @@
 		Last Name:
 		<h:inputText id="lastnameTF" value="#{personHome.instance.lastName}" required='true'/>
 		<h:message id='lastnameMessage' for='lastnameTF'/>
-	
+
+		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
+		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" required='true'>
+			<f:selectItems value="#{factories.memberTypes}"/>
+		</p:selectOneMenu>
+		<h:message id='memberTypeMessage' for='memberTypeChoice'/>
+		
+		Club Executive Position if any:
+		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
+		<h:message id='positionMessage' for='positionTF'/>
+			
 		Email:
 		<h:inputText id="emailTF" value="#{personHome.instance.email}" required='true'>
 			<f:validateRegex pattern="\w+([._]\w+)?@\w+\.\w+"/>
@@ -47,10 +57,6 @@
 			Mobile: <h:inputText id="cellPhoneTF" value="#{personHome.instance.cellPhone}"/>
 		</ui:fragment>
 		<h:message id='homePhoneMessage' for='homePhoneTF'/>
-		
-		Club Executive Position if any:
-		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
-		<h:message id='positionMessage' for='positionTF'/>
 		
 		Address:
 		<h:inputText id="addressTF" value="#{personHome.instance.address}" required='true'/>
