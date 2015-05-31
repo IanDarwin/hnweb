@@ -21,7 +21,7 @@ import javax.persistence.PersistenceContextType;
 import org.omg.CORBA.StringHolder;
 
 import model.Country;
-import model.Person;
+import model.Member;
 
 /**
  * Implements Gateway, an Adam Bien pattern whose purpose is to expose
@@ -40,7 +40,7 @@ public class PersonHome implements Serializable {
 
 	// Must be Long (not long) so we can check for null
 	private Long id;
-	private Person instance = new Person();
+	private Member instance = new Member();
 
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) EntityManager em;
 
@@ -55,10 +55,10 @@ public class PersonHome implements Serializable {
 		}
 		System.out.println("Wire(): " + id);
 		if (id == null) {
-			instance = new Person();
+			instance = new Member();
 			return;
 		}
-		instance = em.find(Person.class, id);
+		instance = em.find(Member.class, id);
 		if (instance == null) {
 			throw new IllegalArgumentException("Person not found by id! " + id);
 		}
@@ -90,7 +90,7 @@ public class PersonHome implements Serializable {
 
 	public void newInstance() {
 		System.out.println("PersonHome.newInstance()");
-		instance = new Person();
+		instance = new Member();
 	}
 
 	public Long getId() {
@@ -101,11 +101,11 @@ public class PersonHome implements Serializable {
 		this.id = id;
 	}
 	
-	public Person getInstance() {
+	public Member getInstance() {
 		System.out.println("PersonHome.getInstance(): " + instance);
 		return instance;
 	}
-	public void setInstance(Person instance) {
+	public void setInstance(Member instance) {
 		this.instance = instance;
 		// this.id = instance.getId();
 	}

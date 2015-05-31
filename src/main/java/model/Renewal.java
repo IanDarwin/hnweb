@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Renewal {
 	long id;
-	Person member;
+	Member member;
 	Date renewalDate;
 	int nYears;
 	
@@ -26,10 +26,10 @@ public class Renewal {
 		this.id = id;
 	}
 	@ManyToOne
-	public Person getMember() {
+	public Member getMember() {
 		return member;
 	}
-	public void setMember(Person member) {
+	public void setMember(Member member) {
 		this.member = member;
 	}
 	public Date getRenewalDate() {

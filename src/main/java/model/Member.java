@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -23,8 +24,9 @@ import javax.persistence.Transient;
  * @author Ian Darwin
  */
 @Entity
-@ManagedBean
-public class Person {
+@ManagedBean(name="person")
+@Table(name="Person")
+public class Member {
 	
 	private long id;
 	private String firstName, lastName;
@@ -38,14 +40,16 @@ public class Person {
 	private String position;
 	private Date expiryDate;
 	/** Only if memberType is MemberType.Secondary */
-	private Person masterMember;
+	private Member masterMember;
 	/** Only if this is MemberType.Family */
-	private Set<Person> secondaryMembers;
+	private Set<Member> secondaryMembers;
+	/** How they get the club newsletter */
+	private NewsletterMode newsletterMode;
 	
 	/** 
 	 * "A very public Person"
 	 */
-	public Person() {
+	public Member() {
 		// Everybody loves an empty constructor
 	}
 
@@ -55,7 +59,7 @@ public class Person {
 	 * @param lastName Last Name
 	 * @param email Email address
 	 */
-	public Person(String firstName, String lastName, String email) {
+	public Member(String firstName, String lastName, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -105,11 +109,11 @@ public class Person {
 	 * @return The master member
 	 */
 	@ManyToOne
-	public Person getMasterMember() {
+	public Member getMasterMember() {
 		return masterMember;
 	}
 
-	public void setMasterMember(Person masterMember) {
+	public void setMasterMember(Member masterMember) {
 		this.masterMember = masterMember;
 		if (masterMember != null) {
 			masterMember.getSecondaryMembers().add(this);
@@ -122,11 +126,11 @@ public class Person {
 	 * @return The secondary members
 	 */
 	@OneToMany(mappedBy="masterMember")
-	public Set<Person> getSecondaryMembers() {
+	public Set<Member> getSecondaryMembers() {
 		return secondaryMembers;
 	}
 
-	public void setSecondaryMembers(Set<Person> secondaryMembers) {
+	public void setSecondaryMembers(Set<Member> secondaryMembers) {
 		this.secondaryMembers = secondaryMembers;
 	}
 
@@ -201,6 +205,14 @@ public class Person {
 		this.country = country;
 	}
 
+	public NewsletterMode getNewsletterMode() {
+		return newsletterMode;
+	}
+
+	public void setNewsletterMode(NewsletterMode newsletterMode) {
+		this.newsletterMode = newsletterMode;
+	}
+
 	public String getPosition() {
 		return position;
 	}
@@ -216,6 +228,19 @@ public class Person {
 
 	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder(getFirstName())
+				.append(' ')
+				.append(getLastName());
+		if (getEmail() != null) {
+			sb.append(' ')
+			.append('<')
+			.append(getEmail())
+			.append('>');
+		}
+		return sb.toString();
 	}
 	
 	/**

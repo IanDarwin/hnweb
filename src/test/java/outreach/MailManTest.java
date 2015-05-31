@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
-import model.Person;
+import model.Member;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -19,9 +19,9 @@ import data.PersonList;
 
 public class MailManTest {
 
-	List<Person> fakeList = Arrays.asList(
+	List<Member> fakeList = Arrays.asList(
 			// XXX Grab the Sender email from the config.props and use that!
-			new Person("Tom", "Jones", "devnull@ojwkjsflkjew.com")
+			new Member("Tom", "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	private MailMan sender;
 	

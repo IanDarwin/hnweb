@@ -6,7 +6,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Default;
 import javax.inject.Named;
 
-import model.Person;
+import model.Member;
 
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Query;
@@ -21,9 +21,9 @@ import org.apache.deltaspike.data.api.Repository;
 @Named("personList") @Default
 @SessionScoped
 @Repository 
-public interface PersonList extends EntityRepository<Person, Long> {
+public interface PersonList extends EntityRepository<Member, Long> {
 
 	@Query(value="select p from Person p order by p.lastName asc")
-	List<Person> findAll();
+	List<Member> findAll();
 
 }

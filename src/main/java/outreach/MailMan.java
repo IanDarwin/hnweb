@@ -17,7 +17,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import model.Person;
+import model.Member;
 import data.PersonList;
 
 @ManagedBean(name="mailMan") @RequestScoped
@@ -59,9 +59,9 @@ public class MailMan implements Serializable {
 
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
-		List<Person> all = lister.findAll();
+		List<Member> all = lister.findAll();
 		List<String> emails = new ArrayList<>(all.size());
-		for (Person p : all) {
+		for (Member p : all) {
 			final String email = p.getEmail();
 			if (email != null) {
 				emails.add(email);

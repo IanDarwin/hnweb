@@ -6,7 +6,7 @@
 
 	<persistence-unit name="clublist" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>model.Person</class>
+		<class>model.Member</class>
 
 		<properties>
 			<!-- Properties for PostgreSQL -->
