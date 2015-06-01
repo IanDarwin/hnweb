@@ -5,6 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
 	template="/template/template.xhtml">
 
 <ui:define name="pageTitle">Member Edit</ui:define>
@@ -16,7 +17,6 @@
 </h:head>
 
 <ui:define name="body">
-
 	<h:form id="personForm">
 	<p:panel>
 		<f:facet name="header">Member Edit</f:facet>
@@ -35,15 +35,29 @@
 		<h:message id='lastnameMessage' for='lastnameTF'/>
 
 		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
+		<ui:fragment id="primoChooser">
 		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" required='true'>
 			<f:selectItems value="#{factories.memberTypes}"/>
+			<p:ajax event="change" update="primoChooser"/>
 		</p:selectOneMenu>
-		<h:message id='memberTypeMessage' for='memberTypeChoice'/>
-		
+		<ui:fragment id="primoMenuHolder"
+			rendered="#{personHome.instance.memberType == 'Secondary'}">
+			Master: 
+			<h:selectOneMenu id="primoMenu" converter="entityConverter"
+                    value="#{person.masterMember}">
+                    <f:selectItems var="_member" value="#{personList.findAll()}"
+                        noSelectionValue="--Select a Product--"
+                        itemLabel="#{_member.name}"
+                        itemValue="#{_member}"/>
+            </h:selectOneMenu>
+        </ui:fragment>
+        </ui:fragment>
+		<h:message id='primoMessage' for='memberChoiceType'/>
+
 		Club Executive Position if any:
 		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
 		<h:message id='positionMessage' for='positionTF'/>
-			
+
 		Email:
 		<h:inputText id="emailTF" value="#{personHome.instance.email}" required='true'>
 			<f:validateRegex pattern="\w+([._]\w+)?@\w+\.\w+"/>
