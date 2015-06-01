@@ -25,7 +25,6 @@ import javax.persistence.Transient;
  */
 @Entity
 @ManagedBean(name="person")
-@Table(name="Person")
 public class Member {
 	
 	private long id;
@@ -45,6 +44,7 @@ public class Member {
 	private Set<Member> secondaryMembers;
 	/** How they get the club newsletter */
 	private NewsletterMode newsletterMode;
+	private Integer yearJoined;
 	
 	/** 
 	 * "A very public Person"
@@ -230,6 +230,14 @@ public class Member {
 		this.expiryDate = expiryDate;
 	}
 	
+	public void setYearJoined(Integer yearJoined) {
+		this.yearJoined = yearJoined;
+	}
+
+	public Integer getYearJoined() {
+		return yearJoined;
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder(getFirstName())
 				.append(' ')
@@ -250,7 +258,6 @@ public class Member {
 	 */
 	@PrePersist @PreUpdate
 	public void fixupPostCode() {
-		System.out.println("Person.fixupPostCode()");
 		if (country == Country.CA) {
 			String ananan = getPostCode().toUpperCase();
 			switch(ananan.length()) {

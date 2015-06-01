@@ -23,7 +23,7 @@ import org.apache.deltaspike.data.api.Repository;
 @Repository 
 public interface PersonList extends EntityRepository<Member, Long> {
 
-	@Query(value="select p from Person p order by p.lastName asc")
+	@Query(value="select m from Member m order by m.lastName asc")
 	List<Member> findAll();
 
 }
