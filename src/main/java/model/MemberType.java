@@ -2,14 +2,24 @@ package model;
 
 public enum MemberType {
 
-	/** The main entry for a Family membership */
-	Family,
-	/** Any additional members on a Family membership */
-	Secondary,
 	/** An individual member */
-	Individual,
-	/** A youth member */
-	Youth,
+	Individual("Ind"),
 	/** A student - full-time or similar */
-	Student
+	Student("St"),
+	/** A Senior - aged 65+ */
+	Senior("Sen"),
+	/** The main entry for a Family membership */
+	Family("FM"),
+	/** Any additional members on a Family membership */
+	Secondary("FS");
+	
+	private final String shortName;
+
+	private MemberType(String shortName) {
+		this.shortName = shortName;
+	}
+	
+	public String getShortName() {
+		return shortName;
+	}
 }
