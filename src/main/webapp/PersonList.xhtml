@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Membership List</ui:define>
+<ui:define name="pageTitle">Full Membership List</ui:define>
 <ui:define name="body">
 
 	<p:panel>
@@ -22,14 +22,7 @@
 	<p:dataTable border='1' 
 		rendered="#{!empty personList.findAll()}"
 		var="person" value="#{personList.findAll()}" 
-		paginator="true" rows="#{pfTableConstants.rows}"
-		paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
-		rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
 		>
-		<p:column width="5%">
-			<f:facet name="header">Id</f:facet>
-			<h:outputText value="#{person.id}"/>
-		</p:column>
 		<p:column>
 			<f:facet name="header">First Name</f:facet>
 			<h:outputText value="#{person.firstName}"/>
@@ -42,14 +35,40 @@
 			<f:facet name="header">Email</f:facet>
 			<h:outputText value="#{person.email}"/>
 		</p:column>
-		<p:column style="width: 20%">
-			<f:facet name="header">Operations</f:facet>
+		<p:column width="3%">
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{person.memberType.shortName}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Exec Pos</f:facet>
+			<h:outputText value="#{person.position}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Home Phone<br/>Cell Phone</f:facet>
+			<h:outputText value="#{person.homePhone}"/>
+			<h:outputText value="#{person.cellPhone}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Address</f:facet>
+			<h:outputText value="#{person.address}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">City</f:facet>
+			<h:outputText value="#{person.city}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">PostCode</f:facet>
+			<h:outputText value="#{person.postCode}"/>
+		</p:column>
+		<p:column width="5%">
+			<f:facet name="header">Year<br/>Joined</f:facet>
+			<h:outputText value="#{person.yearJoined}"/>
+		</p:column>
+
+		<p:column style="width: 5%">
+			<f:facet name="header">Actions</f:facet>
 			<h:outputLink value="PersonView.web">
 				View
-				<f:param name="personId" value="#{person.id}"/>
-			</h:outputLink>
-			<h:outputLink value="PersonLabel.web">
-				Badge
 				<f:param name="personId" value="#{person.id}"/>
 			</h:outputLink>
 			<h:outputLink value="PersonEdit.web">
@@ -58,9 +77,6 @@
 			</h:outputLink>
 		</p:column>
 	</p:dataTable>
-	<h:form>
-	<p:button outcome="PersonEdit.web" value="Add"/>
-	</h:form>
 	</p:panel>
 </ui:define>
 </ui:composition>
