@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -239,7 +238,8 @@ public class Member {
 	}
 	
 	public String toString() {
-		StringBuilder sb = new StringBuilder(getFirstName())
+		StringBuilder sb = new StringBuilder();
+		sb.append(getFirstName())
 				.append(' ')
 				.append(getLastName());
 		if (getEmail() != null) {
