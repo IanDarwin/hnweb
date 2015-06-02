@@ -18,7 +18,7 @@ public class MailManTest {
 
 	List<Member> fakeList = Arrays.asList(
 			// XXX Grab the Sender email from the config.props and use that!
-			new Member("Tom", "Jones", "devnull@ojwkjsflkjew.com")
+			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	private MailMan sender;
 	

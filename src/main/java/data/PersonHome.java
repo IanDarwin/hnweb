@@ -1,8 +1,12 @@
 package data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.ejb.EJBContext;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -18,10 +22,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
-import org.omg.CORBA.StringHolder;
-
 import model.Country;
 import model.Member;
+import model.MemberType;
+
+import org.omg.CORBA.StringHolder;
 
 /**
  * Implements Gateway, an Adam Bien pattern whose purpose is to expose
@@ -30,6 +35,9 @@ import model.Member;
  */
 @Stateful @Named @ConversationScoped
 public class PersonHome implements Serializable {
+	
+	@Inject private PersonList lister;
+	ArrayList<Member> members;
 
 	private static final long serialVersionUID = -2284578724132631798L;
 
@@ -41,19 +49,44 @@ public class PersonHome implements Serializable {
 	// Must be Long (not long) so we can check for null
 	private Long id;
 	private Member instance = new Member();
+	private boolean enableMasterMember;
 
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) EntityManager em;
 
+
 	public PersonHome() {
-		System.out.println("PersonHome.PersonHome()");
+		// System.out.println("PersonHome.PersonHome()");
 	}
 
+	Member noMember = new Member("--", "Select a member", "---", null);
+	
+	/** 
+	 * Cache this list to avoid too many re-creations.
+	 * @return
+	 */
+	public List<Member> getMemberList() {
+		if (members == null) {
+			members = new ArrayList<>();
+			members.add(noMember);
+			members.addAll(lister.findAll());
+		} else {
+			System.out.println("PersonHome.getMemberList() CACHE HIT");
+		}
+		return members;
+	}
+	/** 
+	 * But not too many! Has to be re-created after we update,
+	 * as it is disconnected copies and is now out of sync.
+	 */
+	private void invalidateMemberList() {
+		members = null;
+	}
+	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void wire() {
 		if (conv.isTransient()) {
 			conv.begin();
 		}
-		System.out.println("Wire(): " + id);
 		if (id == null) {
 			instance = new Member();
 			return;
@@ -64,15 +97,15 @@ public class PersonHome implements Serializable {
 		}
 	}
 	public void wire(Long id) {
-		System.out.println("PersonHome.wire(" + id + ")");
 		setId(id);
 		wire();
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String update() {
-		System.out.println("PersonHome.update()");
 		em.merge(instance);
+		conv.end();
+		invalidateMemberList();
 		return LIST_PAGE + FORCE_REDIRECT;
 	}
 	
@@ -82,14 +115,13 @@ public class PersonHome implements Serializable {
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String save() {
-		System.out.println("PersonHome.save()");
 		em.persist(instance);
 		conv.end();
+		invalidateMemberList();
 		return LIST_PAGE + FORCE_REDIRECT;
 	}
 
 	public void newInstance() {
-		System.out.println("PersonHome.newInstance()");
 		instance = new Member();
 	}
 
@@ -97,24 +129,35 @@ public class PersonHome implements Serializable {
 		return id;
 	}
 	public void setId(Long id) {
-		System.out.println("PersonHome.setId(" + id + ")");
 		this.id = id;
 	}
 	
 	public Member getInstance() {
-		System.out.println("PersonHome.getInstance(): " + instance);
 		return instance;
 	}
 	public void setInstance(Member instance) {
 		this.instance = instance;
 		// this.id = instance.getId();
 	}
+
+	public void handleTypeChange() {
+		// For AJAX
+		enableMasterMember = instance.getMemberType() == MemberType.Secondary;
+	}
 	
-	/** Close an editing operation: just end conversation,
+	public boolean isEnableMasterMember() {
+		return enableMasterMember;
+	}
+
+	@Resource EJBContext context;
+
+	/** Close an editing operation: mark tx for
+	 * rollback, end conversation, 
 	 * return List page.
 	 * @return The List Page
 	 */
 	public String cancel() {
+		context.setRollbackOnly();
 		conv.end();
 		return LIST_PAGE + FORCE_REDIRECT;
 	}
@@ -127,9 +170,9 @@ public class PersonHome implements Serializable {
 	}
 
 	public String remove() {
-		System.out.println("PersonHome.remove()");
 		em.remove(instance);
 		conv.end();
+		invalidateMemberList();
 		return LIST_PAGE;
 	}
 
@@ -174,7 +217,7 @@ public class PersonHome implements Serializable {
 		boolean valid = true;
 		switch(country) {
 		case CA:
-			valid = postCode.matches("\\w\\d\\w ?\\d\\w\\d");
+			valid = postCode.matches("\\w\\d\\w\\s?\\d\\w\\d");
 			invalidMessage.value = "PostCode must match ANA NAN pattern";
 			break;
 		case US:

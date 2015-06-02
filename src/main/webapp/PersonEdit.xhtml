@@ -30,29 +30,33 @@
 		<h:inputText id="firstnameTF" value="#{personHome.instance.firstName}" required='true'/>
 		<h:message id='firstnameMessage' for='firstnameTF'/>
 		
+		M.I.:
+		<h:inputText id="middlenameTF" value="#{personHome.instance.middle}" required='false'/>
+		<h:message id='middlenameMessage' for='middlenameTF'/>
+		
 		Last Name:
 		<h:inputText id="lastnameTF" value="#{personHome.instance.lastName}" required='true'/>
 		<h:message id='lastnameMessage' for='lastnameTF'/>
 
 		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
 		<ui:fragment id="primoChooser">
-		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" required='true'>
+		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" partialSubmit="true">
 			<f:selectItems value="#{factories.memberTypes}"/>
-			<p:ajax event="change" update="primoChooser"/>
+			<p:ajax listener="#{personHome.handleTypeChange}" update="primoMenu"/>
 		</p:selectOneMenu>
-		<ui:fragment id="primoMenuHolder"
-			rendered="#{personHome.instance.memberType == 'Secondary'}">
 			Master: 
-			<h:selectOneMenu id="primoMenu" converter="entityConverter"
-                    value="#{person.masterMember}">
-                    <f:selectItems var="_member" value="#{personList.findAll()}"
-                        noSelectionValue="--Select a Product--"
-                        itemLabel="#{_member.name}"
-                        itemValue="#{_member}"/>
+			<h:selectOneMenu id="primoMenu" 
+                value="#{personHome.instance.masterMember}"
+				disabled="#{!personHome.enableMasterMember}"
+				converter="entityConverter"
+                >
+                <f:selectItems var="_member" value="#{personHome.memberList}"
+                	noSelectionValue="#{personHome.memberList[0]}"
+                	itemLabel="#{_member.name}"
+                    itemValue="#{_member}"/>
             </h:selectOneMenu>
         </ui:fragment>
-        </ui:fragment>
-		<h:message id='primoMessage' for='memberChoiceType'/>
+		<h:message id='primoMessage' for='primoMenu'/>
 
 		Club Executive Position if any:
 		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -58,8 +59,9 @@ public class Member {
 	 * @param lastName Last Name
 	 * @param email Email address
 	 */
-	public Member(String firstName, String lastName, String email) {
+	public Member(String firstName, String middle, String lastName, String email) {
 		this.firstName = firstName;
+		this.middle = middle;
 		this.lastName = lastName;
 		this.email = email;
 	}
@@ -141,6 +143,9 @@ public class Member {
 	 */
 	@OneToMany(mappedBy="masterMember")
 	public Set<Member> getSecondaryMembers() {
+		if (secondaryMembers == null) {
+			secondaryMembers = new HashSet<>();
+		}
 		return secondaryMembers;
 	}
 
@@ -266,12 +271,29 @@ public class Member {
 		return sb.toString();
 	}
 	
+	@PrePersist @PreUpdate
+	public void preJpa() {
+		fixMembership();
+		fixupPostCode();
+	}
+	
+	/** 
+	 * Only a Family membership "Secondary" can have a
+	 * master member, but the UI lets them be set...
+	 */
+	public void fixMembership() {
+		if (memberType == null) {
+			throw new NullPointerException("Saving Member w/ no MemberType");
+		}
+		if (MemberType.Secondary != memberType) {
+			masterMember = null;
+		}
+	}
 	/**
 	 * Canadian Post Codes can be entered in either case
 	 * and with or without the middle space; this
 	 * canonicalizes them to upper case and with the space.
 	 */
-	@PrePersist @PreUpdate
 	public void fixupPostCode() {
 		if (country == Country.CA) {
 			String ananan = getPostCode().toUpperCase();
@@ -288,6 +310,42 @@ public class Member {
 					postCode + " not valid Canadian postcode");
 			}
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Member other = (Member) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (id != other.id)
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		return true;
 	}
 }
 
