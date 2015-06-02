@@ -4,6 +4,14 @@ Track members for a small non-profit club.
 
 This shows off some basic functionality of JPA and DeltaSpike Data in a JSF environment.
 
+== DB Design Issues
+
+One of the issues is how to handle family memberships. In our club, some of the families are
+sufficiently internet-savvy that they have 3 or 4 email accounts (two parents, one or two kids)
+whereas some actually have zero. The way I handle families is to arbitrarily designate one
+as the "family master" and all the others as "secondaries" - in JPA/Hibernate terms, a one-to-many
+from Member to Member. Payments are attributed to the master member.
+
 == Deployment
 
 . Copy config-sample.properties to config.properties, change the name in the orgName property
