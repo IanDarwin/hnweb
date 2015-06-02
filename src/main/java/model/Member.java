@@ -27,7 +27,7 @@ import javax.persistence.Transient;
 public class Member {
 	
 	private long id;
-	private String firstName, lastName;
+	private String firstName, middle, lastName;
 	private String homePhone, cellPhone;
 	private String email;
 	private String address, address2;
@@ -81,6 +81,14 @@ public class Member {
 		this.firstName = firstName;
 	}
 
+	public String getMiddle() {
+		return middle;
+	}
+
+	public void setMiddle(String middle) {
+		this.middle = middle;
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
@@ -90,7 +98,14 @@ public class Member {
 
 	@Transient
 	public String getName() {
-		return getFirstName() + ' ' + getLastName();
+		StringBuilder sb = new StringBuilder();
+		sb.append(getFirstName());
+		String mi = getMiddle();
+		if (mi != null && mi.length() > 0) {
+			sb.append(' ').append(mi);
+		}
+		sb.append(' ').append(getLastName());
+		return sb.toString();
 	}
 
 	@Enumerated(EnumType.STRING)
