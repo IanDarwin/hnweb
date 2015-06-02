@@ -207,13 +207,13 @@ public class PersonHome implements Serializable {
 	}
 
 	/** 
-	 * Method is NOT API and is only public for testing
+	 * Method is NOT API and is only exposed for testing
 	 * @param country The country
 	 * @param postCode The post code
 	 * @param invalidMessage A holder for a message if invalid
 	 * @return The syntactic validity of the given code
 	 */
-	public boolean validatePostCode(Country country, String postCode, StringHolder invalidMessage) {
+	boolean validatePostCode(Country country, String postCode, StringHolder invalidMessage) {
 		boolean valid = true;
 		switch(country) {
 		case CA:
@@ -229,5 +229,35 @@ public class PersonHome implements Serializable {
 			throw new IllegalStateException("Unknown country");
 		}
 		return valid;
+	}
+	
+	public void validateEmail(FacesContext jsfContext,
+            UIComponent toValidate, 
+            Object userInputValue) {
+		
+		boolean valid = true;
+		String email = (String) userInputValue;
+		StringHolder messageHolder = new StringHolder();
+		valid = validateEmail(email, messageHolder);
+		if (!valid) {
+			jsfContext.addMessage(
+					toValidate.getClientId(jsfContext), 
+					new FacesMessage(messageHolder.value));
+	        ((UIInput) toValidate).setValid(false);
+	        return;
+		}
+	}
+	
+	/** As above, method is exposed only to facilitate testing
+	 * @param email The email address to be validated
+	 * @param messageHolder The response holder
+	 * @return True if the message is not invalid
+	 */
+	static boolean validateEmail(String email, StringHolder messageHolder) {
+		boolean valid = true;
+		if (email == null || email.length() == 0) 
+			return valid;
+		messageHolder.value = "Invalid email syntax, I think";
+		return email.matches("[\\w.]+@[\\w.]+\\.\\w+");
 	}
 }
