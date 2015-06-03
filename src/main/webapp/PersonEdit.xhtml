@@ -23,8 +23,8 @@
 		<h:panelGrid columns='3'>
 		
 		Id:
-		<h:inputText id="idTF" value="#{personHome.instance.id}"/>
-		<h:message id='idMessage' for='firstnameTF'/>
+		<h:outputText id="idTF" value="#{personHome.instance.id}"/>
+		<h:message id='idMessage' for='idTF'/>
 		
 		First Name:
 		<h:inputText id="firstnameTF" value="#{personHome.instance.firstName}" required='true'/>
