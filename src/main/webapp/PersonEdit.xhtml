@@ -42,7 +42,7 @@
 		<ui:fragment id="primoChooser">
 		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" partialSubmit="true">
 			<f:selectItems value="#{factories.memberTypes}"/>
-			<p:ajax listener="#{personHome.handleTypeChange}" update="primoMenu"/>
+			<p:ajax listener="#{personHome.computeEnableMasterMember}" update="primoMenu"/>
 		</p:selectOneMenu>
 			Master: 
 			<h:selectOneMenu id="primoMenu" 

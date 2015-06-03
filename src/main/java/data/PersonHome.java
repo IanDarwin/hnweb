@@ -140,12 +140,13 @@ public class PersonHome implements Serializable {
 		// this.id = instance.getId();
 	}
 
-	public void handleTypeChange() {
+	public void computeEnableMasterMember() {
 		// For AJAX
 		enableMasterMember = instance.getMemberType() == MemberType.Secondary;
 	}
 	
 	public boolean isEnableMasterMember() {
+		computeEnableMasterMember();
 		return enableMasterMember;
 	}
 
