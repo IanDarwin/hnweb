@@ -12,13 +12,13 @@ import org.junit.runners.Parameterized.Parameters;
 import org.omg.CORBA.StringHolder;
 
 @RunWith(Parameterized.class)
-public class PersonHomeTest {
+public class PersonHomeValidateEmailTest {
 	
 	String email;
 	boolean expected;
 	StringHolder messageHolder = new StringHolder();
 	
-	public PersonHomeTest(boolean expected, String email) {
+	public PersonHomeValidateEmailTest(boolean expected, String email) {
 		this.email = email;
 		this.expected = expected;
 	}
