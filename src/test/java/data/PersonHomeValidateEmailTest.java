@@ -23,21 +23,19 @@ public class PersonHomeValidateEmailTest {
 		this.expected = expected;
 	}
 	
-	private final static Object[][] data = {
-		// Null or Empty are valid for us, might not be for you.
-		{true, null },
-		{true, "" },
-		// From short to long, roughly
-		{true, "a@b.co"},
-		{false, "a at b.co" },
-		{true, "a.b.c@d.e.f.com"},
-		{true, "ketchup@mcdonalds.infomaterial"},
-		{false, "a-b@c.com"},
-	};
-	
 	@Parameters
 	public static List<Object[]> getParams() {
-		return Arrays.asList(data);
+		return Arrays.asList(new Object[][]{
+				// Null or Empty are valid for us, might not be for you.
+				{true, null },
+				{true, "" },
+				// From short to long, roughly
+				{true, "a@b.co"},
+				{false, "a at b.co" },
+				{true, "a.b.c@d.e.f.com"},
+				{true, "ketchup@mcdonalds.infomaterial"},
+				{false, "a-b@c.com"},			
+		});
 	}	
 	
 	@Test
