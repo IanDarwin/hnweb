@@ -78,8 +78,9 @@ public class WellFormedXmlTest {
 				System.err.println( "Parsing " + xmlFile.getAbsolutePath() + "...");
 			}
 			
-			DocumentBuilderFactory dbFactory = 
-				DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			// Disable loading of DTDs; we just want a quick syntax parse
+			dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 			DocumentBuilder parser = dbFactory.newDocumentBuilder();
 			parser.parse(xmlFile);
 			// If we get here, it parsed OK
