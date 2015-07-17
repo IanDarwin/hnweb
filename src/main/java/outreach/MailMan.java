@@ -30,7 +30,7 @@ public class MailMan implements Serializable {
 	private static final long serialVersionUID = -1980670543127065573L;
 
 	@Inject
-	PersonList lister;
+	static PersonList lister;
 	
 	String subject;
 	String messageBody;
@@ -65,8 +65,26 @@ public class MailMan implements Serializable {
 	public void sendMessageToSome(Chooser ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
-		List<String> emails = new ArrayList<>(all.size());
-		for (Member p : all) {
+		List<String> emails = selectListMembers(all, ch);
+		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
+		if (mailHostProperty == null) {
+			throw new IllegalStateException(
+				PROPNAME_MAIL_SMTP_HOST + " not set in " + CONFIG_PROPERTIES_NAME);
+		}
+		sendMessage(props.getProperty("mail.sender"),
+				emails, 
+				subject, messageBody);
+	}
+
+	/**
+	 * Perform list subsetting
+	 * @param list The list of members
+	 * @param ch The chooser
+	 * @return The subset list
+	 */
+	public static List<String> selectListMembers(List<Member> list, Chooser ch) {
+		List<String> emails = new ArrayList<>(list.size());
+		for (Member p : list) {
 			final String email = p.getEmail();
 			if (email == null) {
 				continue;
@@ -76,14 +94,7 @@ public class MailMan implements Serializable {
 			}
 			emails.add(email);
 		}
-		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
-		if (mailHostProperty == null) {
-			throw new IllegalStateException(
-				PROPNAME_MAIL_SMTP_HOST + " not set in " + CONFIG_PROPERTIES_NAME);
-		}
-		sendMessage(props.getProperty("mail.sender"),
-				emails, 
-				subject, messageBody);
+		return emails;
 	}
 
 	private void sendMessage(
