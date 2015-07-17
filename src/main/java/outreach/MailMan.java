@@ -59,13 +59,22 @@ public class MailMan implements Serializable {
 
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
+		sendMessageToSome(null);
+	}
+	
+	public void sendMessageToSome(Chooser ch) throws MessagingException {
+		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
 		List<String> emails = new ArrayList<>(all.size());
 		for (Member p : all) {
 			final String email = p.getEmail();
-			if (email != null) {
-				emails.add(email);
+			if (email == null) {
+				continue;
 			}
+			if (ch != null && !ch.accept(p)) {
+				continue;
+			}
+			emails.add(email);
 		}
 		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
 		if (mailHostProperty == null) {
@@ -110,11 +119,9 @@ public class MailMan implements Serializable {
 
 		// Now the message body.
 		mesg.setText(message_body);
-		// XXX I18N: use setText(msgText.getText(), charset)
 
 		// Finally, send the message!
 		Transport.send(mesg);
-
 	}
 
 	private void notNull(String name, String value) {
