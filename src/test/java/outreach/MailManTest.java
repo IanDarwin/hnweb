@@ -30,7 +30,7 @@ public class MailManTest {
 		sender.lister = lister;
 	}
 	
-	@Test @Ignore // Need to refactor to mock the Mail Session and Transport!
+	@Test // Need to refactor to mock the Mail Session and Transport!
 	public void test() throws Exception {
 		sender.subject = "This is a test message";
 		sender.messageBody = "This is a test message body";
