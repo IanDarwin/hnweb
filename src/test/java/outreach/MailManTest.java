@@ -1,19 +1,26 @@
 package outreach;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
-import model.Member;
+import javax.mail.Session;
+import javax.mail.Transport;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import data.PersonList;
+import model.Member;
 
+@RunWith(PowerMockRunner.class)
 public class MailManTest {
 
 	List<Member> fakeList = Arrays.asList(
@@ -30,11 +37,22 @@ public class MailManTest {
 		sender.lister = lister;
 	}
 	
-	@Test // Need to refactor to mock the Mail Session and Transport!
+	@Test
+	@PrepareForTest(Transport.class)
 	public void test() throws Exception {
+
+		//final Properties properties = mockSession.getProperties();
+		PowerMockito.mockStatic(Transport.class);
+		Properties props = sender.props;
+		sender.session = // PowerMockito.mock(Session.class);
+				Session.getDefaultInstance(props);
+
 		sender.subject = "This is a test message";
 		sender.messageBody = "This is a test message body";
 		sender.sendMessageToAll();
+		
+		PowerMockito.verifyStatic();
+
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
@@ -17,8 +18,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import model.Member;
 import data.PersonList;
+import model.Member;
 
 @ManagedBean(name="mailMan") @RequestScoped
 public class MailMan implements Serializable {
@@ -30,7 +31,10 @@ public class MailMan implements Serializable {
 	private static final long serialVersionUID = -1980670543127065573L;
 
 	@Inject
-	static PersonList lister;
+	PersonList lister;
+	
+	@Resource(mappedName="java:jboss/mail/Default")
+	Session session;		// non-private only for testing.
 	
 	String subject;
 	String messageBody;
@@ -50,6 +54,7 @@ public class MailMan implements Serializable {
 			}
 			Properties p = new Properties();
 			p.load(is);
+			p.store(System.out, "Meh");
 			return p;
 		} catch (IOException e) {
 			throw new IllegalStateException(
@@ -100,15 +105,16 @@ public class MailMan implements Serializable {
 	private void sendMessage(
 			String fromAddress, List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
+		System.out.println("MailMan.sendMessage()");
 		
 		notNull("fromAddress", fromAddress);
 		notNull("message_subject", message_subject);
 		notNull("message_body", message_body);
 		
 		// Create the Session object
-		Session session = 
-				Session.getDefaultInstance(props, null);
-		session.setDebug(true);         // Verbose!
+		if (session == null) {
+			throw new NullPointerException("Mail Session not injected; check configuration");
+		}
 
 		// create a message
 		Message mesg = new MimeMessage(session);
