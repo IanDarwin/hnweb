@@ -27,8 +27,9 @@
 				value="#{mailMan.messageBody}"/>
 		</h:panelGrid>
 		<br/>
-		<h:commandButton value="Send this email to entire list" action="#{mailMan.sendMessageToAll}"/>
-		<p:button value="Send this email to Executive members" enabled="false"/>
+		<h:commandButton value="Send email to entire list" action="#{mailMan.sendMessageToAll}"/>
+		<h:commandButton value="Send email to Executive members only " action="#{mailMan.sendMessageToExec}"/>
+		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
 	</p:panel>
 	</h:form>
 </ui:define>
