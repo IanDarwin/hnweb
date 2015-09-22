@@ -6,8 +6,6 @@ public enum MemberType {
 	Individual("Ind"),
 	/** A student - full-time or similar */
 	Student("St"),
-	/** A Senior - aged 65+ */
-	Senior("Sen"),
 	/** The main entry for a Family membership */
 	Family("FM"),
 	/** Any additional members on a Family membership */
