@@ -1,0 +1,14 @@
+<csv xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	>
+
+<!-- Display the club members' information in CSV -->
+# These will appear on their own lines in "View Source" or "File->SaveAs".
+# There is one line per person. "Family" has one or more "Secondary" members just to show the relationship
+# (there is no implication that the former member is superior to the latter!).  
+firstName,lastName,memberType,position-if-any,address,address2,city,province,postcode,email
+<ui:repeat var="m" value="#{personList.findAll()}">
+"#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.position}","#{m.address}","#{m.address2}","#{m.city}","#{m.province}","#{m.postCode}","#{m.email}" </ui:repeat>
+</csv>
