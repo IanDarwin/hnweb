@@ -66,7 +66,12 @@ public class MailMan implements Serializable {
 		System.out.println("MailMan.sendMessageToAll()");
 		sendMessageToSome(null);
 	}
-	
+
+	public void sendMessageToExec() throws MessagingException {
+		System.out.println("MailMan.sendMessageToAll()");
+		sendMessageToSome(m -> m.getPosition() != null);
+	}
+
 	public void sendMessageToSome(Chooser ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
