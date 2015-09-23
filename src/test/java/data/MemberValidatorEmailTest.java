@@ -9,16 +9,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
 import org.omg.CORBA.StringHolder;
 
 @RunWith(Parameterized.class)
-public class PersonHomeValidateEmailTest {
+public class MemberValidatorEmailTest {
 	
 	String email;
 	boolean expected;
 	StringHolder messageHolder = new StringHolder();
 	
-	public PersonHomeValidateEmailTest(boolean expected, String email) {
+	public MemberValidatorEmailTest(boolean expected, String email) {
 		this.email = email;
 		this.expected = expected;
 	}
@@ -40,7 +41,8 @@ public class PersonHomeValidateEmailTest {
 	
 	@Test
 	public void test() {
-		assertSame(expected, PersonHome.validateEmail(email, messageHolder));
+		System.out.println("Testing: " + email);
+		assertSame(expected, MemberValidator.validateEmail(email, messageHolder));
 	}
 
 }
