@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -34,10 +35,10 @@ public class Member {
 	private String address, address2;
 	private String city, province, postCode;
 	private Country country = Country.CA;
-	private MemberType memberType;
 	/** If they have an executive position */
 	private String position;
 	private Date expiryDate;
+	private MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
 	private Member masterMember;
 	/** Only if this is MemberType.Family */
@@ -45,6 +46,7 @@ public class Member {
 	/** How they get the club newsletter */
 	private NewsletterMode newsletterMode;
 	private Integer yearJoined;
+	private boolean emailTrips;
 	
 	/** 
 	 * "A very public Person"
@@ -257,6 +259,16 @@ public class Member {
 		return yearJoined;
 	}
 	
+	public void setEmailTrips(boolean emailTrips) {
+		this.emailTrips = emailTrips;
+	}
+
+	@Column(name="email_trips",
+	         columnDefinition="boolean default false")
+	public boolean isEmailTrips() {
+		return emailTrips;
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getFirstName())
@@ -295,6 +307,9 @@ public class Member {
 	 * canonicalizes them to upper case and with the space.
 	 */
 	public void fixupPostCode() {
+		if (getPostCode() == null) {
+			return;
+		}
 		if (country == Country.CA) {
 			String ananan = getPostCode().toUpperCase();
 			switch(ananan.length()) {
