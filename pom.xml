@@ -11,7 +11,7 @@
 	<packaging>war</packaging>
 	<inceptionYear>2015</inceptionYear>
 
-	<name>Club Membership</name>
+	<name>UCFN Club Membership</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
