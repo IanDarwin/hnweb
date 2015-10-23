@@ -37,7 +37,8 @@ public class Member {
 	private Country country = Country.CA;
 	/** If they have an executive position */
 	private String position;
-	private Date expiryDate;
+	/** 4-digit year */
+	private int expiryDate;
 	private MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
 	private Member masterMember;
@@ -242,12 +243,11 @@ public class Member {
 		this.position = position;
 	}
 
-	@Temporal(TemporalType.DATE)
-	public Date getExpiryDate() {
+	public int getExpiryDate() {
 		return expiryDate;
 	}
 
-	public void setExpiryDate(Date expiryDate) {
+	public void setExpiryDate(int expiryDate) {
 		this.expiryDate = expiryDate;
 	}
 	

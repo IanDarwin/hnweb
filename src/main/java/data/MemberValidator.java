@@ -27,7 +27,7 @@ public class MemberValidator implements Serializable {
 		if (email == null || email.length() == 0) 
 			return valid;
 		messageHolder.value = "Invalid email syntax, I think";
-		return email.matches("[\\w.]+@[\\w.]+\\.\\w+");
+		return email.matches("[\\w.-]+@[\\w.-]+\\.\\w+");
 	}
 
 	/** 

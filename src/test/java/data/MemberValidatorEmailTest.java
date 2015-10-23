@@ -35,7 +35,7 @@ public class MemberValidatorEmailTest {
 				{false, "a at b.co" },
 				{true, "a.b.c@d.e.f.com"},
 				{true, "ketchup@mcdonalds.infomaterial"},
-				{false, "a-b@c.com"},			
+				{true,  "hey-gal@sympatico-online.ca"},
 		});
 	}	
 	

@@ -102,7 +102,14 @@
 		</ui:fragment>
 		
 		<p:outputLabel for="expdt" value="Expiry:" />
-        <p:calendar id="expdt" value="#{personHome.instance.expiryDate}" pattern="yyyy-MM-dd" showOn="button" />
+		<p:selectOneMenu id="expdt" value="#{personHome.instance.expiryDate}">
+			<f:selectItem itemLabel="2015" itemValue="2015" />
+			<f:selectItem itemLabel="2016" itemValue="2016" />
+			<f:selectItem itemLabel="2017" itemValue="2017" />
+			<f:selectItem itemLabel="2018" itemValue="2018" />
+			<f:selectItem itemLabel="2019" itemValue="2019" />
+			<f:selectItem itemLabel="2020" itemValue="2020" />
+		</p:selectOneMenu>
 			
 		</h:panelGrid>
 	</p:panel>
