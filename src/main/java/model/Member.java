@@ -29,7 +29,7 @@ public class Member {
 	
 	private long id;
 	private String firstName, middle, lastName;
-	private String homePhone, cellPhone;
+	private String homePhone, cellPhone, workPhone;
 	private String email;
 	private String address, address2;
 	private String city, province, postCode;
@@ -167,6 +167,13 @@ public class Member {
 	}
 	public void setCellPhone(String cellPhone) {
 		this.cellPhone = cellPhone;
+	}
+	
+	public String getWorkPhone() {
+		return workPhone;
+	}
+	public void setWorkPhone(String workPhone) {
+		this.workPhone = workPhone;
 	}
 	
 	public String getEmail() {
