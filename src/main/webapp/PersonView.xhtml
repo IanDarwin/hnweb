@@ -26,21 +26,6 @@
 				LastName:
 				<h:outputText value="#{personHome.instance.lastName}"/>
 
-				Email:
-				<h:outputText value="#{personHome.instance.email}"/>
-
-				Phone:
-				<ui:fragment>
-				Home: <h:outputText value="#{personHome.instance.homePhone};"/>
-				Mobile: <h:outputText value="#{personHome.instance.cellPhone}"/>
-				</ui:fragment>
-
-				Postion:
-				<h:outputText value="#{personHome.instance.position}"/>
-
-				Expiry:
-				<h:outputText value="#{personHome.instance.expiryDate}"/>
-
 				Address:
 				<h:outputText value="#{personHome.instance.address}"/>
 
@@ -53,7 +38,23 @@
 				<h:outputText value="#{personHome.instance.country}"/>#{' '}
 				<h:outputText value="#{personHome.instance.postCode}"/>
 				</ui:fragment>
-				
+
+				Phone:
+				<ui:fragment>
+				Home: <h:outputText value="#{personHome.instance.homePhone};"/>
+				Mobile: <h:outputText value="#{personHome.instance.cellPhone}"/>
+				Work: <h:outputText value="#{personHome.instance.workPhone}"/>
+				</ui:fragment>
+
+				Email:
+				<h:outputText value="#{personHome.instance.email}"/>
+
+				Expiry:
+				<h:outputText value="#{personHome.instance.expiryDate}"/>
+
+				Postion:
+				<h:outputText value="#{personHome.instance.position}"/>
+
 			</p:panelGrid>
 
 	<h:form>

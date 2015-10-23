@@ -58,24 +58,6 @@
         </ui:fragment>
 		<h:message id='primoMessage' for='primoMenu'/>
 
-		Club Executive Position if any:
-		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
-		<h:message id='positionMessage' for='positionTF'/>
-
-		Email:
-		<h:inputText id="emailTF" value="#{personHome.instance.email}"
-			validator="#{personHome.validateEmail}">
-			<f:ajax event="blur" render='emailMessage'/>
-		</h:inputText>
-		<h:message id='emailMessage' for='emailTF'/>
-
-		Phones:
-		<ui:fragment>
-			Home: <h:inputText id="homePhoneTF" value="#{personHome.instance.homePhone}"/>
-			Mobile: <h:inputText id="cellPhoneTF" value="#{personHome.instance.cellPhone}"/>
-		</ui:fragment>
-		<h:message id='homePhoneMessage' for='homePhoneTF'/>
-		
 		Address:
 		<h:inputText id="addressTF" value="#{personHome.instance.address}" required='true'/>
 		<h:message id='addressMessage' for='addressTF'/>
@@ -100,7 +82,21 @@
 			<h:message id='provinceMessage' for='provinceTF'/>
 			<h:message id='postcodeMessage' for='postcodeTF'/>
 		</ui:fragment>
-		
+
+		Phones:
+		<ui:fragment>
+			Home: <h:inputText id="homePhoneTF" value="#{personHome.instance.homePhone}"/>
+			Mobile: <h:inputText id="cellPhoneTF" value="#{personHome.instance.cellPhone}"/>
+		</ui:fragment>
+		<h:message id='homePhoneMessage' for='homePhoneTF'/>
+
+		Email:
+		<h:inputText id="emailTF" value="#{personHome.instance.email}"
+			validator="#{personHome.validateEmail}">
+			<f:ajax event="blur" render='emailMessage'/>
+		</h:inputText>
+		<h:message id='emailMessage' for='emailTF'/>
+
 		<p:outputLabel for="expdt" value="Expiry:" />
 		<p:selectOneMenu id="expdt" value="#{personHome.instance.expiryDate}">
 			<f:selectItem itemLabel="2015" itemValue="2015" />
@@ -111,7 +107,12 @@
 			<f:selectItem itemLabel="2020" itemValue="2020" />
 		</p:selectOneMenu>
 			
+		Club Executive Position if any:
+		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
+		<h:message id='positionMessage' for='positionTF'/>
+
 		</h:panelGrid>
+
 	</p:panel>
 
 	<p:commandButton value="Save" action="#{personHome.update}" ajax='false'/>
