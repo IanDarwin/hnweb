@@ -39,7 +39,7 @@ public class Login {
 	public String login() {
 		try {
 			userlist.findByUsernameAndPassword(username, hash(password));
-			return "PersonList";
+			return "MemberList";
 		} catch (RuntimeException ex) {
 			// XXX create a FacesMessage with the failure
 			return "Login";
