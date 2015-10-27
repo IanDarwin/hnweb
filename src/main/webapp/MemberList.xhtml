@@ -11,17 +11,17 @@
 <ui:define name="body">
 
 	<p:panel>
-	<f:facet name="header">Here's looking at your Members  - #{personList.findAll().size()} of them.</f:facet>
+	<f:facet name="header">Here's looking at your Members  - #{memberList.findAll().size()} of them.</f:facet>
 
 	<!-- Print the table, or, an error -->
 	<h:outputText
 		value="Arrr, Billy! I can't find any people. Did we add any yet??"
-		rendered="#{empty personList.findAll()}"/>
+		rendered="#{empty memberList.findAll()}"/>
 
 	<!-- Display the main part of the whole page. -->
 	<p:dataTable border='1' 
-		rendered="#{!empty personList.findAll()}"
-		var="person" value="#{personList.findAll()}" 
+		rendered="#{!empty memberList.findAll()}"
+		var="person" value="#{memberList.findAll()}" 
 		>
 		<p:column>
 			<f:facet name="header">First Name</f:facet>
@@ -67,13 +67,13 @@
 
 		<p:column style="width: 5%">
 			<f:facet name="header">Actions</f:facet>
-			<h:outputLink value="PersonView.web">
+			<h:outputLink value="MemberView.web">
 				View
-				<f:param name="personId" value="#{person.id}"/>
+				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>
-			<h:outputLink value="PersonEdit.web">
+			<h:outputLink value="MemberEdit.web">
 				Edit
-				<f:param name="personId" value="#{person.id}"/>
+				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>
 		</p:column>
 	</p:dataTable>

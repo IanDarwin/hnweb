@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import javax.persistence.Transient;
 public class Member {
 	
 	private long id;
+	private String userName, password;
 	private String firstName, middle, lastName;
 	private String homePhone, cellPhone, workPhone;
 	private String email;
@@ -41,11 +43,11 @@ public class Member {
 	private MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
 	private Member masterMember;
-	/** Only if this is MemberType.Family */
+	/** Only if memberType is MemberType.Family */
 	private Set<Member> secondaryMembers;
 	/** How they get the club newsletter */
 	private NewsletterMode newsletterMode;
-	private Integer yearJoined;
+	private Integer yearJoined = LocalDate.now().getYear();
 	private boolean emailTrips;
 	
 	/** 
@@ -72,9 +74,28 @@ public class Member {
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/** Accessor for the password. May be hashed or not; the sematnics
+	 * are provided by the external control implementation, not coded here.
+	 * @return The password string
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getFirstName() {

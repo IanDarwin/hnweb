@@ -17,7 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import data.PersonList;
+import data.MemberList;
 import model.Member;
 
 @RunWith(PowerMockRunner.class)
@@ -31,7 +31,7 @@ public class MailManTest {
 	
 	@Before
 	public void init() {
-		PersonList lister = mock(PersonList.class);
+		MemberList lister = mock(MemberList.class);
 		when(lister.findAll()).thenReturn(fakeList);
 		sender = new MailMan();
 		sender.lister = lister;

@@ -18,7 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import data.PersonList;
+import data.MemberList;
 import model.Member;
 
 @ManagedBean(name="mailMan") @RequestScoped
@@ -31,7 +31,7 @@ public class MailMan implements Serializable {
 	private static final long serialVersionUID = -1980670543127065573L;
 
 	@Inject
-	PersonList lister;
+	MemberList lister;
 	
 	@Resource(mappedName="java:jboss/mail/Default")
 	Session session;		// non-private only for testing.

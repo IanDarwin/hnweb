@@ -18,12 +18,15 @@ import org.apache.deltaspike.data.api.Repository;
  * The methods in the inherited interface suffice for many apps!
  * @author Ian Darwin
  */
-@Named("personList") @Default
+@Named("memberList") @Default
 @SessionScoped
 @Repository 
-public interface PersonList extends EntityRepository<Member, Long> {
+public interface MemberList extends EntityRepository<Member, Long> {
 
 	@Query(value="select m from Member m order by m.lastName asc")
 	List<Member> findAll();
+
+	/** Basic for login */
+	public Member findByUsernameAndPassword(String username, String passwordHash);
 
 }

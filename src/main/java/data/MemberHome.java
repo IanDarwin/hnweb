@@ -34,14 +34,14 @@ import org.omg.CORBA.StringHolder;
  * @author Ian Darwin
  */
 @Stateful @Named @ConversationScoped
-public class PersonHome implements Serializable {
+public class MemberHome implements Serializable {
 	
-	@Inject private PersonList lister;
+	@Inject private MemberList lister;
 	ArrayList<Member> members;
 
 	private static final long serialVersionUID = -2284578724132631798L;
 
-	private static final String LIST_PAGE = "PersonList";
+	private static final String LIST_PAGE = "MemberList";
 	private static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	@Inject Conversation conv;
@@ -54,8 +54,8 @@ public class PersonHome implements Serializable {
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) EntityManager em;
 
 
-	public PersonHome() {
-		// System.out.println("PersonHome.PersonHome()");
+	public MemberHome() {
+		// System.out.println("MemberHome.MemberHome()");
 	}
 
 	Member noMember = new Member("--", "Select a member", "---", null);
@@ -70,7 +70,7 @@ public class PersonHome implements Serializable {
 			members.add(noMember);
 			members.addAll(lister.findAll());
 		} else {
-			System.out.println("PersonHome.getMemberList() CACHE HIT");
+			System.out.println("MemberHome.getMemberList() CACHE HIT");
 		}
 		return members;
 	}
@@ -93,7 +93,7 @@ public class PersonHome implements Serializable {
 		}
 		instance = em.find(Member.class, id);
 		if (instance == null) {
-			throw new IllegalArgumentException("Person not found by id! " + id);
+			throw new IllegalArgumentException("Member not found by id! " + id);
 		}
 	}
 	public void wire(Long id) {
@@ -179,7 +179,7 @@ public class PersonHome implements Serializable {
 
 	@PreDestroy
 	public void bfn() {
-		System.out.println("PersonHome.bfn()");
+		System.out.println("MemberHome.bfn()");
 	}
 
 	/**
