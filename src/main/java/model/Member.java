@@ -86,7 +86,7 @@ public class Member {
 		this.userName = userName;
 	}
 
-	/** Accessor for the password. May be hashed or not; the sematnics
+	/** Accessor for the password. May be hashed or not; the semantics
 	 * are provided by the external control implementation, not coded here.
 	 * @return The password string
 	 */
