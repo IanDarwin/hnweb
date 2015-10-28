@@ -24,7 +24,7 @@ public class PersistenceTest {
 	}
 
 	/** Live JPA (fake database): save a Member, then
-	 * asser that we find it in the list of Members from JPA
+	 * assert that we find it in the list of Members from JPA
 	 */
 	@Test
 	public void testLoadStore() {
