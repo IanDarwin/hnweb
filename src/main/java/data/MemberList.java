@@ -27,6 +27,6 @@ public interface MemberList extends EntityRepository<Member, Long> {
 	List<Member> findAll();
 
 	/** Basic for login */
-	public Member findByUsernameAndPassword(String username, String passwordHash);
+	public Member findByUserNameAndPassword(String username, String passwordHash);
 
 }
