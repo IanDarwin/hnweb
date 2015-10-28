@@ -69,9 +69,28 @@ public class Login implements Serializable {
 		this.password = password;
 	}
 
+	/** Important for security */
+	public boolean isLoggedIn() {
+		return loggedInUser != null;
+	}
+
+	public boolean hasRole(String role) {
+		if (role == null) {
+			throw new NullPointerException("isUserInRole(null) isn't sensible");
+		}
+		if (!isLoggedIn()) {
+			return false;
+		}
+		for (String r : loggedInUser.getRoles()) {
+			if (r.equals(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/** Just to compile */
 	private String hash(String input) {
 		return input;
 	}
 }
-		

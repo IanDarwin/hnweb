@@ -32,6 +32,7 @@ public class PersistenceTest {
 		tm.setFirstName(FIRST);
 		tm.setLastName("Lozz");
 		tm.setEmailTrips(true);
+		tm.addRole("Dumpster Driver");
 
 		em.getTransaction().begin();
 		em.persist(tm);
@@ -42,6 +43,8 @@ public class PersistenceTest {
 
 		for (Member m : ms) {
 			if (m.getFirstName().equals(FIRST) && m.isEmailTrips()) {
+				assertEquals(1, m.getRoles().size());
+				assertTrue(m.getRoles().contains("Dumpster Driver"));
 				return;
 			}
 		}

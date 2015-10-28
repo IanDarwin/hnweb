@@ -71,7 +71,7 @@
 				View
 				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>
-			<h:outputLink value="MemberEdit.web">
+			<h:outputLink value="MemberEdit.web" rendered="#{login.hasRole('admin')}">
 				Edit
 				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>

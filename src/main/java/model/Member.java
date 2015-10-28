@@ -1,11 +1,14 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 /**
  * Represents one person in our database.
@@ -49,6 +53,8 @@ public class Member {
 	private NewsletterMode newsletterMode;
 	private Integer yearJoined = LocalDate.now().getYear();
 	private boolean emailTrips;
+	private int version;
+	private List<String> roles = new ArrayList<>();;
 	
 	/** 
 	 * "A very public Person"
@@ -286,14 +292,21 @@ public class Member {
 		return yearJoined;
 	}
 	
-	public void setEmailTrips(boolean emailTrips) {
-		this.emailTrips = emailTrips;
+	@Version // Field only used for optimistic locking
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	@Column(name="email_trips",
 	         columnDefinition="boolean default false")
 	public boolean isEmailTrips() {
 		return emailTrips;
+	}
+	public void setEmailTrips(boolean emailTrips) {
+		this.emailTrips = emailTrips;
 	}
 	
 	public String toString() {
@@ -352,6 +365,20 @@ public class Member {
 					postCode + " not valid Canadian postcode");
 			}
 		}
+	}
+
+	// For app-managed security
+
+	@ElementCollection
+	public List<String> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+
+	public void addRole(String role) {
+		roles.add(role);
 	}
 
 	@Override
