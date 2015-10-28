@@ -10,6 +10,10 @@
 <ui:define name="pageTitle">Full Membership List</ui:define>
 <ui:define name="body">
 
+	<ui:fragment rendered="#{!login.hasRole('admin')}">
+		<meta http-equiv="refresh" content="0;URL=#{login.loggedIn?'MemberView.web':'Login.web'}"/>
+	</ui:fragment>
+
 	<p:panel>
 	<f:facet name="header">Here's looking at your Members  - #{memberList.findAll().size()} of them.</f:facet>
 

@@ -8,9 +8,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import com.darwinsys.security.DigestUtils;
 import model.Member;
 import data.MemberList;
-
 
 /**
  * Simple DIY login.
@@ -36,7 +36,7 @@ public class Login implements Serializable {
 		System.out.println("Login.login(" + username + ")");
 		try {
 			loggedInUser = 
-				userlist.findByUserNameAndPassword(username, hash(password));
+				userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
 			FacesContext.getCurrentInstance().addMessage(
                     null,
                     new FacesMessage("Logged in as " + loggedInUser.getName()));
@@ -87,10 +87,5 @@ public class Login implements Serializable {
 			}
 		}
 		return false;
-	}
-
-	/** Just to compile */
-	private String hash(String input) {
-		return input;
 	}
 }
