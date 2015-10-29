@@ -1,0 +1,31 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Club List</ui:define>
+<ui:define name="body">
+
+	<p:panel>
+
+	<h:outputText value="This is the starting page for the Club's Membership section."/>
+
+	<br/>
+
+	<a href="Renew.web">Renew online (not operational yet!) (login required)</a>
+
+	<br/>
+
+	<a href="SignupPaperForm.pdf">Renew by mail or in person</a>
+
+	<br/>
+
+	<a href="MemberView.web">Update your details (login required)</a>
+
+	</p:panel>
+</ui:define>
+</ui:composition>
