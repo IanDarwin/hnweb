@@ -13,13 +13,22 @@
 	<p:panel>
 		<f:facet name="header">JSF Login</f:facet>
 
-		<h:form>
-		User name: <h:inputText value="#{identity.userName}" pt:placeholder="name"/>
-		<br/>
-		Password: <h:inputSecret value="#{identity.password}"/>
-		<br/>
-		<h:commandButton action="#{identity.login}" value="Login"/>
+		<h:form id="login">
+		<h:panelGrid columns="3">
+
+		<h:outputText value="User name:"/>
+			<h:inputText id="userName" value="#{identity.userName}" required="true" message="Username required" pt:placeholder="login name"/>
+			<h:message for="userName"/>
+
+		Password: 	
+			<h:inputSecret id="password" value="#{identity.password}" required="true" message="Password required"/>
+			<h:message for="password"/>
+
+		#{' '}
+			<h:commandButton action="#{identity.login}" value="Login"/>
+			#{' '}
 		
+		</h:panelGrid>
 		</h:form>
 
 	</p:panel>
