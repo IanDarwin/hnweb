@@ -21,13 +21,11 @@
 			<h:graphicImage value="/images/invertocat.png" width="24" height="24" />
 		</h:outputLink>
 		#{'  '}
-        <h:outputText value="Welcome #{request.remoteUser}"/>
-		<!--
-        <h:outputText value="signed in as: #{identity.userName}" rendered="#{identity.loggedIn}"/>
+        <h:outputText value="Welcome #{identity.loggedInUser.userName}" rendered="#{identity.loggedIn}"/>
         <h:outputLink value="index.web" rendered="#{not identity.loggedIn}">
 			Login
 		</h:outputLink>
-		-->
+		#{'  '}
         <h:outputLink value="index.web" action="#{identity.logout}" 
 			rendered="#{identity.loggedIn}">Logout</h:outputLink>
     </p:toolbarGroup>
