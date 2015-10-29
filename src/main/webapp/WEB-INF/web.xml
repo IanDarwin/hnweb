@@ -32,13 +32,6 @@
 
 	<security-constraint>
 		<display-name>Club Membership Area</display-name>
-		<web-resource-collection>
-			<web-resource-name>Club Membership Area</web-resource-name>
-			<url-pattern>/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>club_exec</role-name>
-		</auth-constraint>
 		<!--
 		<user-data-constraint>
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>

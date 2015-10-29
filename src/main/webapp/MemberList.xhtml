@@ -10,8 +10,8 @@
 <ui:define name="pageTitle">Full Membership List</ui:define>
 <ui:define name="body">
 
-	<ui:fragment rendered="#{!login.hasRole('admin')}">
-		<meta http-equiv="refresh" content="0;URL=#{login.loggedIn?'MemberView.web':'Login.web'}"/>
+	<ui:fragment rendered="#{!identity.hasRole('admin')}">
+		<meta http-equiv="refresh" content="0;URL=#{identity.loggedIn?'MemberView.web':'Login.web'}"/>
 	</ui:fragment>
 
 	<p:panel>
@@ -25,48 +25,48 @@
 	<!-- Display the main part of the whole page. -->
 	<p:dataTable border='1' 
 		rendered="#{!empty memberList.findAll()}"
-		var="person" value="#{memberList.findAll()}" 
+		var="member" value="#{memberList.findAll()}" 
 		>
 		<p:column>
 			<f:facet name="header">First Name</f:facet>
-			<h:outputText value="#{person.firstName}"/>
+			<h:outputText value="#{member.firstName}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Last Name</f:facet>
-			<h:outputText value="#{person.lastName}"/>
+			<h:outputText value="#{member.lastName}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Email</f:facet>
-			<h:outputText value="#{person.email}"/>
+			<h:outputText value="#{member.email}"/>
 		</p:column>
 		<p:column width="3%">
 			<f:facet name="header">Type</f:facet>
-			<h:outputText value="#{person.memberType.shortName}"/>
+			<h:outputText value="#{member.memberType.shortName}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Exec Pos'n</f:facet>
-			<h:outputText value="#{person.position}"/>
+			<h:outputText value="#{member.position}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Home Phone<br/>Cell Phone</f:facet>
-			<h:outputText value="#{person.homePhone}"/>#{' '}
-			<h:outputText value="#{person.cellPhone}"/>
+			<h:outputText value="#{member.homePhone}"/>#{' '}
+			<h:outputText value="#{member.cellPhone}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Address</f:facet>
-			<h:outputText value="#{person.address}"/>
+			<h:outputText value="#{member.address}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">City</f:facet>
-			<h:outputText value="#{person.city}"/>
+			<h:outputText value="#{member.city}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">PostCode</f:facet>
-			<h:outputText value="#{person.postCode}"/>
+			<h:outputText value="#{member.postCode}"/>
 		</p:column>
 		<p:column width="5%">
 			<f:facet name="header">Expiry</f:facet>
-			<h:outputText value="#{person.expiryDate}"/>
+			<h:outputText value="#{member.expiryDate}"/>
 		</p:column>
 
 		<p:column style="width: 5%">
@@ -75,7 +75,7 @@
 				View
 				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>
-			<h:outputLink value="MemberEdit.web" rendered="#{login.hasRole('admin')}">
+			<h:outputLink value="MemberEdit.web" rendered="#{identity.hasRole('admin')}">
 				Edit
 				<f:param name="memberId" value="#{member.id}"/>
 			</h:outputLink>

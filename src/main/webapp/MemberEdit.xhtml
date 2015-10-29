@@ -11,8 +11,8 @@
 <ui:define name="pageTitle">Member Edit</ui:define>
 <h:head>
 <f:metadata>
-    <f:event type="preRenderView" rendered="#{!empty request.getParameter('personId')}" listener="#{personHome.wire(request.getParameter('personId'))}"/>
-    <f:event type="preRenderView" rendered="#{ empty request.getParameter('personId')}" listener="#{personHome.create()}"/>
+    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberId')}" listener="#{memberHome.wire(request.getParameter('memberId'))}"/>
+    <f:event type="preRenderView" rendered="#{ empty request.getParameter('memberId')}" listener="#{memberHome.create()}"/>
 </f:metadata>
 </h:head>
 
@@ -23,35 +23,35 @@
 		<h:panelGrid columns='3'>
 		
 		Id:
-		<h:outputText id="idTF" value="#{personHome.instance.id}"/>
+		<h:outputText id="idTF" value="#{memberHome.instance.id}"/>
 		<h:message id='idMessage' for='idTF'/>
 		
 		First Name:
-		<h:inputText id="firstnameTF" value="#{personHome.instance.firstName}" required='true'/>
+		<h:inputText id="firstnameTF" value="#{memberHome.instance.firstName}" required='true'/>
 		<h:message id='firstnameMessage' for='firstnameTF'/>
 		
 		M.I.:
-		<h:inputText id="middlenameTF" value="#{personHome.instance.middle}" required='false'/>
+		<h:inputText id="middlenameTF" value="#{memberHome.instance.middle}" required='false'/>
 		<h:message id='middlenameMessage' for='middlenameTF'/>
 		
 		Last Name:
-		<h:inputText id="lastnameTF" value="#{personHome.instance.lastName}" required='true'/>
+		<h:inputText id="lastnameTF" value="#{memberHome.instance.lastName}" required='true'/>
 		<h:message id='lastnameMessage' for='lastnameTF'/>
 
 		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
 		<ui:fragment id="primoChooser">
-		<p:selectOneMenu id="memberTypeChoice" value="#{personHome.instance.memberType}" partialSubmit="true">
+		<p:selectOneMenu id="memberTypeChoice" value="#{memberHome.instance.memberType}" partialSubmit="true">
 			<f:selectItems value="#{factories.memberTypes}"/>
-			<p:ajax listener="#{personHome.computeEnableMasterMember}" update="primoMenu"/>
+			<p:ajax listener="#{memberHome.computeEnableMasterMember}" update="primoMenu"/>
 		</p:selectOneMenu>
 			Master: 
 			<h:selectOneMenu id="primoMenu" 
-                value="#{personHome.instance.masterMember}"
-				disabled="#{!personHome.enableMasterMember}"
+                value="#{memberHome.instance.masterMember}"
+				disabled="#{!memberHome.enableMasterMember}"
 				converter="entityConverter"
                 >
-                <f:selectItems var="_member" value="#{personHome.memberList}"
-                	noSelectionValue="#{personHome.memberList[0]}"
+                <f:selectItems var="_member" value="#{memberHome.memberList}"
+                	noSelectionValue="#{memberHome.memberList[0]}"
                 	itemLabel="#{_member.name}"
                     itemValue="#{_member}"/>
             </h:selectOneMenu>
@@ -59,24 +59,24 @@
 		<h:message id='primoMessage' for='primoMenu'/>
 
 		Address:
-		<h:inputText id="addressTF" value="#{personHome.instance.address}" required='true'/>
+		<h:inputText id="addressTF" value="#{memberHome.instance.address}" required='true'/>
 		<h:message id='addressMessage' for='addressTF'/>
 
 		City:
-		<h:inputText id="cityTF" value="#{personHome.instance.city}" required='true'/>
+		<h:inputText id="cityTF" value="#{memberHome.instance.city}" required='true'/>
 		<h:message id='cityMessage' for='cityTF'/>
 		
 		Province,Country,PostCode:
 		<ui:fragment>
-			<h:inputText id="provinceTF" value="#{personHome.instance.province}"/>
-			<p:selectOneMenu id="country" value="#{personHome.instance.country}" style="width:150px">
+			<h:inputText id="provinceTF" value="#{memberHome.instance.province}"/>
+			<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
                 <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
                 <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
                 <f:selectItem itemLabel="Canada" itemValue="CA" />
                 <f:selectItem itemLabel="U.S.A." itemValue="US" />
             </p:selectOneMenu>
-			<h:inputText id="postcodeTF" value="#{personHome.instance.postCode}" 
-				validator="#{personHome.validatePostCode}" required='true'/>
+			<h:inputText id="postcodeTF" value="#{memberHome.instance.postCode}" 
+				validator="#{memberHome.validatePostCode}" required='true'/>
 		</ui:fragment>
 		<ui:fragment>
 			<h:message id='provinceMessage' for='provinceTF'/>
@@ -85,20 +85,20 @@
 
 		Phones:
 		<ui:fragment>
-			Home: <h:inputText id="homePhoneTF" value="#{personHome.instance.homePhone}"/>
-			Mobile: <h:inputText id="cellPhoneTF" value="#{personHome.instance.cellPhone}"/>
+			Home: <h:inputText id="homePhoneTF" value="#{memberHome.instance.homePhone}"/>
+			Mobile: <h:inputText id="cellPhoneTF" value="#{memberHome.instance.cellPhone}"/>
 		</ui:fragment>
 		<h:message id='homePhoneMessage' for='homePhoneTF'/>
 
 		Email:
-		<h:inputText id="emailTF" value="#{personHome.instance.email}"
-			validator="#{personHome.validateEmail}">
+		<h:inputText id="emailTF" value="#{memberHome.instance.email}"
+			validator="#{memberHome.validateEmail}">
 			<f:ajax event="blur" render='emailMessage'/>
 		</h:inputText>
 		<h:message id='emailMessage' for='emailTF'/>
 
 		<p:outputLabel for="expdt" value="Expiry:" />
-		<p:selectOneMenu id="expdt" value="#{personHome.instance.expiryDate}">
+		<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryDate}">
 			<f:selectItem itemLabel="2015" itemValue="2015" />
 			<f:selectItem itemLabel="2016" itemValue="2016" />
 			<f:selectItem itemLabel="2017" itemValue="2017" />
@@ -108,19 +108,19 @@
 		</p:selectOneMenu>
 			
 		Club Executive Position if any:
-		<h:inputText id="positionTF" value="#{personHome.instance.position}"/>
+		<h:inputText id="positionTF" value="#{memberHome.instance.position}"/>
 		<h:message id='positionMessage' for='positionTF'/>
 
 		</h:panelGrid>
 
 	</p:panel>
 
-	<p:commandButton value="Save" action="#{personHome.update}" ajax='false'/>
+	<p:commandButton value="Save" action="#{memberHome.update}" ajax='false'/>
 	</h:form>
 	<h:form>
 	<!-- In their own form to avoid hanging on validation -->
-	<p:commandButton value="Delete (no confirmation!)" action="#{personHome.remove}" ajax='false'/>
-	<p:commandButton value="Cancel" action="#{personHome.cancel}" ajax='false'/>
+	<p:commandButton value="Delete (no confirmation!)" action="#{memberHome.remove}" ajax='false'/>
+	<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
 	</h:form>
 	
 </ui:define>

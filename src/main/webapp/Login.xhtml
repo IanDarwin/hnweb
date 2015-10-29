@@ -15,11 +15,11 @@
 		<f:facet name="header">JSF Login</f:facet>
 
 		<h:form>
-		User name: <h:inputText value="#{login.username}"/>
+		User name: <h:inputText value="#{identity.userName}"/>
 		<br/>
-		Password: <h:inputSecret value="#{login.password}"/>
+		Password: <h:inputSecret value="#{identity.password}"/>
 		<br/>
-		<h:commandButton action="#{login.login}" value="Login"/>
+		<h:commandButton action="#{identity.login}" value="Login"/>
 		
 		</h:form>
 

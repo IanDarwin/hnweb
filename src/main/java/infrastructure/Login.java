@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import com.darwinsys.security.DigestUtils;
 import model.Member;
@@ -37,10 +38,21 @@ public class Login implements Serializable {
 		try {
 			loggedInUser = 
 				userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
-			FacesContext.getCurrentInstance().addMessage(
-                    null,
+			if (loggedInUser == null) {
+				throw new IllegalStateException("findByUserNameAndPassword should not return null!");
+			}
+
+			// XXX Maybe now tell the Container about it for e.g., logging and session times...
+			// Except that they want a login and password to look up in a Realm, which we've already done.
+
+			FacesContext.getCurrentInstance().addMessage( null,
                     new FacesMessage("Logged in as " + loggedInUser.getName()));
-			return "MemberList";
+			return hasRole("admin") ? "MemberList" : "MemberView?memberId = " + loggedInUser.getId();
+
+		} catch (NoResultException nre) {
+			FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("Login Failed for user " + username + "; user and/or password invalid."));
+            return "Login";
 		} catch (RuntimeException ex) {
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
@@ -52,11 +64,11 @@ public class Login implements Serializable {
 	}
 
 	/** Called by JSF */
-	public String getUsername() {
+	public String getUserName() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUserName(String username) {
 		this.username = username;
 	}
 
@@ -72,6 +84,10 @@ public class Login implements Serializable {
 	/** Important for security */
 	public boolean isLoggedIn() {
 		return loggedInUser != null;
+	}
+
+	public Member getLoggedInUser() {
+		return loggedInUser;
 	}
 
 	public boolean hasRole(String role) {
