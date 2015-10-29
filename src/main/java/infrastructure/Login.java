@@ -16,7 +16,7 @@ import data.MemberList;
 /**
  * Simple DIY login.
  */
-@ManagedBean(name="login") @SessionScoped
+@ManagedBean(name="identity") @SessionScoped
 public class Login implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
@@ -61,6 +61,12 @@ public class Login implements Serializable {
                     new FacesMessage("Login Failed for user " + username + " due to " + ex));
 			return "Login";
 		}
+	}
+
+	public void logout() {
+		System.out.println("Logout " + loggedInUser);
+		// XXX session.invalidate();
+		loggedInUser = null;
 	}
 
 	/** Called by JSF */
