@@ -9,6 +9,6 @@
 # There is one line per person. "Family" has one or more "Secondary" members just to show the relationship
 # (there is no implication that the former member is superior to the latter!).  
 firstName,lastName,memberType,position-if-any,address,address2,city,province,postcode,email
-<ui:repeat var="m" value="#{personList.findAll()}">
+<ui:repeat var="m" value="#{memberList.findAll()}">
 "#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.position}","#{m.address}","#{m.address2}","#{m.city}","#{m.province}","#{m.postCode}","#{m.email}" </ui:repeat>
 </csv>
