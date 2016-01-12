@@ -22,6 +22,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import com.darwinsys.geo.CanadaProvince;
+
 /**
  * Represents one person in our database.
  * Equals and hashCode() based solely on ID so we don't get new entries made
@@ -38,7 +40,8 @@ public class Member {
 	private String homePhone, cellPhone, workPhone;
 	private String email;
 	private String address, address2;
-	private String city, province, postCode;
+	private String city, postCode;
+	CanadaProvince province;
 	private Country country = Country.CA;
 	/** If they have an executive position */
 	private String position;
@@ -235,11 +238,12 @@ public class Member {
 		this.city = city;
 	}
 
-	public String getProvince() {
+	@Enumerated(EnumType.STRING)
+	public CanadaProvince getProvince() {
 		return province;
 	}
 
-	public void setProvince(String province) {
+	public void setProvince(CanadaProvince province) {
 		this.province = province;
 	}
 
