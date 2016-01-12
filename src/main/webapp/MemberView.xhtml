@@ -16,8 +16,11 @@
 
 	<ui:define name="body">
 
-		<ui:fragment rendered="#{!identity.loggedIn || (identity.loggedInUser != memberHome.instance)}">
-			<meta http-equiv="refresh" content="0;URL=#{identity.loggedIn?'MemberView.web':'Login.web'}"/>
+		<ui:fragment rendered="#{!identity.loggedIn}">
+			<meta http-equiv="refresh" content="0;URL='Login.web'"/>
+		</ui:fragment>
+		<ui:fragment rendered="#{identity.loggedInUser != memberHome.instance and !identity.hasRole('admin')}">
+			<meta http-equiv="refresh" content="0;URL='errors/own-only.html'"/>
 		</ui:fragment>
 
 			<p:panelGrid columns="2" title="MemberView">
