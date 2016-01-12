@@ -1,4 +1,4 @@
-package infrastructure;
+package action;
 
 import java.io.Serializable;
 
@@ -17,7 +17,7 @@ import data.MemberList;
  * Simple DIY login.
  */
 @ManagedBean(name="identity") @SessionScoped
-public class Login implements Serializable {
+public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
 
@@ -28,7 +28,7 @@ public class Login implements Serializable {
 
 	Member loggedInUser = null;
 	
-	public Login() {
+	public LoginAction() {
 		// Just for debugging...
 		System.out.println("Login.Login()");
 	}

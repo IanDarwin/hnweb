@@ -43,7 +43,7 @@ public class Member {
 	/** If they have an executive position */
 	private String position;
 	/** 4-digit year */
-	private int expiryDate;
+	private int expiryYear;
 	private MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
 	private Member masterMember;
@@ -276,12 +276,12 @@ public class Member {
 		this.position = position;
 	}
 
-	public int getExpiryDate() {
-		return expiryDate;
+	public int getExpiryYear() {
+		return expiryYear;
 	}
 
-	public void setExpiryDate(int expiryDate) {
-		this.expiryDate = expiryDate;
+	public void setExpiryYear(int expiryDate) {
+		this.expiryYear = expiryDate;
 	}
 	
 	public void setYearJoined(Integer yearJoined) {
@@ -321,6 +321,11 @@ public class Member {
 			.append('>');
 		}
 		return sb.toString();
+	}
+	
+	public void acceptRenewal(Renewal renewal) {
+		setExpiryYear(getExpiryYear() + renewal.getNumYears());
+		renewal.setNewExpiryYear(getExpiryYear());
 	}
 	
 	@PrePersist @PreUpdate

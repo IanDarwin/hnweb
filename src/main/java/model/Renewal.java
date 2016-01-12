@@ -1,28 +1,44 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
- * A Renewal records the extension of a member's membership
+ * A Renewal records the extension of a member's membership.
+ * We use the 1992 version of Date for dateRenewed property because 
+ * JPA is still out of sync with Java SE.
  */
 @Entity
 public class Renewal {
-	long id;
-	Member member;
-	Date renewalDate;
-	int nYears;
+	private long id;
+	private Member member;
+	private Date dateRenewed = new Date();
+	private int numYears;
+	private int newExpiryYear;
 	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	public Renewal() {
+		// Required for JPA
+	}
+	
+	public Renewal(Member member, int nYears) {
+		this.member = member;
+		this.numYears = nYears;
+	}
+	
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	
+	@SuppressWarnings("unused") // For JPA
+	private void setId(long id) {
 		this.id = id;
 	}
 	@ManyToOne
@@ -32,16 +48,23 @@ public class Renewal {
 	public void setMember(Member member) {
 		this.member = member;
 	}
-	public Date getRenewalDate() {
-		return renewalDate;
+	@Temporal(TemporalType.DATE)
+	public Date getDateRenewed() {
+		return dateRenewed;
 	}
-	public void setRenewalDate(Date renewalDate) {
-		this.renewalDate = renewalDate;
+	public void setDateRenewed(Date renewalDate) {
+		this.dateRenewed = renewalDate;
 	}
-	public int getnYears() {
-		return nYears;
+	public int getNumYears() {
+		return numYears;
 	}
-	public void setnYears(int nYears) {
-		this.nYears = nYears;
+	public void setNumYears(int nYears) {
+		this.numYears = nYears;
+	}
+	public int getNewExpiryYear() {
+		return newExpiryYear;
+	}
+	public void setNewExpiryYear(int year) {
+		this.newExpiryYear = year;
 	}
 }
