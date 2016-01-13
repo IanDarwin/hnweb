@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import model.Member;
-import model.Transaction;
+import model.MemberTransaction;
 import model.TransactionReason;
 
 @Named @RequestScoped
@@ -35,7 +35,7 @@ public class RenewAction implements Serializable {
 			throw new IllegalArgumentException(message);
 		}
 		System.out.println(message);
-		Transaction r = new Transaction(member, numYears, TransactionReason.R);
+		MemberTransaction r = new MemberTransaction(member, numYears, TransactionReason.R);
 		em.persist(r);
 		member.acceptRenewal(r);
 		

@@ -327,7 +327,7 @@ public class Member {
 		return sb.toString();
 	}
 	
-	public void acceptRenewal(Transaction renewal) {
+	public void acceptRenewal(MemberTransaction renewal) {
 		setExpiryYear(getExpiryYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
 	}

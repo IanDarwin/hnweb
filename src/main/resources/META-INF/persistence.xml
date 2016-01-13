@@ -9,7 +9,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/UcfnClubDataSource</jta-data-source>
 		<class>model.Member</class>
-		<class>model.Transaction</class>
+		<class>model.MemberTransaction</class>
 
 		<properties>
 			<!-- Properties for PostgreSQL -->

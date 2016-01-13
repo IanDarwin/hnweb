@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -19,7 +20,8 @@ import javax.persistence.TemporalType;
  * JPA is still out of sync with Java SE.
  */
 @Entity
-public class Transaction {
+@Table(name="transaction") // legacy + shorter in db
+public class MemberTransaction {
 	private long id;
 	private TransactionReason reason = TransactionReason.R;
 	private PaymentType paymentType;
@@ -28,11 +30,11 @@ public class Transaction {
 	private int numYears;
 	private int newExpiryYear;
 	
-	public Transaction() {
+	public MemberTransaction() {
 		// Required for JPA
 	}
 	
-	public Transaction(Member member, int nYears, TransactionReason transactionReason) {
+	public MemberTransaction(Member member, int nYears, TransactionReason transactionReason) {
 		this.member = member;
 		this.numYears = nYears;
 		this.reason = transactionReason;

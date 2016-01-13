@@ -26,7 +26,7 @@ import javax.persistence.PersistenceContextType;
 import model.Country;
 import model.Member;
 import model.MemberType;
-import model.Transaction;
+import model.MemberTransaction;
 import model.TransactionReason;
 
 import org.omg.CORBA.StringHolder;
@@ -121,7 +121,7 @@ public class MemberHome implements Serializable {
 	public String save() {
 		instance.setExpiryYear(getNewMemberExpiryYear(LocalDate.now()));
 		em.persist(instance);
-		Transaction tx = new Transaction(instance, 1, TransactionReason.N);
+		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
 		em.persist(tx);
 		conv.end();
 		invalidateMemberList();
