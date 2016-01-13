@@ -1,0 +1,24 @@
+package data;
+
+import static org.junit.Assert.*;
+
+import java.time.LocalDate;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class MemberHomeTest {
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@Test
+	public void testGetNewMemberExpiryYear() {
+		LocalDate aug31 = LocalDate.of(2011, 8, 29);
+		assertEquals(2011, MemberHome.getNewMemberExpiryYear(aug31));
+		LocalDate sep1 = LocalDate.of(2011, 9, 01);
+		assertEquals(2012, MemberHome.getNewMemberExpiryYear(sep1));
+	}
+
+}

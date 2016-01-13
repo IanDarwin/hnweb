@@ -1,6 +1,7 @@
 package data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import javax.persistence.PersistenceContextType;
 import model.Country;
 import model.Member;
 import model.MemberType;
+import model.Transaction;
+import model.TransactionReason;
 
 import org.omg.CORBA.StringHolder;
 
@@ -100,25 +103,47 @@ public class MemberHome implements Serializable {
 		setId(id);
 		wire();
 	}
+	
+	public void create() {
+		// Nothing to do, instance is pre-created
+	}
+	
+	public String saveOrUpdate() {
+		if (id == null) {
+			return save();
+		} else {
+			return update();
+		}
+	}
 
+	/** Save a new member */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public String update() {
-		em.merge(instance);
+	public String save() {
+		instance.setExpiryYear(getNewMemberExpiryYear(LocalDate.now()));
+		em.persist(instance);
+		Transaction tx = new Transaction(instance, 1, TransactionReason.N);
+		em.persist(tx);
 		conv.end();
 		invalidateMemberList();
 		return LIST_PAGE + FORCE_REDIRECT;
 	}
 	
-	public void create() {
-		// Nothing to do, instance is pre-created
-	}
-
+	/** Update an existing member */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public String save() {
-		em.persist(instance);
+	public String update() {
+		em.merge(instance); // in case detached - shouldn't be!
+		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
 		invalidateMemberList();
 		return LIST_PAGE + FORCE_REDIRECT;
+	}
+	
+	/** 
+	 * This should be externalized as it depends on our club's policies:
+	 * If you sign up on or after September 1 you get next year's membership
+	 */
+	protected static int getNewMemberExpiryYear(LocalDate now) {
+		 return now.getMonthValue()>=9 ? now.getYear() + 1 : now.getYear();
 	}
 
 	public void newInstance() {

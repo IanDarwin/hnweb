@@ -284,8 +284,8 @@ public class Member {
 		return expiryYear;
 	}
 
-	public void setExpiryYear(int expiryDate) {
-		this.expiryYear = expiryDate;
+	public void setExpiryYear(int expiryYear) {
+		this.expiryYear = expiryYear;
 	}
 	
 	public void setYearJoined(Integer yearJoined) {
@@ -327,7 +327,7 @@ public class Member {
 		return sb.toString();
 	}
 	
-	public void acceptRenewal(Renewal renewal) {
+	public void acceptRenewal(Transaction renewal) {
 		setExpiryYear(getExpiryYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
 	}
