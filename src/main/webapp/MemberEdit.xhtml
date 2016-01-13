@@ -68,23 +68,23 @@
 		
 		Province,Country,PostCode:
 		<ui:fragment>
-			<p:selectOneMenu value="#{memberHome.instance.province}" style="width:150px">
-				<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
-                    noSelectionValue="--SELECT--"
-                    itemValue="#{_prov.name()}"
-                    itemlabel="#{_prov.longName}"/>
-			</p:selectOneMenu>
 			<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
                 <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
                 <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
                 <f:selectItem itemLabel="Canada" itemValue="CA" />
                 <f:selectItem itemLabel="U.S.A." itemValue="US" />
             </p:selectOneMenu>
+			<p:selectOneMenu id="provinceMenu" value="#{memberHome.instance.province}" style="width:150px">
+				<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
+                    noSelectionValue="--SELECT--"
+                    itemValue="#{_prov.name()}"
+                    itemlabel="#{_prov.longName}"/>
+			</p:selectOneMenu>
 			<h:inputText id="postcodeTF" value="#{memberHome.instance.postCode}" 
 				validator="#{memberHome.validatePostCode}" required='true'/>
 		</ui:fragment>
 		<ui:fragment>
-			<h:message id='provinceMessage' for='provinceTF'/>
+			<h:message id='provinceMessage' for='provinceMenu'/>
 			<h:message id='postcodeMessage' for='postcodeTF'/>
 		</ui:fragment>
 
