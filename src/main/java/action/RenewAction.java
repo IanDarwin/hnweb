@@ -20,7 +20,7 @@ public class RenewAction implements Serializable {
 	
 	private static final long serialVersionUID = 832908490238178971L;
 
-	private static final String LIST_PAGE = "MemberList";
+	private static final String VIEW_PAGE = "MemberView";
 	private static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	private Member member;
@@ -39,7 +39,7 @@ public class RenewAction implements Serializable {
 		em.persist(r);
 		member.acceptRenewal(r);
 		
-		return LIST_PAGE + FORCE_REDIRECT;
+		return VIEW_PAGE  + "?memberId=" + member.getId() + FORCE_REDIRECT;
 	}
 
 	public Member getMember() {
