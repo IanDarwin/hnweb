@@ -96,7 +96,7 @@ public class MailMan implements Serializable {
 		List<String> emails = new ArrayList<>(list.size());
 		for (Member p : list) {
 			final String email = p.getEmail();
-			if (email == null) {
+			if (email == null || email.isEmpty()) {
 				continue;
 			}
 			if (ch != null && !ch.accept(p)) {
