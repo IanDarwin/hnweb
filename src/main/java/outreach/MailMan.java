@@ -15,6 +15,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -121,6 +122,26 @@ public class MailMan implements Serializable {
 			throw new NullPointerException("Mail Session not injected; check configuration");
 		}
 
+		Message mesg = createMessage(fromAddress, message_subject, message_body, emails);
+
+		// Finally, send the message!
+		Transport.send(mesg);
+	}
+
+	/** 
+	 * Create the javax.mail.Message object to be sent.
+	 * 
+	 * @param fromAddress - the (typically fake) email
+	 * @param messageSubject The subject
+	 * @param messageBody The body, as plain text only for now
+	 * @param recipients a List of String email addresses
+	 * @return The mail message
+	 * @throws MessagingException If the message format isn't quite right
+	 */
+	protected Message createMessage(String fromAddress, 
+			String messageSubject, 
+			String messageBody,
+			List<String> recipients) throws MessagingException {
 		// create a message
 		Message mesg = new MimeMessage(session);
 
@@ -131,19 +152,17 @@ public class MailMan implements Serializable {
 		mesg.addRecipient(Message.RecipientType.BCC, fromInternetAddress);
 
 		// TO Addresses - may be a lot!
-		for (String message_recip : emails) {
+		for (String message_recip : recipients) {
 			InternetAddress toAddress = new InternetAddress(message_recip);
 			mesg.addRecipient(Message.RecipientType.TO, toAddress);
 		}
 
 		// The Subject
-		mesg.setSubject(message_subject);
+		mesg.setSubject(messageSubject);
 
 		// Now the message body.
-		mesg.setText(message_body);
-
-		// Finally, send the message!
-		Transport.send(mesg);
+		mesg.setText(messageBody);
+		return mesg;
 	}
 
 	private void notNull(String name, String value) {
