@@ -111,8 +111,9 @@
 			<f:selectItem itemLabel="2019" itemValue="2019" />
 			<f:selectItem itemLabel="2020" itemValue="2020" />
 		</p:selectOneMenu>
+		&nbsp;
 			
-		Club Executive Position if any:
+		<p:outputLabel for="positionTF" value="Club Executive Position if any:"/>
 		<h:inputText id="positionTF" value="#{memberHome.instance.position}"/>
 		<h:message id='positionMessage' for='positionTF'/>
 
