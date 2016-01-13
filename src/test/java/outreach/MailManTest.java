@@ -43,7 +43,7 @@ public class MailManTest {
 
 		//final Properties properties = mockSession.getProperties();
 		PowerMockito.mockStatic(Transport.class);
-		Properties props = sender.props;
+		Properties props = MailMan.props;
 		sender.session = // PowerMockito.mock(Session.class);
 				Session.getDefaultInstance(props);
 
