@@ -90,7 +90,7 @@ public class MemberHome implements Serializable {
 		if (conv.isTransient()) {
 			conv.begin();
 		}
-		if (id == null) {
+		if (id == null || id == 0L) {
 			instance = new Member();
 			return;
 		}
@@ -99,15 +99,18 @@ public class MemberHome implements Serializable {
 			throw new IllegalArgumentException("Member not found by id! " + id);
 		}
 	}
-	public void wire(Long id) {
-		setId(id);
+
+	public void wire(String id) {
+		if (id != null && !id.isEmpty()) {
+			setId(Long.parseLong(id));
+		}
 		wire();
 	}
-	
+
 	public void create() {
 		// Nothing to do, instance is pre-created
 	}
-	
+
 	public String saveOrUpdate() {
 		if (id == null) {
 			return save();
@@ -122,7 +125,8 @@ public class MemberHome implements Serializable {
 		instance.setExpiryYear(getNewMemberExpiryYear(LocalDate.now()));
 		em.persist(instance);
 		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
-		em.persist(tx);
+		// XXX em.persist(tx);
+		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
 		return LIST_PAGE + FORCE_REDIRECT;
