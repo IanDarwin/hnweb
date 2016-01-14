@@ -35,11 +35,11 @@ public class RenewAction implements Serializable {
 			throw new IllegalArgumentException(message);
 		}
 		System.out.println(message);
-		MemberTransaction r = new MemberTransaction(member, numYears, TransactionReason.R);
-		em.persist(r);
-		member.acceptRenewal(r);
+		MemberTransaction tx = new MemberTransaction(member, numYears, TransactionReason.R);
+		member.getMemberTransactions().add(tx);
+		member.acceptRenewal(tx);
 		
-		return VIEW_PAGE  + "?memberId=" + member.getId() + FORCE_REDIRECT;
+		return VIEW_PAGE + FORCE_REDIRECT + "&memberId=" + member.getId();
 	}
 
 	public Member getMember() {
