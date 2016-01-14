@@ -1,0 +1,7 @@
+#!/bin/sh
+
+firstname=$1
+lastname=$2
+
+echo "select id,firstname,lastname from member where id in (
+	select mastermember_id from member where firstname='$firstname' and lastname = '$lastname')" | psql -d ucfn
