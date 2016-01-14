@@ -8,6 +8,7 @@
 	<persistence-unit name="clublist" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>model.Member</class>
+		<class>model.MemberTransaction</class>
 
 		<properties>
 			<!-- Properties for type of database -->
