@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -57,7 +58,8 @@ public class Member {
 	private Integer yearJoined = LocalDate.now().getYear();
 	private boolean emailTrips;
 	private int version;
-	private List<String> roles = new ArrayList<>();;
+	private List<String> roles = new ArrayList<>();
+	private List<MemberTransaction> transactions = new ArrayList<>();
 	
 	/** 
 	 * "A very public Person"
@@ -302,6 +304,14 @@ public class Member {
 	}
 	public void setVersion(int version) {
 		this.version = version;
+	}
+	
+	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
+	public List<MemberTransaction> getMemberTransactions() {
+		return transactions;
+	}
+	public void setMemberTransactions(List<MemberTransaction> transactions) {
+		this.transactions = transactions;
 	}
 
 	@Column(name="email_trips",
