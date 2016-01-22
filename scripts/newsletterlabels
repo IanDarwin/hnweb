@@ -1,0 +1,3 @@
+psql -d ucfn <<!
+select firstname,lastname,address,city,postcode,province from member where email is null or newslettermode = 0 order by lastname;
+!
