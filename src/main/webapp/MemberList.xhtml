@@ -30,17 +30,25 @@
 		<p:column>
 			<f:facet name="header">First Name</f:facet>
 			<h:outputText value="#{member.firstName}"/>
+			<h:panelGroup rendered="#{member.memberType.shortName=='FS'}">
+					<br/>
+					<h:outputText value="(w/ #{member.masterMember.firstName}"/>
+			</h:panelGroup>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Last Name</f:facet>
 			<h:outputText value="#{member.lastName}"/>
+			<h:panelGroup rendered="#{member.memberType.shortName=='FS'}">
+					<br/>
+					<h:outputText value="#{member.masterMember.lastName})"/>
+			</h:panelGroup>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Email</f:facet>
 			<h:outputText value="#{member.email}"/>
 		</p:column>
 		<p:column width="3%">
-			<f:facet name="header">Type</f:facet>
+			<f:facet name="header">Member Type</f:facet>
 			<h:outputText value="#{member.memberType.shortName}"/>
 		</p:column>
 		<p:column>
