@@ -1,0 +1,15 @@
+#!/bin/sh
+
+YEAR=$(date +%Y)
+
+psql -d ucfn <<!
+
+\echo Finding Individual and Family (master) memberships that are NOT renewed for ${YEAR}
+ 
+select id,firstname,lastname,email from member where membertype != 'Secondary' and expiryyear < ${YEAR} order by lastname;
+
+\echo Once more with just the emails!
+
+select distinct(email) from member where membertype != 'Secondary' and expiryyear < ${YEAR} order by email;
+
+!
