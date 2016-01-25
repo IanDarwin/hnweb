@@ -1,17 +1,14 @@
 package data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 
-import org.junit.Before;
 import org.junit.Test;
 
-public class MemberHomeTest {
+import model.Member;
 
-	@Before
-	public void setUp() throws Exception {
-	}
+public class MemberHomeTest extends AbstractPersistenceTest {
 
 	@Test
 	public void testGetNewMemberExpiryYear() {
@@ -19,6 +16,18 @@ public class MemberHomeTest {
 		assertEquals(2011, MemberHome.getNewMemberExpiryYear(aug31));
 		LocalDate sep1 = LocalDate.of(2011, 9, 01);
 		assertEquals(2012, MemberHome.getNewMemberExpiryYear(sep1));
+	}
+	
+	@Test
+	public void testRemove() {
+		MemberHome home = new MemberHome();
+		home.em = em;
+		em.getTransaction().begin();
+		Member member = new Member("A", "B", "C", "d@e.fg");
+		em.persist(member);
+		home.instance = member;
+		home.remove();
+		System.out.println("Remove did not throw exception");
 	}
 
 }

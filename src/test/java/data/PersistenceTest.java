@@ -6,22 +6,9 @@ import org.junit.*;
 import model.*;
 import static org.junit.Assert.*;
 
-public class PersistenceTest {
-
-	private static EntityManagerFactory emf;
-	private EntityManager em;
+public class PersistenceTest extends AbstractPersistenceTest {
 
 	final static String FIRST = "Loodlie";
-
-	@BeforeClass
-	public static void preClass() {
-		emf = Persistence.createEntityManagerFactory("clublist");
-	}
-
-	@Before
-	public void preTest() {
-		em = emf.createEntityManager();
-	}
 
 	/** Live JPA (fake database): save a Member, then
 	 * assert that we find it in the list of Members from JPA

@@ -22,13 +22,18 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import model.Country;
 import model.Member;
 import model.MemberType;
 import model.MemberTransaction;
 import model.TransactionReason;
-import model.Zombie;
 
 import org.omg.CORBA.StringHolder;
 
@@ -52,7 +57,7 @@ public class MemberHome implements Serializable {
 
 	// Must be Long (not long) so we can check for null
 	private Long id;
-	private Member instance = new Member();
+	protected Member instance = new Member();
 	private boolean enableMasterMember;
 
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) EntityManager em;
@@ -202,8 +207,16 @@ public class MemberHome implements Serializable {
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String remove() {
-		Zombie z = new Zombie(instance);
-		em.persist(z);
+
+		// Use raw sql to archive, via JPA Native Query mechanism
+		String archive_sql = "insert into member_archived select * from member where id = ?1";
+		Query q = em.createNativeQuery(archive_sql);
+		q.setParameter(1, instance.getId());
+		int rowCount = q.executeUpdate();
+		if (rowCount != 1) {
+			System.err.println("WARNING: archive did not succeed");
+			return ""; // Stay on page
+		}
 		em.remove(instance);
 		conv.end();
 		invalidateMemberList();
