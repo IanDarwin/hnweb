@@ -28,6 +28,7 @@ import model.Member;
 import model.MemberType;
 import model.MemberTransaction;
 import model.TransactionReason;
+import model.Zombie;
 
 import org.omg.CORBA.StringHolder;
 
@@ -199,7 +200,10 @@ public class MemberHome implements Serializable {
 		return LIST_PAGE;
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String remove() {
+		Zombie z = new Zombie(instance);
+		em.persist(z);
 		em.remove(instance);
 		conv.end();
 		invalidateMemberList();

@@ -36,30 +36,30 @@ import com.darwinsys.geo.CanadaProvince;
 public class Member {
 	
 	private long id;
-	private String userName, password;
-	private String firstName, middle, lastName;
-	private String homePhone, cellPhone, workPhone;
-	private String email;
-	private String address, address2;
-	private String city, postCode;
+	protected String userName, password;
+	protected String firstName, middle, lastName;
+	protected String homePhone, cellPhone, workPhone;
+	protected String email;
+	protected String address, address2;
+	protected String city, postCode;
 	CanadaProvince province;
-	private Country country = Country.CA;
+	protected Country country = Country.CA;
 	/** If they have an executive position */
-	private String position;
+	protected String position;
 	/** 4-digit year */
-	private int expiryYear;
-	private MemberType memberType = MemberType.Individual;
+	protected int expiryYear;
+	protected MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
-	private Member masterMember;
+	protected Member masterMember;
 	/** Only if memberType is MemberType.Family */
-	private Set<Member> secondaryMembers;
+	protected Set<Member> secondaryMembers;
 	/** How they get the club newsletter */
-	private NewsletterMode newsletterMode;
-	private Integer yearJoined = LocalDate.now().getYear();
-	private boolean emailTrips;
-	private int version;
-	private List<String> roles = new ArrayList<>();
-	private List<MemberTransaction> transactions = new ArrayList<>();
+	protected NewsletterMode newsletterMode;
+	protected Integer yearJoined = LocalDate.now().getYear();
+	protected boolean emailTrips;
+	protected int version;
+	protected List<String> roles = new ArrayList<>();
+	protected List<MemberTransaction> transactions = new ArrayList<>();
 	
 	/** 
 	 * "A very public Person"
