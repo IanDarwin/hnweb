@@ -24,18 +24,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.omg.CORBA.StringHolder;
 
 import model.Country;
 import model.Member;
-import model.MemberType;
 import model.MemberTransaction;
+import model.MemberType;
 import model.TransactionReason;
-
-import org.omg.CORBA.StringHolder;
 
 /**
  * Implements Gateway, an Adam Bien pattern whose purpose is to expose
