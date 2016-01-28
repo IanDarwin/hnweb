@@ -36,13 +36,13 @@ public class LoginAction implements Serializable {
 	public String login() {
 		System.out.println("Login.login(" + username + ")");
 		try {
-			loggedInUser = 
-				userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
+			loggedInUser = verifyUser(username, password);
 			if (loggedInUser == null) {
 				throw new IllegalStateException("findByUserNameAndPassword should not return null!");
 			}
 
 			// XXX Maybe now tell the Container about it for e.g., logging and session times...
+			// using request.login(username, password);
 			// Except that they want a login and password to look up in a Realm, which we've already done.
 
 			FacesContext.getCurrentInstance().addMessage( null,
@@ -61,6 +61,10 @@ public class LoginAction implements Serializable {
                     new FacesMessage("Login Failed for user " + username + " due to " + ex));
 			return "Login";
 		}
+	}
+
+	Member verifyUser(String username, String password) {
+		return userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
 	}
 
 	public void logout() {
