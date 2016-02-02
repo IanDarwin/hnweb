@@ -2,7 +2,7 @@
 
 psql -d ucfn <<!
 
-\echo #1 Finding Secondary membes with no master
+\echo #1 Finding Secondary members with no master
 
 select id,firstname,lastname from member where membertype = 'Secondary' and mastermember_id is null;
 
