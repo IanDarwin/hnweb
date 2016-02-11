@@ -13,7 +13,7 @@
 	<p:panel>
 		<f:facet name="header">JSF Login</f:facet>
 
-		<h:form id="login">
+		<h:form id="loginForm">
 		<h:panelGrid columns="3">
 
 		<h:outputText value="User name:"/>
@@ -25,7 +25,7 @@
 			<h:message for="password"/>
 
 		#{' '}
-			<h:commandButton action="#{identity.login}" value="Login"/>
+			<h:commandButton id="login" action="#{identity.login}" value="Login"/>
 			#{' '}
 		
 		</h:panelGrid>
