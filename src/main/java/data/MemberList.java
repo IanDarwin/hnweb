@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -21,12 +22,11 @@ import org.apache.deltaspike.data.api.Repository;
 @Named("memberList") @Default
 @SessionScoped
 @Repository 
-public interface MemberList extends EntityRepository<Member, Long> {
+public interface MemberList extends Serializable, EntityRepository<Member, Long>  {
 
 	@Query(value="select m from Member m order by m.lastName asc")
 	List<Member> findAll();
 
 	/** Basic for login */
 	public Member findByUserNameAndPassword(String username, String passwordHash);
-
 }
