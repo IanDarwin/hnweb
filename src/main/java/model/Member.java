@@ -42,7 +42,7 @@ public class Member {
 	protected String email;
 	protected String address, address2;
 	protected String city, postCode;
-	CanadaProvince province;
+	protected CanadaProvince province;
 	protected Country country = Country.CA;
 	/** If they have an executive position */
 	protected String position;
