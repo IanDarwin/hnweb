@@ -27,6 +27,14 @@ import action.LoginAction;
 import data.MemberList;
 import model.Member;
 
+/**
+ * Sends email on behalf of the club.
+ * The "mail.smtphost" property must be set.
+ * The "mail.sender" property may be set to a fake "no-reply" type address,
+ * absent which the mail will be sent from the email of the logged-in user,
+ * assuming that this is syntactically valid (failing that, an exception
+ * will be thrown in the mailing process, and you don't want that).
+ */
 @ManagedBean(name="mailMan") @RequestScoped
 public class MailMan implements Serializable {
 
@@ -155,8 +163,10 @@ public class MailMan implements Serializable {
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
 		
-		String fromAddress = identity.getLoggedInUser().getName() + " <" +
-				identity.getLoggedInUser().getEmail() + ">";
+		Member loggedIn = identity.getLoggedInUser();
+		String fromAddress = sendMessage(props.getProperty("mail.sender") != null ?
+			sendMessage(props.getProperty("mail.sender") :
+			loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
 		notNull("message_subject", message_subject);
 		notNull("message_body", message_body);
 		
