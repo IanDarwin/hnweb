@@ -73,7 +73,7 @@ public class PageViewFilter implements Filter {
 		System.out.println("PageViewFilter.init()");
 	}
 
-	/** Allow the request if the user is logged in.
+	/** Allow the request if the user is logged in and isn't blocked by <restrict>.
 	 * Called before every request, so keep it light weight.
 	 */
 	@Override
