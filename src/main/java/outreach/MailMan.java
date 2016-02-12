@@ -80,7 +80,7 @@ public class MailMan implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
-		sendMessage(props.getProperty("mail.sender"),
+		sendMessage(
                 Arrays.asList(identity.getLoggedInUser().getEmail()),
                 subject, messageBody);
 	}
@@ -124,7 +124,7 @@ public class MailMan implements Serializable {
 			throw new IllegalStateException(
 				PROPNAME_MAIL_SMTP_HOST + " not set in " + CONFIG_PROPERTIES_NAME);
 		}
-		sendMessage(props.getProperty("mail.sender"),
+		sendMessage(
 				emails, 
 				subject, messageBody);
 	}
@@ -151,11 +151,12 @@ public class MailMan implements Serializable {
 	}
 
 	private void sendMessage(
-			String fromAddress, List<String> emails, 
+			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
 		
-		notNull("fromAddress", fromAddress);
+		String fromAddress = identity.getLoggedInUser().getName() + " <" +
+				identity.getLoggedInUser().getEmail() + ">";
 		notNull("message_subject", message_subject);
 		notNull("message_body", message_body);
 		
