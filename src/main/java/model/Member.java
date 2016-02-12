@@ -281,6 +281,11 @@ public class Member {
 	public void setPosition(String position) {
 		this.position = position;
 	}
+	
+	@Transient
+	public boolean isExecutive() {
+		return getPosition() != null;
+	}
 
 	public int getExpiryYear() {
 		return expiryYear;
