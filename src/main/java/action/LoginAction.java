@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 
 import com.darwinsys.security.DigestUtils;
 import model.Member;
+import servlet.LoginConstants;
 import data.MemberList;
 
 /**
@@ -67,10 +68,13 @@ public class LoginAction implements Serializable {
 		return userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
 	}
 
-	public void logout() {
+	public String logout() {
 		System.out.println("Logout " + loggedInUser);
-		// XXX session.invalidate();
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		FacesContext.getCurrentInstance().addMessage( null,
+                new FacesMessage("You are being logged out  as " + loggedInUser.getName()));
 		loggedInUser = null;
+		return LoginConstants.HOME_PAGE + "?faces-redirect=true";
 	}
 
 	/** Called by JSF */

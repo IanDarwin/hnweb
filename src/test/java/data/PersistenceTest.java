@@ -1,10 +1,14 @@
 package data;
 
-import java.util.*;
-import javax.persistence.*;
-import org.junit.*;
-import model.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import model.Member;
 
 public class PersistenceTest extends AbstractPersistenceTest {
 

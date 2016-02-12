@@ -22,12 +22,14 @@
 			Subject:
 			<h:inputText value="#{mailMan.subject}" size="70" required="true"/>
 			Message:
-			<h:inputTextarea rows="5" cols="70" 
+			<p:editor id="editor" widgetVar="editorWidget" width="600"
 				value="#{mailMan.messageBody}" required="true"/>
 		</h:panelGrid>
 		<br/>
+		<h:commandButton value="TEST - Send To Self Only" action="#{mailMan.sendMessageToMe}"/>
 		<h:commandButton value="Send email to entire list" action="#{mailMan.sendMessageToAll}"/>
 		<h:commandButton value="Send email to Executive members only " action="#{mailMan.sendMessageToExec}"/>
+		<h:commandButton value="Send nags to expired members only " action="#{mailMan.sendMessageToExpired}"/>
 		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
 	</p:panel>
 	</h:form>

@@ -3,22 +3,27 @@ package outreach;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import action.LoginAction;
 import data.MemberList;
 import model.Member;
 
@@ -33,6 +38,8 @@ public class MailMan implements Serializable {
 
 	@Inject
 	MemberList lister;
+	@ManagedProperty("#{identity}")
+	LoginAction identity;
 	
 	@Resource(mappedName="java:jboss/mail/Default")
 	Session session;		// non-private only for testing.
@@ -63,16 +70,51 @@ public class MailMan implements Serializable {
 		}
 	}
 
+	/**
+	 * Send a message to yourself, typically to test how a message will look before sending to a group.
+	 */
+	public void sendMessageToMe() throws MessagingException {
+		System.out.println("MailMan.sendMessageToMe()");
+		if (identity.getLoggedInUser() == null) {
+			FacesMessage message = new FacesMessage( "Are you sure you logged in?");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+		sendMessage(props.getProperty("mail.sender"),
+                Arrays.asList(identity.getLoggedInUser().getEmail()),
+                subject, messageBody);
+	}
+
+	/**
+	 * Send an email to everybody
+	 */
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
 		sendMessageToSome(null);
 	}
 
+	/**
+	 * Send an email to the executive only.
+	 */
 	public void sendMessageToExec() throws MessagingException {
-		System.out.println("MailMan.sendMessageToAll()");
+		System.out.println("MailMan.sendMessageToExec()");
 		sendMessageToSome(m -> m.getPosition() != null);
 	}
 
+	/**
+	 * Send a dunning letter to members that have not renewed.
+	 */
+	public void sendMessageToExpired() throws MessagingException {
+		System.out.println("MailMan.sendMessageToExpired()");
+		LocalDate d = LocalDate.now();
+		int year = d.getYear();
+		sendMessageToSome(m -> m.getExpiryYear() < year);
+	}
+
+	/**
+	 * Common code for Some of the sendMessageToXXX() methods;
+	 * takes a lambda for including/excluding each member from the list.
+	 */
 	public void sendMessageToSome(Chooser ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
@@ -185,5 +227,13 @@ public class MailMan implements Serializable {
 
 	public void setMessageBody(String messageBody) {
 		this.messageBody = messageBody;
+	}
+
+	public LoginAction getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(LoginAction identity) {
+		this.identity = identity;
 	}
 }

@@ -2,10 +2,11 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
 
     <p:toolbarGroup>
-        <h:outputLink value="http://www.uppercreditfieldnaturalists.org/">Club Home</h:outputLink>
+        <h:outputLink value="http://www.uppercreditfieldnaturalists.org/">Club Home @ Main Site</h:outputLink>
 		#{' '}
         <h:outputLink value="index.web">Membership Home</h:outputLink>
 		#{'  '}
@@ -19,18 +20,19 @@
     </p:toolbarGroup>
     
     <p:toolbarGroup align="right">
+	<h:form>
 		<h:outputLink value="About.web">About ClubList</h:outputLink>
 		#{'  '}
 		<h:outputLink value="https://github.com/IanDarwin/clublist">
 			<h:graphicImage value="/images/invertocat.png" width="24" height="24" />
 		</h:outputLink>
 		#{'  '}
-        <h:outputText value="Welcome #{identity.loggedInUser.userName}" rendered="#{identity.loggedIn}"/>
-        <h:outputLink value="index.web" rendered="#{not identity.loggedIn}">
+		<h:outputLink value="login.web" rendered="#{not identity.loggedIn}">
 			Login
 		</h:outputLink>
+		<h:outputText value="Welcome #{identity.loggedInUser.userName}" rendered="#{identity.loggedIn}"/>
 		#{'  '}
-        <h:outputLink value="index.web" action="#{identity.logout}" 
-			rendered="#{identity.loggedIn}">Logout</h:outputLink>
+		<h:commandLink action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}"/>
+	</h:form>
     </p:toolbarGroup>
 </p:toolbar>

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.omg.CORBA.StringHolder;
 
 import model.Country;
-import model.Member;
 
 /**
  * Raw validators, not tied to JSF or anything.

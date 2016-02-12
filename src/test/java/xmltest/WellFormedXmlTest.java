@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-/** Non-validating parse of the XHTML files under "src/main/webapp";
+/** Non-validating parse of the XML/XHTML files under "src/main/webapp";
  * faster than deploying and failing for missing ">" or "/"...
  * @author Ian Darwin, http://www.darwinsys.com/
  */
@@ -23,6 +23,7 @@ public class WellFormedXmlTest {
 	final static String VIEW_DIR = "src/main/webapp/";	// "view" for old Seam2 layout...
 
 	/** Only parse files that end like so */
+	final static String XML_EXT = ".xml";
 	final static String FACELETS_EXT = ".xhtml";
 
 	static boolean verbose = false;
@@ -56,7 +57,8 @@ public class WellFormedXmlTest {
 			throw new IllegalArgumentException(f + " does not exist");
 		}
 		if (f.isFile()) {
-			if (f.getName().endsWith(FACELETS_EXT)) {
+			if (f.getName().endsWith(XML_EXT) ||
+				f.getName().endsWith(FACELETS_EXT)) {
 				allFiles.add(f);
 			}
 		} else if (f.isDirectory()) {
