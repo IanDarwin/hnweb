@@ -15,15 +15,20 @@
 	And the ability to print mailing labels, if your members are old enough to remember what those are.
 	</p>
 
-	<h:form>
+	<h:form id="messageForm">
 	<p:panel>
 		<f:facet name="header">Mail a short note</f:facet>
-		<h:panelGrid columns='2'>
+		<h:panelGrid columns='3'>
+
 			Subject:
-			<h:inputText value="#{mailMan.subject}" size="70" required="true"/>
+			<h:inputText id='subject' value="#{mailMan.subject}" size="70" required="true"/>
+			<h:message id='subjectMessage' for='subject'/>
+
 			Message:
-			<p:editor id="editor" widgetVar="editorWidget" width="600"
+			<p:editor id="bodyEditor" widgetVar="editorWidget" width="600"
 				value="#{mailMan.messageBody}" required="true"/>
+			<h:message id='bodyMessage' for='bodyEditor'/>
+
 		</h:panelGrid>
 		<br/>
 		<h:commandButton value="TEST - Send To Self Only" action="#{mailMan.sendMessageToMe}"/>
