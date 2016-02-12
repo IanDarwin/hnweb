@@ -1,6 +1,6 @@
 <page login-required='true'>
 
 	<restrict>
-		#{identity.loggedInUser == memberHome.instance or identity.hasRole('admin')}
+		#{identity.loggedInUser == memberHome.instance or identity.loggedInUser.isExecutive() or identity.hasRole('admin')}
 	</restrict>
 </page>
