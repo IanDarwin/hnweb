@@ -27,7 +27,7 @@ public class LoginAction implements Serializable {
 
 	String username, password;
 
-	Member loggedInUser = null;
+	private Member loggedInUser = null;
 	
 	public LoginAction() {
 		// Just for debugging...
@@ -37,8 +37,8 @@ public class LoginAction implements Serializable {
 	public String login() {
 		System.out.println("Login.login(" + username + ")");
 		try {
-			loggedInUser = verifyUser(username, password);
-			if (loggedInUser == null) {
+			setLoggedInUser(verifyUser(username, password));
+			if (getLoggedInUser() == null) {
 				throw new IllegalStateException("findByUserNameAndPassword should not return null!");
 			}
 
@@ -47,8 +47,8 @@ public class LoginAction implements Serializable {
 			// Except that they want a login and password to look up in a Realm, which we've already done.
 
 			FacesContext.getCurrentInstance().addMessage( null,
-                    new FacesMessage("Logged in as " + loggedInUser.getName()));
-			return hasRole("admin") ? "MemberList" : "MemberView?memberId = " + loggedInUser.getId();
+                    new FacesMessage("Logged in as " + getLoggedInUser().getName()));
+			return hasRole("admin") ? "MemberList" : "MemberView?memberId = " + getLoggedInUser().getId();
 
 		} catch (NoResultException nre) {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -69,11 +69,11 @@ public class LoginAction implements Serializable {
 	}
 
 	public String logout() {
-		System.out.println("Logout " + loggedInUser);
+		System.out.println("Logout " + getLoggedInUser());
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		FacesContext.getCurrentInstance().addMessage( null,
-                new FacesMessage("You are being logged out  as " + loggedInUser.getName()));
-		loggedInUser = null;
+                new FacesMessage("You are being logged out  as " + getLoggedInUser().getName()));
+		setLoggedInUser(null);
 		return LoginConstants.HOME_PAGE + "?faces-redirect=true";
 	}
 
@@ -97,7 +97,7 @@ public class LoginAction implements Serializable {
 
 	/** Important for security */
 	public boolean isLoggedIn() {
-		return loggedInUser != null;
+		return getLoggedInUser() != null;
 	}
 
 	public Member getLoggedInUser() {
@@ -111,11 +111,15 @@ public class LoginAction implements Serializable {
 		if (!isLoggedIn()) {
 			return false;
 		}
-		for (String r : loggedInUser.getRoles()) {
+		for (String r : getLoggedInUser().getRoles()) {
 			if (r.equals(role)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public void setLoggedInUser(Member loggedInUser) {
+		this.loggedInUser = loggedInUser;
 	}
 }

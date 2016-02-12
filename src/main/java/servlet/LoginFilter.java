@@ -18,6 +18,8 @@ import action.LoginAction;
  * This is the Servlet Filter for the login mechanism.
  */
 public class LoginFilter implements Filter {
+	
+	private final boolean DEBUG = false;
 
 	public void init(FilterConfig config) throws ServletException {
 		System.out.println("LoginFilter.init()");
@@ -33,13 +35,17 @@ public class LoginFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 
 		String requestURI = request.getRequestURI();
-		System.out.printf("LoginFilter.doFilter(): requestURI = %s; ", requestURI);
+		if (DEBUG) {
+			System.out.printf("LoginFilter.doFilter(): requestURI = %s; ", requestURI);
+		}
 
 		LoginAction loggedInToken = (LoginAction)request.getSession().getAttribute(LoginConstants.LOGIN_FLAG);
 
 		if (loggedInToken != null && loggedInToken.isLoggedIn()) {
 			// User is logged in, continue processing, override getRemoteUser in request object.
-			System.out.printf("user is %s%n", loggedInToken);
+			if (DEBUG) {
+				System.out.printf("Logged in user is %s%n", loggedInToken.getLoggedInUser());
+			}
 			chain.doFilter(new LoginFilterHTTPServletRequest((HttpServletRequest) req, loggedInToken.getUserName()), resp);
 			return;
 		}
@@ -51,7 +57,9 @@ public class LoginFilter implements Filter {
 			requestURI.indexOf(LoginConstants.JSF_RESOURCE_DIR) != -1 ||
 			requestURI.indexOf(LoginConstants.FAVICON) != -1) {
 			// User not logged in and trying to log in
-			System.out.println("(trying to login)");
+			if (DEBUG) {
+				System.out.println("(allowing)");
+			}
 			chain.doFilter(req, resp);
 			return;
 		}
@@ -61,7 +69,9 @@ public class LoginFilter implements Filter {
 			// Save where the user was trying to get to:
 			request.getSession().setAttribute(LoginConstants.TARGET_URI_KEY, requestURI);
 			// Redirect user to the login page
-			System.out.println("(-->login)");
+			if (DEBUG) {
+				System.out.println("(-->login)");
+			}
 			response.sendRedirect("." + LoginConstants.LOGIN_PAGE); // . in case a sub-directory
 			// DO NOT do chain.doFilter for this case!
 			return;

@@ -158,14 +158,17 @@ public class MailMan implements Serializable {
 		return emails;
 	}
 
+	/** 
+	 * Send the message. The "from" address is either the mail.sender property or the logged-in user's own.
+	 */
 	private void sendMessage(
 			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
 		
 		Member loggedIn = identity.getLoggedInUser();
-		String fromAddress = sendMessage(props.getProperty("mail.sender") != null ?
-			sendMessage(props.getProperty("mail.sender") :
+		String fromAddress = props.getProperty("mail.sender") != null ?
+			props.getProperty("mail.sender") :
 			loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
 		notNull("message_subject", message_subject);
 		notNull("message_body", message_body);

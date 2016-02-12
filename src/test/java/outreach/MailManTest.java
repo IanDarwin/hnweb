@@ -17,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import action.LoginAction;
 import data.MemberList;
 import model.Member;
 
@@ -28,6 +29,8 @@ public class MailManTest {
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	private MailMan sender;
+	private Member member;
+	private LoginAction identity;
 	
 	@Before
 	public void init() {
@@ -35,6 +38,9 @@ public class MailManTest {
 		when(lister.findAll()).thenReturn(fakeList);
 		sender = new MailMan();
 		sender.lister = lister;
+		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
+		identity = new LoginAction();
+		identity.setLoggedInUser(member);
 	}
 	
 	@Test
@@ -44,6 +50,7 @@ public class MailManTest {
 		//final Properties properties = mockSession.getProperties();
 		PowerMockito.mockStatic(Transport.class);
 		Properties props = MailMan.props;
+		sender.identity = identity;
 		sender.session = // PowerMockito.mock(Session.class);
 				Session.getDefaultInstance(props);
 

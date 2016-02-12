@@ -10,10 +10,6 @@
 <ui:define name="pageTitle">Renew Membership Online</ui:define>
 <ui:define name="body">
 
-	<ui:fragment rendered="#{!identity.hasRole('admin')}">
-		<meta http-equiv="refresh" content="0;URL=#{identity.loggedIn?'MemberView.web':'Login.web'}"/>
-	</ui:fragment>
-
 	<p:panel>
 
 	<h:form>
