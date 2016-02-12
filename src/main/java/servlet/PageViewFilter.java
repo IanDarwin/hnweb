@@ -1,7 +1,5 @@
 package servlet;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -57,7 +55,7 @@ import action.LoginAction;
 
 public class PageViewFilter implements Filter {
 	
-	private final boolean DEBUG = true;
+	private final boolean DEBUG = false;
 	
 	/** Communication between the parser and the mainline */
 	static class PageInfo {
@@ -136,19 +134,6 @@ public class PageViewFilter implements Filter {
 			tl.set(null);
 		}
 		filterChain.doFilter(req, resp);				
-	}
-	
-	/** THIS OVERLOAD MUST DIE */
-	static void process(String fileName) throws Exception {
-		PageInfo info = new PageInfo();
-		tl.set(info);
-		final File file = new File(fileName);
-		if (!file.exists() || !file.isFile()) {
-			System.out.println("No such file: " + file);
-			return;
-		}
-		InputStream is = new FileInputStream(file);
-		process(is);
 	}
 	
 	/** Read the XML document */
