@@ -16,12 +16,16 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import action.LoginAction;
 import data.MemberList;
@@ -216,8 +220,20 @@ public class MailMan implements Serializable {
 		// The Subject
 		mesg.setSubject(messageSubject);
 
-		// Now the message body.
-		mesg.setText(messageBody);
+        // Now the message body.
+        Multipart mp = new MimeMultipart();
+
+        // BodyPart textPart = new MimeBodyPart();
+        // We could use TagSoup to convert to plain text I suppose?
+        // textPart.setText(message_body); // sets type to "text/plain"
+        // mp.addBodyPart(textPart);
+
+        BodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(messageBody, "text/html");
+        mp.addBodyPart(htmlPart);
+
+        // Put the MultiPart into the Message
+        mesg.setContent(mp);
 		return mesg;
 	}
 
