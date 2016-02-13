@@ -81,6 +81,17 @@ public class MailMan implements Serializable {
 				"CANTHAPPEN: IOException in close of resource " + propsName);
 		}
 	}
+	
+	protected void addFacesMessage(String message) {
+		final FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext == null) {
+			// FacesContext will be null in simple JUnit testing...
+			System.out.println("FacesMessage is null! Losing message: " + message);
+			return;			// cheaper than an NPE
+		}
+		final FacesMessage facesMessage = new FacesMessage(message);
+		facesContext.addMessage(null, facesMessage);
+	}
 
 	/**
 	 * Send a message to yourself, typically to test how a message will look before sending to a group.
@@ -88,14 +99,13 @@ public class MailMan implements Serializable {
 	public void sendMessageToMe() throws MessagingException {
 		System.out.println("MailMan.sendMessageToMe()");
 		if (identity.getLoggedInUser() == null) {
-			FacesMessage message = new FacesMessage("Are you sure you logged in?");
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			addFacesMessage("Are you sure you logged in?");
 			return;
 		}
 		sendMessage(
                 Arrays.asList(identity.getLoggedInUser().getEmail()),
                 subject, messageBody);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to you."));
+		addFacesMessage("Message sent to your email, please proof-read.");
 	}
 
 	/**
@@ -104,7 +114,7 @@ public class MailMan implements Serializable {
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
 		sendMessageToSome(null);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to entire list."));
+		addFacesMessage("Message sent to entire list.");
 	}
 
 	/**
@@ -113,7 +123,7 @@ public class MailMan implements Serializable {
 	public void sendMessageToExec() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExec()");
 		sendMessageToSome(m -> m.getPosition() != null);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to Exec List."));
+		addFacesMessage("Message sent to Exec List.");
 	}
 
 	/**
@@ -124,7 +134,7 @@ public class MailMan implements Serializable {
 		LocalDate d = LocalDate.now();
 		int year = d.getYear();
 		sendMessageToSome(m -> m.getExpiryYear() < year);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to expired members."));
+		addFacesMessage("Message sent to expired members.");
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import javax.faces.application.FacesMessage;
 import javax.mail.Session;
 import javax.mail.Transport;
 
@@ -44,7 +45,7 @@ public class MailManTest {
 	}
 	
 	@Test
-	@PrepareForTest(Transport.class)
+	@PrepareForTest({Transport.class,FacesMessage.class})
 	public void test() throws Exception {
 
 		//final Properties properties = mockSession.getProperties();
