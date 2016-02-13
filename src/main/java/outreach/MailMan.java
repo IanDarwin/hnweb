@@ -88,13 +88,14 @@ public class MailMan implements Serializable {
 	public void sendMessageToMe() throws MessagingException {
 		System.out.println("MailMan.sendMessageToMe()");
 		if (identity.getLoggedInUser() == null) {
-			FacesMessage message = new FacesMessage( "Are you sure you logged in?");
+			FacesMessage message = new FacesMessage("Are you sure you logged in?");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
 		sendMessage(
                 Arrays.asList(identity.getLoggedInUser().getEmail()),
                 subject, messageBody);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to you."));
 	}
 
 	/**
@@ -103,6 +104,7 @@ public class MailMan implements Serializable {
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
 		sendMessageToSome(null);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to entire list."));
 	}
 
 	/**
@@ -111,6 +113,7 @@ public class MailMan implements Serializable {
 	public void sendMessageToExec() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExec()");
 		sendMessageToSome(m -> m.getPosition() != null);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to Exec List."));
 	}
 
 	/**
@@ -121,6 +124,7 @@ public class MailMan implements Serializable {
 		LocalDate d = LocalDate.now();
 		int year = d.getYear();
 		sendMessageToSome(m -> m.getExpiryYear() < year);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Message sent to expired members."));
 	}
 
 	/**
