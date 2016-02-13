@@ -28,17 +28,16 @@ configuration, which is under development at the moment.
 
 == ToDo
 
-Here are some things that should be added. https://github.com/IanDarwin/clublist[Fork this project on GitHub] and send pull requests when you get one working!
+Here are some things that should be added. 
+Roughly in increasing order of difficulty.
+https://github.com/IanDarwin/clublist[Fork this project on GitHub] and send pull requests when you get one working!
 
-. Search with 'Like' method in DS Data
+. Login should take you to view yourself, not a blank (is coded but doesn't work ATM)
+. Allow members to update their own record (only!)
 . Move Renewal into Edit page or at least into list of buttons on List page.
-. Delete operation should copy to archived_member
-. Maybe allow members to update their own record (only!)
+. Provide a Change Password button
+. Search with 'Like' method in DS Data
+. Implement the Print Member Badge/Label page.
+. Refactor Home object to merge w/ darwinsys-ee EntityHome?
 . "Position" should be a relationship to another Entity, or an Enum, with a dropdown chooser.
 Note that this will need its own list-detail mechanism to manage the list of Positions!
-. Finish the Mailing List page.
-. Implement the Print Member Badge/Label page.
-. Even though people should not use spreadsheets for database work, you will probably
-be pressured to implement the "Export" capability. 
-You will want http://poi.apache.org/[Apache POI] for this.
-. Refactor Home object to merge w/ darwinsys-ee EntityHome?
