@@ -3,6 +3,7 @@ package outreach;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,10 +103,9 @@ public class MailMan implements Serializable {
 			addFacesMessage("Are you sure you logged in?");
 			return;
 		}
-		sendMessage(
-                Arrays.asList(identity.getLoggedInUser().getEmail()),
-                subject, messageBody);
-		addFacesMessage("Message sent to your email, please proof-read.");
+		if (sendMessage(Arrays.asList(identity.getLoggedInUser().getEmail()), subject, messageBody)) {
+			addFacesMessage("Message sent to your email, please proof-read.");
+		}
 	}
 
 	/**
@@ -113,8 +113,9 @@ public class MailMan implements Serializable {
 	 */
 	public void sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
-		sendMessageToSome(null);
-		addFacesMessage("Message sent to entire list.");
+		if (sendMessageToSome(null)) {
+			addFacesMessage("Message sent to entire list.");
+		}
 	}
 
 	/**
@@ -122,8 +123,9 @@ public class MailMan implements Serializable {
 	 */
 	public void sendMessageToExec() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExec()");
-		sendMessageToSome(m -> m.getPosition() != null);
-		addFacesMessage("Message sent to Exec List.");
+		if (sendMessageToSome(m -> m.getPosition() != null)) {
+			addFacesMessage("Message sent to Exec List.");
+		}
 	}
 
 	/**
@@ -133,15 +135,16 @@ public class MailMan implements Serializable {
 		System.out.println("MailMan.sendMessageToExpired()");
 		LocalDate d = LocalDate.now();
 		int year = d.getYear();
-		sendMessageToSome(m -> m.getExpiryYear() < year);
-		addFacesMessage("Message sent to expired members.");
+		if (sendMessageToSome(m -> m.getExpiryYear() < year)) {
+			addFacesMessage("Message sent to expired members.");
+		}
 	}
 
 	/**
 	 * Common code for Some of the sendMessageToXXX() methods;
 	 * takes a lambda for including/excluding each member from the list.
 	 */
-	public void sendMessageToSome(Chooser ch) throws MessagingException {
+	public boolean sendMessageToSome(Chooser ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
 		List<String> emails = selectListMembers(all, ch);
@@ -150,7 +153,7 @@ public class MailMan implements Serializable {
 			throw new IllegalStateException(
 				PROPNAME_MAIL_SMTP_HOST + " not set in " + CONFIG_PROPERTIES_NAME);
 		}
-		sendMessage(
+		return sendMessage(
 				emails, 
 				subject, messageBody);
 	}
@@ -179,7 +182,7 @@ public class MailMan implements Serializable {
 	/** 
 	 * Send the message. The "from" address is either the mail.sender property or the logged-in user's own.
 	 */
-	private void sendMessage(
+	private boolean sendMessage(
 			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
@@ -199,7 +202,14 @@ public class MailMan implements Serializable {
 		Message mesg = createMessage(fromAddress, message_subject, message_body, emails);
 
 		// Finally, send the message!
-		Transport.send(mesg);
+		try {
+			Transport.send(mesg);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			addFacesMessage("Final sending step failed, probably unable to connect to mail server");
+			return false;
+		}
 	}
 
 	/** 
