@@ -1,0 +1,53 @@
+/* 
+ * Style Sheet for Ian Darwin web site.
+ * This is the web: go ahead and borrow this page, but change it for
+ * your own web, and pass it on with the same terms of re-use.
+ * $Id$
+ */
+
+/* Attributes named after an HTML element apply to all occurrences of type.
+ * Attributes named like tr.foo only appy to tr's with class=foo.
+ * Attributes named *.home_* are only used on the home page.
+ * Attributes named with a "#" can apply to any element but only if class= used,
+ * e.g., <p class="nav">Link: ...</p>
+ */
+
+/* Paragraph formats: use generic, non-vendor specific names (no Arial) */
+h1	{ color: blue; font-family: Helvetica, sans-serif; }
+h2	{ color: blue; font-family: Helvetica, sans-serif; }
+h3	{ color: blue; font-family: Helvetica, sans-serif; }
+h4	{ color: blue; font-family: Helvetica, sans-serif; }
+h5	{ color: blue; font-family: Helvetica, sans-serif; }
+h6	{ color: blue; font-family: Helvetica, sans-serif; }
+
+
+th { background-color: #eee; font-family: Helvetica, sans-serif; }
+
+td { font-family: sans-serif,Helvetica; font-size: 1.0em; }
+
+p, li { font-family: sans-serif,Helvetica; font-size: 1.0em; }
+
+a:hover {
+        background-color: #dbd4a6;
+}
+
+#message	{ color: red; }
+#errormsg	{ color: red; }
+#infomsg	{ color: orange; }
+#warnmsg	{ color: orange; }
+
+
+/* Heading colors */
+#TextAbout   { color: #0000FF;	 /* blue */
+	font-family: Helvetica, sans-serif
+}
+
+/* Link colors */
+#LinkLocal   { color: #00FF00 } /* green */
+#LinkRemote  { color: #ff0000 } /* red  */
+
+#Nav	{ font-family: Helvetica, sans-serif; font-size: 0.6em }
+
+/* Pseudo-headings */
+#ph1	{ color: blue; font-family: Helvetica, sans-serif; font-weight: bold }
+
