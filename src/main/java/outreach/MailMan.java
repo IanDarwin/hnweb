@@ -222,10 +222,11 @@ public class MailMan implements Serializable {
 		// From Address
 		final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
 		mesg.setFrom(fromInternetAddress);
-		// Send ourself a copy as well as 'To' address
+		
+		// Send ourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, fromInternetAddress);
 
-		// TO Addresses - may be a lot! Send as BCC as usual for privacy.
+		// TO Addresses - may be a lot! But send as BCC as usual for privacy.
 		for (String message_recip : recipients) {
 			InternetAddress toAddress = new InternetAddress(message_recip);
 			mesg.addRecipient(Message.RecipientType.BCC, toAddress);
