@@ -3,7 +3,6 @@ package outreach;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
