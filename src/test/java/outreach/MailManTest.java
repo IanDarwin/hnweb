@@ -68,7 +68,7 @@ public class MailManTest {
 	@Test
 	public void testCreateMessage() throws Exception {
 		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
-		final MimeMessage actual = new MailMan().createMessage("from@dom.ain", 
+		final MimeMessage actual = sender.createMessage("from@dom.ain", 
 				"About your night life", 
 				"<html><p>Hello",
 				recipients);
@@ -76,4 +76,11 @@ public class MailManTest {
 		assertEquals("Subject", "About your night life", actual.getSubject());
 	}
 
+	@Test
+	public void testsanitizeToPlainText() {
+		String htmlBody = "<span style='font-size: 12px; font-style: italic;'>Time</span><span style='font-size: 12px;'> is <span style='font-weight: bold;'>not</span> enough.</span>";
+		final String actual = sender.sanitizeToPlainText(htmlBody);
+		System.out.println("Converted text is " + actual);
+		assertEquals("Sanitize to plain text", "Time is not enough.", actual);
+	}
 }

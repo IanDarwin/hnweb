@@ -257,13 +257,18 @@ public class MailMan implements Serializable {
 
         // Convert to plain and send it that way too.
         BodyPart textPart = new MimeBodyPart();
-        String plainBody = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody));
+        String plainBody = sanitizeToPlainText(htmlBody);
         textPart.setText(plainBody); // sets type of this part to "text/plain"
         mp.addBodyPart(textPart);
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
 		return mesg;
+	}
+
+	/** Convert a string containing an HTML message into plain text */
+	protected String sanitizeToPlainText(String htmlBody) {
+		return new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody));
 	}
 
 	private void notNull(String name, String value) {
