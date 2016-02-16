@@ -100,6 +100,13 @@
 			<version>2.0</version>
 		</dependency>
 
+		<!-- JSoup just to convert html text to plain for email -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+
 		<!-- Hibernate and its JPA Provider: test scope -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

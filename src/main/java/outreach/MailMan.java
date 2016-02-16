@@ -27,6 +27,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
+
 import action.LoginAction;
 import data.MemberList;
 import model.Member;
@@ -193,7 +196,7 @@ public class MailMan implements Serializable {
 		notNull("message_subject", message_subject);
 		notNull("message_body", message_body);
 		
-		// Create the Session object
+		// Get the Mail Session object
 		if (session == null) {
 			throw new NullPointerException("Mail Session not injected; check configuration");
 		}
@@ -216,17 +219,17 @@ public class MailMan implements Serializable {
 	 * 
 	 * @param fromAddress - the (typically fake) email
 	 * @param messageSubject The subject
-	 * @param messageBody The body, as plain text only for now
+	 * @param htmlBody The body, as plain text only for now
 	 * @param recipients a List of String email addresses
 	 * @return The mail message
 	 * @throws MessagingException If the message format isn't quite right
 	 */
-	protected Message createMessage(String fromAddress, 
+	protected MimeMessage createMessage(String fromAddress, 
 			String messageSubject, 
-			String messageBody,
+			String htmlBody,
 			List<String> recipients) throws MessagingException {
 		// create a message
-		Message mesg = new MimeMessage(session);
+		MimeMessage mesg = new MimeMessage(session);
 
 		// From Address
 		final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
@@ -244,17 +247,19 @@ public class MailMan implements Serializable {
 		// The Subject
 		mesg.setSubject(messageSubject);
 
-        // Now the message body.
+        // Now the message body, in HTML and in plain text
         Multipart mp = new MimeMultipart();
-
-        // BodyPart textPart = new MimeBodyPart();
-        // We could use TagSoup to convert to plain text I suppose?
-        // textPart.setText(message_body); // sets type to "text/plain"
-        // mp.addBodyPart(textPart);
-
+        
+        // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(messageBody, "text/html");
+        htmlPart.setContent(htmlBody, "text/html");
         mp.addBodyPart(htmlPart);
+
+        // Convert to plain and send it that way too.
+        BodyPart textPart = new MimeBodyPart();
+        String plainBody = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody));
+        textPart.setText(plainBody); // sets type of this part to "text/plain"
+        mp.addBodyPart(textPart);
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);

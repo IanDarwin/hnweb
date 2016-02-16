@@ -1,5 +1,6 @@
 package outreach;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,7 @@ import java.util.Properties;
 import javax.faces.application.FacesMessage;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.MimeMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +48,7 @@ public class MailManTest {
 	
 	@Test
 	@PrepareForTest({Transport.class,FacesMessage.class})
-	public void test() throws Exception {
+	public void testSendMessageToAll() throws Exception {
 
 		//final Properties properties = mockSession.getProperties();
 		PowerMockito.mockStatic(Transport.class);
@@ -61,6 +63,17 @@ public class MailManTest {
 		
 		PowerMockito.verifyStatic();
 
+	}
+	
+	@Test
+	public void testCreateMessage() throws Exception {
+		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
+		final MimeMessage actual = new MailMan().createMessage("from@dom.ain", 
+				"About your night life", 
+				"<html><p>Hello",
+				recipients);
+		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
+		assertEquals("Subject", "About your night life", actual.getSubject());
 	}
 
 }
