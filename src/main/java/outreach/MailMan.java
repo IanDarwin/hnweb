@@ -268,7 +268,9 @@ public class MailMan implements Serializable {
 
 	/** Convert a string containing an HTML message into plain text */
 	protected String sanitizeToPlainText(String htmlBody) {
-		return new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody));
+		final String rendered = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody, "ISO-8859-1"));
+		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'...
+		return rendered.replace('\u00a0', ' ');
 	}
 
 	private void notNull(String name, String value) {

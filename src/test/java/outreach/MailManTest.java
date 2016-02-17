@@ -80,7 +80,6 @@ public class MailManTest {
 	public void testsanitizeToPlainText() {
 		String htmlBody = "<span style='font-size: 12px; font-style: italic;'>Time</span><span style='font-size: 12px;'> is <span style='font-weight: bold;'>not</span> enough.</span>";
 		final String actual = sender.sanitizeToPlainText(htmlBody);
-		System.out.println("Converted text is " + actual);
 		assertEquals("Sanitize to plain text", "Time is not enough.", actual);
 	}
 }
