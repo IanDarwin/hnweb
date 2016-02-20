@@ -113,11 +113,12 @@ public class MailMan implements Serializable {
 	/**
 	 * Send an email to everybody
 	 */
-	public void sendMessageToAll() throws MessagingException {
+	public String sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
 		if (sendMessageToSome(null)) {
 			addFacesMessage("Message sent to entire list.");
 		}
+		return "/";
 	}
 
 	/**
