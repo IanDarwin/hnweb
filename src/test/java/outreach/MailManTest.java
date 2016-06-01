@@ -28,7 +28,6 @@ import model.Member;
 public class MailManTest {
 
 	List<Member> fakeList = Arrays.asList(
-			// XXX Grab the Sender email from the config.props and use that!
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	private MailMan sender;
@@ -54,7 +53,8 @@ public class MailManTest {
 		PowerMockito.mockStatic(Transport.class);
 		Properties props = MailMan.props;
 		sender.identity = identity;
-		sender.session = // PowerMockito.mock(Session.class);
+		sender.session = 
+				// PowerMockito.mock(Session.class);
 				Session.getDefaultInstance(props);
 
 		sender.subject = "This is a test message";
