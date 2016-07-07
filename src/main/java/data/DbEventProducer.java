@@ -1,20 +1,24 @@
 package data;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Default;
+import javax.inject.Named;
+
+import org.apache.deltaspike.data.api.AbstractEntityRepository;
+import org.apache.deltaspike.data.api.Repository;
 
 import model.Event;
 
-/*
-@Named("memberList") @Default
+
+@Named("dbEventList") @Default
 @SessionScoped
 @Repository 
- */
-public interface DbEventProducer extends EventProducer/*, EntityRepository<Event, Long>*/ {
+public abstract class DbEventProducer extends AbstractEntityRepository<Event, Long>
+	implements EventProducer {
 
-	//@Query(value="select evt from Event evt order by evt.date asc")
-    public default List<Event> getEvents() {
-    	// return findAll();
-    	return new ArrayList<>();
+	public List<Event> getEvents() {
+    	return findAll();
 	}
 }
