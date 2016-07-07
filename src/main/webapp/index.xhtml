@@ -12,8 +12,25 @@
 
 	<p:panel>
 
-	<h:outputText value="This is the starting page for the Club's Membership section."/>
-
+	<p:dataTable var="evt" value="#{meetingEventProducer.events}">
+		<f:facet name="header">Upcoming Events</f:facet>
+		<p:column width="10%">
+			<f:facet name="header">Date</f:facet>
+			#{evt.date.toLocalDate()}
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">Time</f:facet>
+			#{evt.date.toLocalTime()}
+		</p:column>
+		<p:column>
+			<f:facet name="header">Event</f:facet>
+			#{evt.title}
+		</p:column>
+		<p:column>
+			<f:facet name="header">Location</f:facet>
+			#{evt.location}
+		</p:column>
+	</p:dataTable>
 	<br/>
 
 	<a href="Renew.web">Renew online (not operational yet!) (login required)</a>
