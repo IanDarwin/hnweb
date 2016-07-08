@@ -24,10 +24,15 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="transaction") // legacy + shorter in db
 public class MemberTransaction {
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	private TransactionReason reason = TransactionReason.R;
+	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="member_id")
 	private Member member;
+	@Temporal(TemporalType.DATE)
 	private Date dateRenewed = new Date();
 	private int numYears;
 	private int newExpiryYear;
@@ -42,26 +47,14 @@ public class MemberTransaction {
 		this.reason = transactionReason;
 	}
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
 	
-	@SuppressWarnings("unused") // For JPA
-	private void setId(long id) {
-		this.id = id;
-	}
-	
-	@Enumerated(EnumType.STRING)
-	public TransactionReason getReason() {
-		return reason;
-	}
-
 	public void setReason(TransactionReason reason) {
 		this.reason = reason;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public PaymentType getPaymentType() {
 		return paymentType;
 	}
@@ -70,15 +63,12 @@ public class MemberTransaction {
 		this.paymentType = paymentType;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="member_id")
 	public Member getMember() {
 		return member;
 	}
 	public void setMember(Member member) {
 		this.member = member;
 	}
-	@Temporal(TemporalType.DATE)
 	public Date getDateRenewed() {
 		return dateRenewed;
 	}

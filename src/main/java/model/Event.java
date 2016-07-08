@@ -4,21 +4,24 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Event implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	long id;
 	LocalDateTime date;
+	String times;
 	String title;
 	String location;
 	String eventAbstract;
 	String speakerName;
 	String speakerBio;
 
-	@Id
 	public long getId() {
 		return id;
 	}
@@ -34,10 +37,16 @@ public class Event implements Serializable {
 		this.date = date;
 	}
 
+	public String getTimes() {
+		return times;
+	}
+	public void setTimes(String times) {
+		this.times = times;
+	}
+
 	public String getTitle() {
 		return title;
 	}
-
 	public void setTitle(String title) {
 		this.title = title;
 	}

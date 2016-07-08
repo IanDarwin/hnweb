@@ -35,6 +35,7 @@ import com.darwinsys.geo.CanadaProvince;
 @ManagedBean(name="person")
 public class Member {
 	
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	protected String userName, password;
 	protected String firstName, middle, lastName;
@@ -42,23 +43,33 @@ public class Member {
 	protected String email;
 	protected String address, address2;
 	protected String city, postCode;
+	@Enumerated(EnumType.STRING)
 	protected CanadaProvince province;
+	@Enumerated(EnumType.STRING)
 	protected Country country = Country.CA;
 	/** If they have an executive position */
 	protected String position;
 	/** 4-digit year */
 	protected int expiryYear;
+	@Enumerated(EnumType.STRING)
 	protected MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
+	@ManyToOne
 	protected Member masterMember;
 	/** Only if memberType is MemberType.Family */
+	@OneToMany(mappedBy="masterMember")
 	protected Set<Member> secondaryMembers;
 	/** How they get the club newsletter */
 	protected NewsletterMode newsletterMode;
 	protected Integer yearJoined = LocalDate.now().getYear();
+	@Column(name="email_trips",
+	         columnDefinition="boolean default false")
 	protected boolean emailTrips;
+	@Version // Field only used for optimistic locking
 	protected int version;
+	@ElementCollection
 	protected List<String> roles = new ArrayList<>();
+	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
 	protected List<MemberTransaction> transactions = new ArrayList<>();
 	
 	/** 
@@ -81,7 +92,6 @@ public class Member {
 		this.email = email;
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
@@ -144,7 +154,6 @@ public class Member {
 		return sb.toString();
 	}
 
-	@Enumerated(EnumType.STRING)
 	public MemberType getMemberType() {
 		return memberType;
 	}
@@ -158,7 +167,6 @@ public class Member {
 	 * Property will refer to the Master (e.g., paying!) member.
 	 * @return The master member
 	 */
-	@ManyToOne
 	public Member getMasterMember() {
 		return masterMember;
 	}
@@ -175,7 +183,6 @@ public class Member {
 	 * Property will refer to the Secondary member(s).
 	 * @return The secondary members
 	 */
-	@OneToMany(mappedBy="masterMember")
 	public Set<Member> getSecondaryMembers() {
 		if (secondaryMembers == null) {
 			secondaryMembers = new HashSet<>();
@@ -240,7 +247,6 @@ public class Member {
 		this.city = city;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public CanadaProvince getProvince() {
 		return province;
 	}
@@ -257,7 +263,6 @@ public class Member {
 		this.postCode = postCode;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public Country getCountry() {
 		return country;
 	}
@@ -303,7 +308,6 @@ public class Member {
 		return yearJoined;
 	}
 	
-	@Version // Field only used for optimistic locking
 	public int getVersion() {
 		return version;
 	}
@@ -311,7 +315,6 @@ public class Member {
 		this.version = version;
 	}
 	
-	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
 	public List<MemberTransaction> getMemberTransactions() {
 		return transactions;
 	}
@@ -319,8 +322,6 @@ public class Member {
 		this.transactions = transactions;
 	}
 
-	@Column(name="email_trips",
-	         columnDefinition="boolean default false")
 	public boolean isEmailTrips() {
 		return emailTrips;
 	}
@@ -393,7 +394,6 @@ public class Member {
 
 	// For app-managed security
 
-	@ElementCollection
 	public List<String> getRoles() {
 		return roles;
 	}
