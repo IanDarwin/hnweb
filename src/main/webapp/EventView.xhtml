@@ -1,0 +1,51 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Event Edit</ui:define>
+<h:head>
+<f:metadata>
+    <f:event type="preRenderView" rendered="#{!empty request.getParameter('eventId')}" listener="#{eventHome.wire(request.getParameter('eventId'))}"/>
+    <f:event type="preRenderView" rendered="#{ empty request.getParameter('eventId')}" listener="#{eventHome.create()}"/>
+</f:metadata>
+</h:head>
+
+<ui:define name="body">
+
+	<h:form id="entityForm">
+	<p:panel>
+		<f:facet name="header">Event Detail</f:facet>
+		<h:panelGrid columns='2'>
+		
+		Id:
+		<h:inputText id="idTF" value="#{eventHome.instance.id}"/>
+		
+		date:
+		<h:outputText id="dateTF" value="#{eventHome.instance.date}" required='true'/>
+		times:
+		<h:outputText id="timesTF" value="#{eventHome.instance.times}" required='false'/>
+		title:
+		<h:outputText id="titleTF" value="#{eventHome.instance.title}" required='true'/>
+		location:
+		<h:outputText id="locationTF" value="#{eventHome.instance.location}" required='true'/>
+		eventAbstract:
+		<h:outputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
+		speakerName:
+		<h:outputText id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
+		speakerBio:
+		<h:outputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
+
+		</h:panelGrid>
+	</p:panel>
+
+	<p:commandButton value="Edit" action="/eventEdit.web" ajax='false'/>
+	<p:commandButton value="Done" action="#{eventHome.done}" ajax='false'/>
+	</h:form>
+	
+</ui:define>
+</ui:composition>
