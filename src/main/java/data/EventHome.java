@@ -1,23 +1,32 @@
 package data;
 
 import javax.ejb.*;
+import javax.enterprise.context.ConversationScoped;
 import javax.inject.*;
 
 import entity.EntityHome;
 import model.Event;
 
-@Stateful @Named
+@Stateful @Named @ConversationScoped
 public class EventHome extends EntityHome<Event,Long> {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public EventHome() {
+		System.out.println("EventHome.EventHome()");
+	}
 
 	@Override
 	public Event newInstance() {
 		return new Event();
 	}
 
-	//@Override
+	@Override
 	public String getListPage() {
 		return "EventList";
+	}
+
+	public void wire(String s) {
+		wire(Long.parseLong(s));
 	}
 }
