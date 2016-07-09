@@ -40,31 +40,43 @@ import model.TransactionReason;
 @Stateful @Named @ConversationScoped
 public class MemberHome implements Serializable {
 	
-	@Inject private MemberList lister;
-	ArrayList<Member> members;
-
 	private static final long serialVersionUID = -2284578724132631798L;
+
+	@PersistenceContext(type=PersistenceContextType.EXTENDED) protected EntityManager em;
 
 	private static final String LIST_PAGE = "MemberList";
 	private static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	@Inject Conversation conv;
 
+	@Inject private MemberList lister;
+	List<Member> members;
+
 	// Must be Long (not long) so we can check for null
 	private Long id;
+
 	protected Member instance = new Member();
+	// Used to enable the "Master Member" UI control while editing a Secondary Member
 	private boolean enableMasterMember;
-
-	@PersistenceContext(type=PersistenceContextType.EXTENDED) EntityManager em;
-
+	// For the benefit of the UI controls only
+	final static Member noMember = new Member("--", "Select a member", "---", null);
 
 	public MemberHome() {
-		// System.out.println("MemberHome.MemberHome()");
+		System.out.println("MemberHome.MemberHome()");
 	}
 
-	Member noMember = new Member("--", "Select a member", "---", null);
+	public void newInstance() {
+		instance = new Member();
+	}
+
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
-	/** 
+	/**
 	 * Cache this list to avoid too many re-creations.
 	 * @return
 	 */
@@ -78,7 +90,7 @@ public class MemberHome implements Serializable {
 		}
 		return members;
 	}
-	/** 
+	/**
 	 * But not too many! Has to be re-created after we update,
 	 * as it is disconnected copies and is now out of sync.
 	 */
@@ -86,6 +98,10 @@ public class MemberHome implements Serializable {
 		members = null;
 	}
 	
+	public void create() {
+		// Nothing to do, instance is pre-created
+	}
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void wire() {
 		if (conv.isTransient()) {
@@ -101,15 +117,12 @@ public class MemberHome implements Serializable {
 		}
 	}
 
+    // Calls the version that is @Transactional
 	public void wire(String id) {
 		if (id != null && !id.isEmpty()) {
 			setId(Long.parseLong(id));
 		}
 		wire();
-	}
-
-	public void create() {
-		// Nothing to do, instance is pre-created
 	}
 
 	public String saveOrUpdate() {
@@ -120,7 +133,8 @@ public class MemberHome implements Serializable {
 		}
 	}
 
-	/** Save a new member */
+	/** The C of CRUD - create a new Member in the database
+	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String save() {
 		instance.setExpiryYear(getNewMemberExpiryYear(LocalDate.now()));
@@ -143,7 +157,7 @@ public class MemberHome implements Serializable {
 		return LIST_PAGE + FORCE_REDIRECT;
 	}
 	
-	/** 
+	/**
 	 * This should be externalized as it depends on our club's policies:
 	 * If you sign up on or after September 1 you get next year's membership
 	 */
@@ -151,17 +165,6 @@ public class MemberHome implements Serializable {
 		 return now.getMonthValue()>=9 ? now.getYear() + 1 : now.getYear();
 	}
 
-	public void newInstance() {
-		instance = new Member();
-	}
-
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
 	public Member getInstance() {
 		return instance;
 	}
@@ -183,7 +186,7 @@ public class MemberHome implements Serializable {
 	@Resource EJBContext context;
 
 	/** Close an editing operation: mark tx for
-	 * rollback, end conversation, 
+	 * rollback, end conversation,
 	 * return List page.
 	 * @return The List Page
 	 */
@@ -228,7 +231,7 @@ public class MemberHome implements Serializable {
 	 * that can validate based on related state
 	 */
 	public void validatePostCode(FacesContext jsfContext,
-            UIComponent toValidate, 
+            UIComponent toValidate,
             Object userInputValue) {
 		
 		boolean valid = true;
@@ -241,7 +244,7 @@ public class MemberHome implements Serializable {
 		valid = MemberValidator.validatePostCode(country, postCode, messageHolder);
 		if (!valid) {
 			jsfContext.addMessage(
-					toValidate.getClientId(jsfContext), 
+					toValidate.getClientId(jsfContext),
 					new FacesMessage(messageHolder.value));
 	        ((UIInput) toValidate).setValid(false);
 	        return;
@@ -249,7 +252,7 @@ public class MemberHome implements Serializable {
 	}
 
 	public void validateEmail(FacesContext jsfContext,
-            UIComponent toValidate, 
+            UIComponent toValidate,
             Object userInputValue) {
 		
 		boolean valid = true;
@@ -258,7 +261,7 @@ public class MemberHome implements Serializable {
 		valid = MemberValidator.validateEmail(email, messageHolder);
 		if (!valid) {
 			jsfContext.addMessage(
-					toValidate.getClientId(jsfContext), 
+					toValidate.getClientId(jsfContext),
 					new FacesMessage(messageHolder.value));
 	        ((UIInput) toValidate).setValid(false);
 	        return;
