@@ -1,16 +1,13 @@
 package data;
 
-import java.util.List;
-
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Default;
 import javax.inject.Named;
 
-import model.Event;
-
 import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
+
+import model.Event;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
