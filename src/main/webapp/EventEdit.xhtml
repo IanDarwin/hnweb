@@ -22,11 +22,11 @@
 		<f:facet name="header">Event Edit</f:facet>
 		<h:panelGrid columns='3'>
 		
-		Id:
+		<h:outputText value="Id:"/>
 		<h:inputText id="idTF" value="#{eventHome.instance.id}"/>
 		<h:outputText value=""/>
 		
-		Date:
+		<h:outputText value="Date:"/>
 		<h:inputText id="dateTF" value="#{eventHome.instance.date}" required='false'/>
 		<h:message id='dateMessage' for='dateTF'/>
 
@@ -34,23 +34,23 @@
 		<h:inputText id="timesTF" value="#{eventHome.instance.times}" required='false'/>
 		<h:message id='timesMessage' for='timesTF'/>
 
-		title:
+		<h:outputText value="Title:"/>
 		<h:inputText id="titleTF" value="#{eventHome.instance.title}" required='false'/>
 		<h:message id='titleMessage' for='titleTF'/>
 
-		location:
+		<h:outputText value="Location:"/>
 		<h:inputText id="locationTF" value="#{eventHome.instance.location}" required='false'/>
 		<h:message id='locationMessage' for='locationTF'/>
 
-		eventAbstract:
+		<h:outputText value="Event Abstract:"/>
 		<h:inputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
 		<h:message id='eventAbstractMessage' for='eventAbstractTF'/>
 
-		speakerName:
+		<h:outputText value="Speaker Name:"/>
 		<h:inputText id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
 		<h:message id='speakerNameMessage' for='speakerNameTF'/>
 
-		speakerBio:
+		<h:outputText value="Speaker Bio:"/>
 		<h:inputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
 		<h:message id='speakerBioMessage' for='speakerBioTF'/>
 			

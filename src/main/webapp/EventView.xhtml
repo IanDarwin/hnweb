@@ -7,11 +7,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Event Edit</ui:define>
+<ui:define name="pageTitle">Event View</ui:define>
 <h:head>
 <f:metadata>
     <f:event type="preRenderView" rendered="#{!empty request.getParameter('eventId')}" listener="#{eventHome.wire(request.getParameter('eventId'))}"/>
-    <f:event type="preRenderView" rendered="#{ empty request.getParameter('eventId')}" listener="#{eventHome.create()}"/>
 </f:metadata>
 </h:head>
 
@@ -23,22 +22,28 @@
 		<h:panelGrid columns='2'>
 		
 		Id:
-		<h:inputText id="idTF" value="#{eventHome.instance.id}"/>
+		<h:outputText id="idTF" value="#{eventHome.instance.id}"/>
 		
-		date:
-		<h:outputText id="dateTF" value="#{eventHome.instance.date}" required='true'/>
-		times:
-		<h:outputText id="timesTF" value="#{eventHome.instance.times}" required='false'/>
-		title:
-		<h:outputText id="titleTF" value="#{eventHome.instance.title}" required='true'/>
-		location:
-		<h:outputText id="locationTF" value="#{eventHome.instance.location}" required='true'/>
-		eventAbstract:
-		<h:outputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
-		speakerName:
-		<h:outputText id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
-		speakerBio:
-		<h:outputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
+		<h:outputText value="Date:"/>
+		<h:outputText id="dateTF" value="#{eventHome.instance.date}"/>
+
+		<h:outputText value="Times:"/>
+		<h:outputText id="timesTF" value="#{eventHome.instance.times}"/>
+
+		<h:outputText value="Title:"/>
+		<h:outputText id="titleTF" value="#{eventHome.instance.title}"/>
+
+		<h:outputText value="Location:"/>
+		<h:outputText id="locationTF" value="#{eventHome.instance.location}"/>
+
+		<h:outputText value="EventAbstract:"/>
+		<h:outputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}"/>
+
+		<h:outputText value="SpeakerName:"/>
+		<h:outputText id="speakerNameTF" value="#{eventHome.instance.speakerName}"/>
+
+		<h:outputText value="SpeakerBio:"/>
+		<h:outputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}"/>
 
 		</h:panelGrid>
 	</p:panel>

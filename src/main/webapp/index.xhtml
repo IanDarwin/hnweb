@@ -12,7 +12,7 @@
 
 	<p:panel>
 
-	<p:dataTable var="evt" value="#{eventList.events}">
+	<p:dataTable var="evt" value="#{eventList.findAll()}">
 		<f:facet name="header">Upcoming Events</f:facet>
 		<p:column width="10%">
 			<f:facet name="header">Date</f:facet>
