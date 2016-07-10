@@ -51,6 +51,9 @@ public class MemberTransaction {
 		return id;
 	}
 	
+	public TransactionReason getReason() {
+		return reason;
+	}
 	public void setReason(TransactionReason reason) {
 		this.reason = reason;
 	}
