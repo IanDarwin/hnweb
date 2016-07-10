@@ -1,4 +1,4 @@
-package servlet;
+package webtier;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

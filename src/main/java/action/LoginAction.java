@@ -10,9 +10,11 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import com.darwinsys.security.DigestUtils;
-import model.Member;
-import servlet.LoginConstants;
+
 import data.MemberList;
+import model.Member;
+import webtier.LoginConstants;
+
 
 /**
  * Simple DIY login.

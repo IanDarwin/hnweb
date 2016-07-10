@@ -1,4 +1,4 @@
-package servlet;
+package webtier;
 
 import java.io.IOException;
 import java.io.InputStream;
