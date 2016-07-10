@@ -13,7 +13,7 @@
 	<!-- Login filter -->
 	<filter>
 		<filter-name>login</filter-name>
-		<filter-class>servlet.LoginFilter</filter-class>
+		<filter-class>webtier.LoginFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>login</filter-name>
@@ -23,7 +23,7 @@
 	<!-- Page View filter -->
 	<filter>
 		<filter-name>pageview</filter-name>
-		<filter-class>servlet.PageViewFilter</filter-class>
+		<filter-class>webtier.PageViewFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>pageview</filter-name>
