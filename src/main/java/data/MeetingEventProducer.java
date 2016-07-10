@@ -34,6 +34,14 @@ public class MeetingEventProducer {
 	@Transactional(value=TxType.REQUIRED)
     public String addEvents() {
     	System.out.println("MeetingEventProducer.getEvents()");
+		for (Event evt : getEvents() {
+			em.persist(evt);
+		}
+        return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
+	}
+
+	protected List<Event> getEvents() {
+		List<Event> list = new ArrayList<>();
 		// Get all meetings for the next year
         for (int i = 0; i < 12; i++) {
 			final LocalDateTime when = MP.getEventLocalDateTime(i);
@@ -44,9 +52,9 @@ public class MeetingEventProducer {
 			Event evt = new Event();
 			evt.setDate(when);
 			evt.setTitle(when.getMonth() == Month.FEBRUARY ? FEBRUARY_MEETING : REGULAR_MEETING);
-			em.persist(evt);
+			list.add(evt);
 		}
-        return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
+		return list;
 	}
 
     public boolean isMeetingMonth(final LocalDateTime when) {
