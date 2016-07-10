@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 
+import java.util.*;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -33,8 +35,8 @@ public class MeetingEventProducer {
 	
 	@Transactional(value=TxType.REQUIRED)
     public String addEvents() {
-    	System.out.println("MeetingEventProducer.getEvents()");
-		for (Event evt : getEvents() {
+		System.out.println("MeetingEventProducer.addEvents()");
+		for (Event evt : getEvents()) {
 			em.persist(evt);
 		}
         return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
