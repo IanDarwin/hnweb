@@ -3,11 +3,14 @@ package data;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Month;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import com.darwinsys.calendar.RecurringEventDatePicker;
 
@@ -18,16 +21,19 @@ import model.Event;
  * @author Ian Darwin
  */
 @Named @ApplicationScoped
-public class MeetingEventProducer implements EventProducer {
+public class MeetingEventProducer {
 
-    private static final String REGULAR_MEETING = "Regular meeting";
+    private static final String REGULAR_MEETING = "Speaker's Night";
+    private static final String FEBRUARY_MEETING = "Members' Night";
 
     private final static RecurringEventDatePicker MP = 
     		new RecurringEventDatePicker(3, DayOfWeek.TUESDAY, LocalTime.of(19, 00));
+
+	@PersistenceContext EntityManager em;
 	
-    public List<Event> getEvents() {
+	@Transactional(value=TxType.REQUIRED)
+    public String addEvents() {
     	System.out.println("MeetingEventProducer.getEvents()");
-    	List<Event> events = new ArrayList<>(10);
 		// Get all meetings for the next year
         for (int i = 0; i < 12; i++) {
 			final LocalDateTime when = MP.getEventLocalDateTime(i);
@@ -37,11 +43,10 @@ public class MeetingEventProducer implements EventProducer {
 			}
 			Event evt = new Event();
 			evt.setDate(when);
-			evt.setTitle(REGULAR_MEETING);
-			events.add(evt);
+			evt.setTitle(when.getMonth() == Month.FEBRUARY ? FEBRUARY_MEETING : REGULAR_MEETING);
+			em.persist(evt);
 		}
-        System.out.println(events.size() + " meetings found");
-        return events;
+        return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
 	}
 
     public boolean isMeetingMonth(final LocalDateTime when) {

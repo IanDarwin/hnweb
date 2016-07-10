@@ -45,7 +45,7 @@ public class MemberHome implements Serializable {
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) protected EntityManager em;
 
 	private static final String LIST_PAGE = "MemberList";
-	private static final String FORCE_REDIRECT = "?faces-redirect=true";
+	static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	@Inject Conversation conv;
 
@@ -144,7 +144,7 @@ public class MemberHome implements Serializable {
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
-		return LIST_PAGE + FORCE_REDIRECT;
+		return getListPage() + FORCE_REDIRECT;
 	}
 	
 	/** Update an existing member */
@@ -154,7 +154,7 @@ public class MemberHome implements Serializable {
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
 		invalidateMemberList();
-		return LIST_PAGE + FORCE_REDIRECT;
+		return getListPage() + FORCE_REDIRECT;
 	}
 	
 	/**
@@ -183,6 +183,10 @@ public class MemberHome implements Serializable {
 		return enableMasterMember;
 	}
 
+	public static String getListPage() {
+		return LIST_PAGE;
+	}
+
 	@Resource EJBContext context;
 
 	/** Close an editing operation: mark tx for
@@ -193,14 +197,14 @@ public class MemberHome implements Serializable {
 	public String cancel() {
 		context.setRollbackOnly();
 		conv.end();
-		return LIST_PAGE + FORCE_REDIRECT;
+		return getListPage() + FORCE_REDIRECT;
 	}
 	
 	/** Like Cancel but for e.g., View page, no conv end.
 	 * @return The List Page
 	 */
 	public String done() {
-		return LIST_PAGE;
+		return getListPage();
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -218,7 +222,7 @@ public class MemberHome implements Serializable {
 		em.remove(instance);
 		conv.end();
 		invalidateMemberList();
-		return LIST_PAGE;
+		return getListPage();
 	}
 
 	@PreDestroy
