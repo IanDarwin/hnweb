@@ -33,7 +33,7 @@ public class LoginAction implements Serializable {
 	
 	public LoginAction() {
 		// Just for debugging...
-		System.out.println("Login.Login()");
+		System.out.println("LoginAction.LoginAction()");
 	}
 	
 	public String login() {
@@ -50,7 +50,7 @@ public class LoginAction implements Serializable {
 
 			FacesContext.getCurrentInstance().addMessage( null,
                     new FacesMessage("Logged in as " + getLoggedInUser().getName()));
-			return hasRole("admin") ? "MemberList" : "MemberView?memberId = " + getLoggedInUser().getId();
+			return "index.web";
 
 		} catch (NoResultException nre) {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -59,8 +59,7 @@ public class LoginAction implements Serializable {
 		} catch (RuntimeException ex) {
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-                    null,
+			FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Login Failed for user " + username + " due to " + ex));
 			return "Login";
 		}
