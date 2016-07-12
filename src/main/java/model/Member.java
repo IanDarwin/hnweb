@@ -281,7 +281,7 @@ public class Member {
 	
 	@Transient
 	public boolean isExecutive() {
-		return getPosition() != null;
+		return getPosition() != null && getPosition().length() > 0;
 	}
 
 	public int getExpiryYear() {
