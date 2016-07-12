@@ -1,8 +1,9 @@
 package data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class MeetingEventProducerTest {
 	public void testGetFirstMeetingInFuture() {
 		final List<Event> events = meetingEventProducer.getEvents();
 		Event e = events.get(0);
-		LocalDateTime when = e.getDate();
-		assertTrue("first meeting in future", when.isAfter(LocalDateTime.now()));
+		LocalDate when = e.getDate();
+		assertTrue("first meeting in future", when.isAfter(LocalDate.now()));
 	}
 }

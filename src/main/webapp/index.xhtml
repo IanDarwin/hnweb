@@ -14,13 +14,13 @@
 
 	<p:dataTable var="evt" value="#{eventList.findAll()}">
 		<f:facet name="header">Upcoming Events</f:facet>
-		<p:column width="10%">
+		<p:column width="12%">
 			<f:facet name="header">Date</f:facet>
-			#{evt.date.toLocalDate()}
+			#{evt.date}
 		</p:column>
-		<p:column width="10%">
+		<p:column width="12%">
 			<f:facet name="header">Time</f:facet>
-			#{evt.date.toLocalTime()}
+			#{evt.times}
 		</p:column>
 		<p:column>
 			<f:facet name="header">Event</f:facet>

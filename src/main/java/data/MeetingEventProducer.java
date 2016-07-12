@@ -1,7 +1,7 @@
 package data;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 
@@ -41,7 +41,7 @@ public class MeetingEventProducer {
 		for (Event evt : getEvents()) {
 			em.persist(evt);
 		}
-        return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
+        return EventHome.LIST_PAGE + MemberHome.FORCE_REDIRECT;
 	}
 
 	/** Create the list of events for the next 12 months */
@@ -49,20 +49,21 @@ public class MeetingEventProducer {
 		List<Event> list = new ArrayList<>();
 		// Get all meetings for the next year
         for (int i = 0; i < 12; i++) {
-			final LocalDateTime when = MP.getEventLocalDateTime(i);
+			final LocalDate when = MP.getEventLocalDateTime(i).toLocalDate();
 			// Regular meetings run from September to April.
 			if (!isMeetingMonth(when)) {
 				continue;
 			}
 			Event evt = new Event();
 			evt.setDate(when);
+			evt.setTimes("7-9 PM");
 			evt.setTitle(when.getMonth() == Month.FEBRUARY ? FEBRUARY_MEETING : REGULAR_MEETING);
 			list.add(evt);
 		}
 		return list;
 	}
 
-    public boolean isMeetingMonth(final LocalDateTime when) {
+    public boolean isMeetingMonth(final LocalDate when) {
     	switch(when.getMonth()) {
     	case MAY:
     	case JUNE:

@@ -11,6 +11,8 @@ import model.Event;
 public class EventHome extends EntityHome<Event,Long> {
 	
 	private static final long serialVersionUID = 1L;
+
+	static final String LIST_PAGE = "EventList";
 	
 	public EventHome() {
 		System.out.println("EventHome.EventHome()");
@@ -23,7 +25,7 @@ public class EventHome extends EntityHome<Event,Long> {
 
 	@Override
 	public String getListPage() {
-		return "EventList";
+		return LIST_PAGE;
 	}
 
 	public void wire(String s) {
