@@ -58,7 +58,14 @@
 	</p:panel>
 
 	<p:commandButton value="Save" action="#{eventHome.update}" ajax='false'/>
-	<p:commandButton value="Delete (no confirmation!)" action="#{eventHome.delete}" ajax='false'/>
+	<p:commandButton value="Delete" action="#{eventHome.remove}">
+        <p:confirm header="Confirm Deletion" message="Really delete?" icon="ui-icon-alert" />
+    </p:commandButton>
+ 
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    </p:confirmDialog>
 	<p:commandButton value="Cancel" action="#{eventHome.cancel}" ajax='false'/>
 	</h:form>
 	
