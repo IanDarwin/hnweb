@@ -37,10 +37,10 @@ public class Member {
 	
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
-	protected String userName, password;
+	protected String email;
+	protected String password;
 	protected String firstName, middle, lastName;
 	protected String homePhone, cellPhone, workPhone;
-	protected String email;
 	protected String address, address2;
 	protected String city, postCode;
 	@Enumerated(EnumType.STRING)
@@ -97,14 +97,6 @@ public class Member {
 	}
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	/** Accessor for the password. May be hashed or not; the semantics

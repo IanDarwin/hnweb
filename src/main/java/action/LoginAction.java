@@ -24,10 +24,9 @@ public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
 
-	@Inject
-	MemberList userlist;
+	@Inject MemberList userlist;
 
-	String username, password;
+	String email, password;
 
 	private Member loggedInUser = null;
 	
@@ -37,15 +36,15 @@ public class LoginAction implements Serializable {
 	}
 	
 	public String login() {
-		System.out.println("Login.login(" + username + ")");
+		System.out.println("Login.login(" + email + ")");
 		try {
-			setLoggedInUser(verifyUser(username, password));
+			setLoggedInUser(verifyUser(email, password));
 			if (getLoggedInUser() == null) {
-				throw new IllegalStateException("findByUserNameAndPassword should not return null!");
+				throw new IllegalStateException("findByEmailAndPassword should not return null!");
 			}
 
 			// XXX Maybe now tell the Container about it for e.g., logging and session times...
-			// using request.login(username, password);
+			// using request.login(email, password);
 			// Except that they want a login and password to look up in a Realm, which we've already done.
 
 			FacesContext.getCurrentInstance().addMessage( null,
@@ -54,19 +53,19 @@ public class LoginAction implements Serializable {
 
 		} catch (NoResultException nre) {
 			FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Login Failed for user " + username + "; user and/or password invalid."));
+                    new FacesMessage("Login Failed for user " + email + "; user and/or password invalid."));
             return "Login";
 		} catch (RuntimeException ex) {
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Login Failed for user " + username + " due to " + ex));
+                    new FacesMessage("Login Failed for user " + email + " due to " + ex));
 			return "Login";
 		}
 	}
 
-	Member verifyUser(String username, String password) {
-		return userlist.findByUserNameAndPassword(username, DigestUtils.md5(password));
+	Member verifyUser(String email, String password) {
+		return userlist.findByEmailAndPassword(email, DigestUtils.md5(password));
 	}
 
 	public String logout() {
@@ -79,12 +78,12 @@ public class LoginAction implements Serializable {
 	}
 
 	/** Called by JSF */
-	public String getUserName() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUserName(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/** Used by JSF */

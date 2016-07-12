@@ -34,7 +34,7 @@
 		<h:outputLink value="login.web" rendered="#{not identity.loggedIn}">
 			Login
 		</h:outputLink>
-		<h:outputText value="Welcome #{identity.loggedInUser.userName}" rendered="#{identity.loggedIn}"/>
+		<h:outputText value="Welcome #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>
 		#{'  '}
 		<h:commandLink action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}"/>
 	</h:form>

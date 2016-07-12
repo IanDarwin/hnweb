@@ -28,5 +28,5 @@ public interface MemberList extends Serializable, EntityRepository<Member, Long>
 	List<Member> findAll();
 
 	/** Basic for login */
-	public Member findByUserNameAndPassword(String username, String passwordHash);
+	public Member findByEmailAndPassword(String email, String passwordHash);
 }

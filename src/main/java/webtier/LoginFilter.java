@@ -46,7 +46,7 @@ public class LoginFilter implements Filter {
 			if (DEBUG) {
 				System.out.printf("Logged in user is %s%n", loggedInToken.getLoggedInUser());
 			}
-			chain.doFilter(new LoginFilterHTTPServletRequest((HttpServletRequest) req, loggedInToken.getUserName()), resp);
+			chain.doFilter(new LoginFilterHTTPServletRequest((HttpServletRequest) req, loggedInToken.getEmail()), resp);
 			return;
 		}
 

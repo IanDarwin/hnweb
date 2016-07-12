@@ -16,15 +16,15 @@
 		<h:form id="loginForm">
 		<h:panelGrid columns="3">
 
-		<h:outputText value="User name:"/>
-			<h:inputText id="userName" value="#{identity.userName}" required="true" message="Username required" pt:placeholder="login name"/>
-			<h:message for="userName"/>
+		<h:outputText value="Your email:"/>
+			<h:inputText id="email" value="#{identity.email}" required="true" message="email required" pt:placeholder="user@domain.name"/>
+			<h:message for="email"/>
 
 		Password: 	
-			<h:inputSecret id="password" value="#{identity.password}" required="true" message="Password required"/>
+			<h:inputSecret id="password" value="#{identity.password}" required="true" message="Password required" pt:placeholder="Password"/>
 			<h:message for="password"/>
 
-		#{' '}
+			#{' '}
 			<h:commandButton id="login" action="#{identity.login}" value="Login"/>
 			#{' '}
 		
