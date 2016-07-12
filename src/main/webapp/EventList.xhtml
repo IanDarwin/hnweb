@@ -1,84 +1,10 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	template="/template/template.xhtml">
-
-<ui:define name="pageTitle">Event List</ui:define>
-<ui:define name="body">
-
-	<p:panel>
-	<f:facet name="header">Event</f:facet>
-
-	<!-- Print the table, or, an error -->
-	<h:outputText
-		value="Arrr, Billy! I can't find any Events. Did we add any yet??"
-		rendered="#{empty eventList.findAll()}"/>
-
-	<!-- Display the main part of the whole page. -->
-	<p:dataTable border='1' 
-		rendered="#{!empty eventList.findAll()}"
-		var="_entity" value="#{eventList.findAll()}" 
-		paginator="true" rows="#{pfTableConstants.rows}"
-		paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
-		rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
-		>
-		<p:column width="5%">
-			<f:facet name="header">Id</f:facet>
-			<h:outputText value="#{_entity.id}"/>
-		</p:column>
-		
-		<p:column>
-			<f:facet name="header">Date</f:facet>
-			<h:outputText value="#{_entity.date}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Times</f:facet>
-			<h:outputText value="#{_entity.times}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Title</f:facet>
-			<h:outputText value="#{_entity.title}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Location</f:facet>
-			<h:outputText value="#{_entity.location}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Event Abstract</f:facet>
-			<h:outputText value="#{_entity.eventAbstract}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Speaker Name</f:facet>
-			<h:outputText value="#{_entity.speakerName}"/>
-		</p:column>
-		<p:column>
-			<f:facet name="header">Speaker Bio</f:facet>
-			<h:outputText value="#{_entity.speakerBio}"/>
-		</p:column>
-
-		<!-- Last column: action buttons -->
-		<p:column style="width: 15%">
-			<f:facet name="header">Operations</f:facet>
-			<h:outputLink value="EventView.web">
-				View
-				<f:param name="eventId" value="#{_entity.id}"/>
-			</h:outputLink>
-			<h:outputLink value="EventEdit.web">
-				Edit
-				<f:param name="eventId" value="#{_entity.id}"/>
-			</h:outputLink>
-		</p:column>
-	</p:dataTable>
-	<h:form>
-	<p:button outcome="EventView.web" value="Add"/>
-	</h:form>
-	<h:form>
-	<p:commandButton action="#{meetingEventProducer.addEvents()}" value="Add Next Year's Meetings"/>
-	</h:form>
-	</p:panel>
-</ui:define>
-</ui:composition>
+<page xmlns="http://jboss.com/products/seam/pages"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+	login-required='true'>
+ 
+	<restrict>
+		#{identity.hasRole('admin')}
+	</restrict>
+ 
+</page>
