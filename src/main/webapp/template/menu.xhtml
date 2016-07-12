@@ -5,11 +5,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
 
-    <p:toolbarGroup>
+    <p:toolbarGroup align="left">>
         <h:outputLink value="http://www.uppercreditfieldnaturalists.org/">Club Home @ Main Site</h:outputLink>
 		#{' '}
         <h:outputLink value="index.web">Membership Home</h:outputLink>
 		#{'  '}
+		<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
 		<h:outputLink value="MemberList.web">Member List</h:outputLink>
 		#{'  '}
 		<h:outputLink value="MemberEdit.web">Add Member</h:outputLink>
@@ -19,6 +20,7 @@
 		<h:outputLink value="EventList.web">Event List</h:outputLink>
 		#{'  '}
 		<h:outputLink value="MailingList.web">Member Mailings</h:outputLink>
+		</ui:fragment>
     </p:toolbarGroup>
     
     <p:toolbarGroup align="right">
