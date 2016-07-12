@@ -13,11 +13,6 @@
 	<p:panel>
 	<f:facet name="header">Event</f:facet>
 
-	<!-- Print the table, or, an error -->
-	<h:outputText
-		value="Arrr, Billy! I can't find any Events. Did we add any yet??"
-		rendered="#{empty eventList.findAll()}"/>
-
 	<!-- Display the main part of the whole page. -->
 	<p:dataTable border='1' 
 		rendered="#{!empty eventList.findAll()}"
