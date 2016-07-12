@@ -19,6 +19,7 @@ import com.darwinsys.calendar.RecurringEventDatePicker;
 import model.Event;
 
 /**
+ * Club-specific scheduler bean. Should replace with a DSL somedecade.
  * Regular meetings "are held on the 3rd Tuesday of each month from September to April, except for December."
  * @author Ian Darwin
  */
@@ -33,6 +34,7 @@ public class MeetingEventProducer {
 
 	@PersistenceContext EntityManager em;
 	
+	/** Persist the list of events created by getEvents() */
 	@Transactional(value=TxType.REQUIRED)
     public String addEvents() {
 		System.out.println("MeetingEventProducer.addEvents()");
@@ -42,6 +44,7 @@ public class MeetingEventProducer {
         return MemberHome.getListPage() + MemberHome.FORCE_REDIRECT;
 	}
 
+	/** Create the list of events for the next 12 months */
 	protected List<Event> getEvents() {
 		List<Event> list = new ArrayList<>();
 		// Get all meetings for the next year
