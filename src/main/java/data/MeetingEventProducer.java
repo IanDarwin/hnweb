@@ -58,6 +58,7 @@ public class MeetingEventProducer {
 			evt.setDate(when);
 			evt.setTimes("7-9 PM");
 			evt.setTitle(when.getMonth() == Month.FEBRUARY ? FEBRUARY_MEETING : REGULAR_MEETING);
+			evt.setSpeakerBio("T.B.A.");
 			list.add(evt);
 		}
 		return list;
@@ -75,8 +76,4 @@ public class MeetingEventProducer {
     		return true;
     	}
     }
-
-	public static RecurringEventDatePicker getMeetingDatePicker() {
-		return MP;
-	}
 }
