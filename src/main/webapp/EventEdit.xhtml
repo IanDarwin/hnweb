@@ -1,10 +1,66 @@
-<page xmlns="http://jboss.com/products/seam/pages"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
-	login-required='true'>
- 
-	<restrict>
-		#{identity.hasRole('admin')}
-	</restrict>
- 
-</page>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Event Edit</ui:define>
+<h:head>
+<f:metadata>
+    <f:event type="preRenderView" rendered="#{!empty request.getParameter('eventId')}" listener="#{eventHome.wire(request.getParameter('eventId'))}"/>
+    <f:event type="preRenderView" rendered="#{ empty request.getParameter('eventId')}" listener="#{eventHome.create()}"/>
+</f:metadata>
+</h:head>
+
+<ui:define name="body">
+
+	<h:form id="entityForm">
+	<p:panel>
+		<f:facet name="header">Edit Event</f:facet>
+		<p:panelGrid columns='3'>
+		
+		<h:outputText value="Id:"/>
+		<h:outputText id="idTF" value="#{eventHome.instance.id}"/>
+		<h:outputText value=""/>
+		
+		<h:outputText value="Date:"/>
+		<h:inputText id="dateTF" value="#{eventHome.instance.date}" required='false'/>
+		<h:message id='dateMessage' for='dateTF'/>
+
+		<h:outputText value="Start and End Times:"/>
+		<h:inputText id="timesTF" value="#{eventHome.instance.times}" required='false'/>
+		<h:message id='timesMessage' for='timesTF'/>
+
+		<h:outputText value="Title:"/>
+		<h:inputText id="titleTF" value="#{eventHome.instance.title}" required='false'/>
+		<h:message id='titleMessage' for='titleTF'/>
+
+		<h:outputText value="Location:"/>
+		<h:inputText id="locationTF" value="#{eventHome.instance.location}" required='false'/>
+		<h:message id='locationMessage' for='locationTF'/>
+
+		<h:outputText value="Event Abstract:"/>
+		<h:inputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
+		<h:message id='eventAbstractMessage' for='eventAbstractTF'/>
+
+		<h:outputText value="Speaker Name:"/>
+		<h:inputText id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
+		<h:message id='speakerNameMessage' for='speakerNameTF'/>
+
+		<h:outputText value="Speaker Bio:"/>
+		<h:inputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
+		<h:message id='speakerBioMessage' for='speakerBioTF'/>
+			
+		</p:panelGrid>
+	</p:panel>
+
+	<p:commandButton value="Save" action="#{eventHome.update}" ajax='false'/>
+	<p:commandButton value="Delete (no confirmation!)" action="#{eventHome.delete}" ajax='false'/>
+	<p:commandButton value="Cancel" action="#{eventHome.cancel}" ajax='false'/>
+	</h:form>
+	
+</ui:define>
+</ui:composition>
