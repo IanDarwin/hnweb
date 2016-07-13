@@ -8,12 +8,14 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpSession;
 
 import com.darwinsys.security.DigestUtils;
 
 import data.MemberList;
 import model.Member;
 import webtier.LoginConstants;
+import webtier.WebConstants;
 
 
 /**
@@ -49,13 +51,25 @@ public class LoginAction implements Serializable {
 
 			FacesContext.getCurrentInstance().addMessage( null,
                     new FacesMessage("Logged in as " + getLoggedInUser().getName()));
-			return "index.web";
+			final HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+					.getExternalContext()
+					.getSession(false);
+			String redirTarget = (String) session
+					.getAttribute(LoginConstants.TARGET_URI_KEY);
+			if (redirTarget != null) {
+				System.out.println("Return stored " + redirTarget);
+				session.removeAttribute(LoginConstants.TARGET_URI_KEY);
+				return redirTarget + WebConstants.FORCE_REDIRECT;
+			}
+			return "/index.web";
 
 		} catch (NoResultException nre) {
+			System.out.println("LoginAction.login():" + nre);
 			FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Login Failed for user " + email + "; user and/or password invalid."));
             return "Login";
 		} catch (RuntimeException ex) {
+			System.out.println("LoginAction.login():" + ex);
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -64,6 +78,7 @@ public class LoginAction implements Serializable {
 		}
 	}
 
+	/** Hook allows testing via mocking; do not inline! */
 	Member verifyUser(String email, String password) {
 		return userlist.findByEmailAndPassword(email, DigestUtils.md5(password));
 	}

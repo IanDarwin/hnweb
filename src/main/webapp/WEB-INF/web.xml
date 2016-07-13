@@ -41,6 +41,16 @@
 		<url-pattern>*.web</url-pattern>
 	</servlet-mapping>
 
+	<!-- Mime-mappings, needed by buggy Wildfly 8 -->
+	<mime-mapping>
+		<extension>jsp</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>web</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+	
 	<!-- error pages -->
 	<error-page>
 		<error-code>404</error-code>

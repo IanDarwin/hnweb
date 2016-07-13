@@ -31,7 +31,7 @@
 			<h:graphicImage value="/images/invertocat.png" width="24" height="24" />
 		</h:outputLink>
 		#{'  '}
-		<h:outputLink value="login.web" rendered="#{not identity.loggedIn}">
+		<h:outputLink value="Login.web" rendered="#{not identity.loggedIn}">
 			Login
 		</h:outputLink>
 		<h:outputText value="Welcome #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>

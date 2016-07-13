@@ -31,6 +31,7 @@ import model.Member;
 import model.MemberTransaction;
 import model.MemberType;
 import model.TransactionReason;
+import webtier.WebConstants;
 
 /**
  * Implements Gateway, an Adam Bien pattern whose purpose is to expose
@@ -45,7 +46,6 @@ public class MemberHome implements Serializable {
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) protected EntityManager em;
 
 	private static final String LIST_PAGE = "MemberList";
-	static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	@Inject Conversation conv;
 
@@ -144,7 +144,7 @@ public class MemberHome implements Serializable {
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + FORCE_REDIRECT;
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/** Update an existing member */
@@ -154,7 +154,7 @@ public class MemberHome implements Serializable {
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + FORCE_REDIRECT;
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class MemberHome implements Serializable {
 	public String cancel() {
 		context.setRollbackOnly();
 		conv.end();
-		return getListPage() + FORCE_REDIRECT;
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/** Like Cancel but for e.g., View page, no conv end.

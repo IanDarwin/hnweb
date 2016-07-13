@@ -55,6 +55,8 @@ public class LoginFilter implements Filter {
 			requestURI.indexOf(LoginConstants.WEB_IMAGES_DIR) != -1 ||
 			requestURI.indexOf(LoginConstants.WEB_TEMPLATE_DIR) != -1 ||
 			requestURI.indexOf(LoginConstants.JSF_RESOURCE_DIR) != -1 ||
+			requestURI.indexOf(LoginConstants.WEB_CSS_DIR) != -1 ||
+			requestURI.indexOf(LoginConstants.WEB_JS_DIR) != -1 ||
 			requestURI.indexOf(LoginConstants.FAVICON) != -1) {
 			// User not logged in and trying to log in
 			if (DEBUG) {

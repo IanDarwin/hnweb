@@ -4,8 +4,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -17,6 +17,7 @@ import javax.transaction.Transactional.TxType;
 import com.darwinsys.calendar.RecurringEventDatePicker;
 
 import model.Event;
+import webtier.WebConstants;
 
 /**
  * Club-specific scheduler bean. Should replace with a DSL somedecade.
@@ -41,7 +42,7 @@ public class MeetingEventProducer {
 		for (Event evt : getEvents()) {
 			em.persist(evt);
 		}
-        return EventHome.LIST_PAGE + MemberHome.FORCE_REDIRECT;
+        return EventHome.LIST_PAGE + WebConstants.FORCE_REDIRECT;
 	}
 
 	/** Create the list of events for the next 12 months */

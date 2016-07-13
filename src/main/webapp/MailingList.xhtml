@@ -39,10 +39,14 @@
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
+			<p:button value="Attach PDF" disabled="true"/>
+
 		</h:panelGrid>
 		<br/>
 		<h:commandButton value="TEST - Send To Self Only" action="#{mailMan.sendMessageToMe}"/>
 		<h:commandButton value="Send email to Executive members only " action="#{mailMan.sendMessageToExec}"/>
+		<h:commandButton value="Send to Newsletter Email List" disabled="true"/>
+		<h:commandButton value="Send to Trips Email List" disabled="true"/>
 		<h:commandButton value="Send email to **entire list**" action="#{mailMan.sendMessageToAll}"/>
 		<h:commandButton value="Send nags to expired members only " action="#{mailMan.sendMessageToExpired}"/>
 		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
