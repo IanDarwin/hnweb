@@ -50,16 +50,21 @@ public class MeetingEventProducer {
 		List<Event> list = new ArrayList<>();
 		// Get all meetings for the next year
         for (int i = 0; i < 12; i++) {
-			final LocalDate when = MP.getEventLocalDateTime(i).toLocalDate();
+			final LocalDate mtgDate = MP.getEventLocalDateTime(i).toLocalDate();
 			// Regular meetings run from September to April.
-			if (!isMeetingMonth(when)) {
+			if (!isMeetingMonth(mtgDate)) {
 				continue;
 			}
 			Event evt = new Event();
-			evt.setDate(when);
+			evt.setDate(mtgDate);
 			evt.setTimes("7-9 PM");
-			evt.setTitle(when.getMonth() == Month.FEBRUARY ? FEBRUARY_MEETING : REGULAR_MEETING);
-			evt.setSpeakerName("T.B.A.");
+			if (mtgDate.getMonth() != Month.FEBRUARY) {
+				evt.setTitle(REGULAR_MEETING);
+				evt.setSpeakerName("T.B.A.");
+			} else {
+				evt.setTitle(FEBRUARY_MEETING);
+				evt.setSpeakerName("Various Members");
+			}
 			list.add(evt);
 		}
 		return list;
