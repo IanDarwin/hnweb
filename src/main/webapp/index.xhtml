@@ -25,6 +25,7 @@
 		<p:column>
 			<f:facet name="header">Event</f:facet>
 			#{evt.title}
+			<h:outputText value=" with #{evt.speakerName}" rendered="#{!empty(evt.speakerName) and evt.speakerName != 'T.B.A.'}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Location</f:facet>
