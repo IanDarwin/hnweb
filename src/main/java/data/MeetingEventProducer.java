@@ -31,7 +31,7 @@ public class MeetingEventProducer {
     private static final String FEBRUARY_MEETING = "Members' Night";
 
     private final static RecurringEventDatePicker MP = 
-    		new RecurringEventDatePicker(3, DayOfWeek.TUESDAY, LocalTime.of(19, 00));
+    		new RecurringEventDatePicker(RecurringEventDatePicker.LAST, DayOfWeek.TUESDAY, LocalTime.of(19, 00));
 
 	@PersistenceContext EntityManager em;
 	
