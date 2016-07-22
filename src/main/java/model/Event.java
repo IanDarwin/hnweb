@@ -50,9 +50,9 @@ public class Event implements Serializable {
 		// System.out.printf("Instant %s of type %s%n", instant, instant.getClass());
 		// date = LocalDate.from(instant);
 		date = LocalDate.of(
-				legacyDate.getYear() + 1900, 
-				legacyDate.getMonth() + 1, 
-				legacyDate.getDate() + 1);
+				legacyDate.getYear() + 1900,
+				legacyDate.getMonth() + 1,
+				legacyDate.getDate());
 	}
 
 	public String getTimes() {
