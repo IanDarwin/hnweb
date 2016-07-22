@@ -2,11 +2,14 @@ package model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Event implements Serializable {
@@ -32,9 +35,24 @@ public class Event implements Serializable {
 	public LocalDate getDate() {
 		return date;
 	}
-
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	// KLUDGE because PrimeFaces doesn't support new date/time api yet
+	@Transient
+	public Date getLegacyDate() {
+		return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+	@SuppressWarnings("deprecation")
+	public void setLegacyDate(Date legacyDate) {
+		// final Instant instant = legacyDate.toInstant();
+		// System.out.printf("Instant %s of type %s%n", instant, instant.getClass());
+		// date = LocalDate.from(instant);
+		date = LocalDate.of(
+				legacyDate.getYear() + 1900, 
+				legacyDate.getMonth() + 1, 
+				legacyDate.getDate() + 1);
 	}
 
 	public String getTimes() {
