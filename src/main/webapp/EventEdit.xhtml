@@ -35,23 +35,23 @@
 		<h:message id='timesMessage' for='timesTF'/>
 
 		<h:outputText value="Title:"/>
-		<h:inputText id="titleTF" value="#{eventHome.instance.title}" required='false'/>
+		<h:inputText size='60' id="titleTF" value="#{eventHome.instance.title}" required='false'/>
 		<h:message id='titleMessage' for='titleTF'/>
 
 		<h:outputText value="Location:"/>
-		<h:inputText id="locationTF" value="#{eventHome.instance.location}" required='false'/>
+		<h:inputText size='60' id="locationTF" value="#{eventHome.instance.location}" required='false'/>
 		<h:message id='locationMessage' for='locationTF'/>
 
 		<h:outputText value="Event Abstract:"/>
-		<h:inputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
+		<h:inputTextarea rows='5' cols='60' id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}" required='false'/>
 		<h:message id='eventAbstractMessage' for='eventAbstractTF'/>
 
 		<h:outputText value="Speaker Name:"/>
-		<h:inputText id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
+		<h:inputText size='60' id="speakerNameTF" value="#{eventHome.instance.speakerName}" required='false'/>
 		<h:message id='speakerNameMessage' for='speakerNameTF'/>
 
 		<h:outputText value="Speaker Bio:"/>
-		<h:inputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
+		<h:inputTextarea rows='5' cols='60' id="speakerBioTF" value="#{eventHome.instance.speakerBio}" required='false'/>
 		<h:message id='speakerBioMessage' for='speakerBioTF'/>
 			
 		</p:panelGrid>
