@@ -86,6 +86,11 @@ public class PageViewFilter implements Filter {
 		if (DEBUG) {
 			System.out.printf("PageViewFilter.doFilter(): requestURI = %s; ", requestURI);
 		}
+
+		if (requestURI.indexOf("../")) { // Red Alert!
+			System.out.println("Red Alert: Attacking URL is " + requestURI);
+			throw new SecurityException("Not allowed");
+		}
 		
 		try {
 			final HttpSession session = request.getSession();
