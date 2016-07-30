@@ -89,6 +89,11 @@ public class PageViewFilter implements Filter {
 		
 		try {
 			final HttpSession session = request.getSession();
+			// These are asked for by JSF frameworks.
+			if (requestURI.startsWith("/javax.faces.resource/")) {
+				filterChain.doFilter(req, resp);
+				return;
+			}
 			final String JSF_PAGE_EXT = ".web";		// XXX get from JSF
 			if (requestURI.endsWith(JSF_PAGE_EXT)) {
 
