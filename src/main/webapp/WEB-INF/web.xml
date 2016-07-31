@@ -10,20 +10,10 @@
 		<welcome-file>index.web</welcome-file>
 	</welcome-file-list>
 
-	<!-- Login filter -->
-	<filter>
-		<filter-name>login</filter-name>
-		<filter-class>webtier.LoginFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>login</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
 	<!-- Page View filter -->
 	<filter>
 		<filter-name>pageview</filter-name>
-		<filter-class>webtier.PageViewFilter</filter-class>
+		<filter-class>webtier.PageFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>pageview</filter-name>

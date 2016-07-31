@@ -23,8 +23,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,8 +34,10 @@ import org.w3c.dom.NodeList;
 
 import action.LoginAction;
 
+import org.xml.sax.SAXException;
+
 /**
- * Simple Page View filter - adapts a tiny bit of Seam2
+ * Combined plain-login filter AND Simple PageView filter - the latter a tiny remnant of Seam2.
  * Only implements login-required and role-required. Sample page.xml:
  * <pre>
  * &lt;page xmlns="http://jboss.com/products/seam/pages"
@@ -53,7 +57,7 @@ import action.LoginAction;
  * @author Ian Darwin
  */
 
-public class PageViewFilter implements Filter {
+public class PageFilter implements Filter {
 	
 	private final boolean DEBUG = false;
 	
@@ -62,13 +66,14 @@ public class PageViewFilter implements Filter {
 		boolean loginRequired;
 		String restriction;
 	}
+
 	final static ThreadLocal<PageInfo> tl = new ThreadLocal<>();
-	
+
 	final static DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		System.out.println("PageViewFilter.init()");
+		System.out.println("PageFilter.init()");
 	}
 
 	/** Allow the request if the user is logged in and isn't blocked by <restrict>.
@@ -76,29 +81,67 @@ public class PageViewFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
-			FilterChain filterChain) throws IOException, ServletException {
+			FilterChain chain) throws IOException, ServletException {
 
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) resp;
-		final ServletContext servletContext = request.getServletContext();
-
-		final String requestURI = request.getRequestURI();
-		if (DEBUG) {
-			System.out.printf("PageViewFilter.doFilter(): requestURI = %s; ", requestURI);
-		}
-
-		if (requestURI.indexOf("../") >= 0) { // Red Alert!
-			System.out.println("Red Alert: Attacking URL is " + requestURI);
-			throw new SecurityException("Not allowed");
-		}
-		
 		try {
+
+			final HttpServletRequest request = (HttpServletRequest) req;
+			final HttpServletResponse response = (HttpServletResponse) resp;
 			final HttpSession session = request.getSession();
-			// These are asked for by JSF frameworks.
-			if (requestURI.startsWith("/javax.faces.resource/")) {
-				filterChain.doFilter(req, resp);
+			final ServletContext servletContext = request.getServletContext();
+
+			final String requestURI = request.getRequestURI();
+			if (DEBUG) {
+				System.out.printf("PageFilter.doFilter(): requestURI = %s; ", requestURI);
+			}
+
+			if (requestURI.indexOf("../") >= 0) { // Red Alert!
+				System.out.println("Red Alert: Attacking URL is " + requestURI);
+				throw new SecurityException("Not allowed");
+			}
+			
+			LoginAction identity = (LoginAction)session.getAttribute(LoginConstants.LOGIN_FLAG);
+
+			// So first, if they are logged in, carry one.
+			if (identity != null && identity.isLoggedIn()) {
+				// User is logged in, continue processing, override getRemoteUser in request object.
+				if (DEBUG) {
+					System.out.printf("Logged in user is %s%n", identity.getLoggedInUser());
+				}
+				chain.doFilter(new LoginFilterHTTPServletRequest((HttpServletRequest) req, identity.getEmail()), resp);
 				return;
 			}
+
+			if (requestURI.indexOf(LoginConstants.HOME_PAGE) != -1 ||
+				requestURI.indexOf(LoginConstants.LOGIN_PAGE) != -1 ||
+				requestURI.indexOf(LoginConstants.WEB_IMAGES_DIR) != -1 ||
+				requestURI.indexOf(LoginConstants.WEB_TEMPLATE_DIR) != -1 ||
+				requestURI.indexOf(LoginConstants.JSF_RESOURCE_DIR) != -1 ||
+				requestURI.indexOf(LoginConstants.WEB_CSS_DIR) != -1 ||
+				requestURI.indexOf(LoginConstants.WEB_JS_DIR) != -1 ||
+				requestURI.indexOf(LoginConstants.FAVICON) != -1) {
+				// User not logged in and trying to log in
+				if (DEBUG) {
+					System.out.println("(allowing)");
+				}
+				chain.doFilter(req, resp);
+				return;
+			}
+
+			// User not logged in and trying unauthorized access
+			// Save where the user was trying to get to:
+			session.setAttribute(LoginConstants.TARGET_URI_KEY, requestURI);
+			// Redirect user to the login page
+			if (DEBUG) {
+				System.out.println("(-->login)");
+			}
+boolean XXX = false;
+			if (XXX) {
+				response.sendRedirect("." + LoginConstants.LOGIN_PAGE); // . in case a sub-directory
+				// DO NOT do chain.doFilter for this case!
+			return;
+			}
+			
 			final String JSF_PAGE_EXT = ".web";		// XXX get from JSF
 			if (requestURI.endsWith(JSF_PAGE_EXT)) {
 
@@ -112,22 +155,16 @@ public class PageViewFilter implements Filter {
 				if (inputStrm == null) {
 					// No page.xml, so the request is allowed
 					System.err.println("No page.xml " + pagePath + " for " + requestURI + " --> allow");
-					filterChain.doFilter(req, resp);
+					chain.doFilter(req, resp);
 					return;
 				} else {
 					System.err.println("FOUND .page.xml " + pagePath + " for " + requestURI + " --> allow");
 				}
 
-				try {
-					process(inputStrm);	// Side effect: calls tl.set() with a new PageInfo.
-				} catch (Exception e) {
-					e.printStackTrace();
-					response.sendRedirect(contextPath + LoginConstants.PAGE_500);
-				}
-				// identity may be null!
-				LoginAction identity = (LoginAction)session.getAttribute(LoginConstants.LOGIN_FLAG);
+				process(inputStrm);	// Side effect: calls tl.set() with a new PageInfo.
 
 				PageInfo pageInfo = tl.get();
+				// XXX check for null? or prove we don't need to...
 				if (pageInfo.loginRequired && identity == null) {
 					response.sendRedirect(contextPath + LoginConstants.LOGIN_PAGE);
 					return;
@@ -139,16 +176,22 @@ public class PageViewFilter implements Filter {
 				}
 			} 
 			
+		} catch (IOException | ServletException e) {
+			throw new LoginFailureException(e.toString(), e);
 		} finally {
 			// set this empty after use!
 			tl.set(null);
 		}
-		filterChain.doFilter(req, resp);				
+
+		// LAST CALL - If we get here instead of hitting a "return" above, ALLOW THE PAGE
+		chain.doFilter(req, resp);				
 	}
 	
 	/** Read the XML document */
-	static void process(InputStream is) throws Exception {
-		System.out.println("PageViewFilter.process()");
+	static void process(InputStream is) {
+		System.out.println("PageFilter.process()");
+
+		try {
 		// Need to do the PageInfo get first, for testing
 		PageInfo info = new PageInfo();
 		tl.set(info);
@@ -167,6 +210,9 @@ public class PageViewFilter implements Filter {
 		}
 		System.out.println("Results: login req'd: " + info.loginRequired + "; restriction: " + info.restriction);
 		// parser.close(); // Doesn't have any cleanup method.
+		} catch (IOException | ParserConfigurationException | SAXException ex) {
+			throw new LoginFailureException("Failure in page.xml processing", ex);
+		}
 	}
 
 	/**
@@ -185,7 +231,7 @@ public class PageViewFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		System.out.println("PageViewFilter.destroy()");
+		System.out.println("PageFilter.destroy()");
 	}
 	
 	/**
@@ -215,6 +261,7 @@ public class PageViewFilter implements Filter {
         }
         return facesContext;
     }
+
     public void removeFacesContext() {
         InnerFacesContext.setFacesContextAsCurrentInstance(null);
     }
@@ -227,4 +274,24 @@ public class PageViewFilter implements Filter {
         }
     }    
 
+
+
+	/**
+	 * Delegating HTTPServletRequest that just overrides a few methods such as getRemoteUser(), since
+	 * we are handling our own login...
+	 */
+	public class LoginFilterHTTPServletRequest extends HttpServletRequestWrapper {
+
+		private String userName;
+
+		public LoginFilterHTTPServletRequest(HttpServletRequest request, String userName) {
+			super(request);
+			this.userName = userName;
+		}
+
+		@Override
+		public String getRemoteUser() {
+			return this.userName;
+		}
+	}
 }
