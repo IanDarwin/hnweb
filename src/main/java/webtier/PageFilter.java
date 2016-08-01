@@ -67,8 +67,6 @@ public class PageFilter implements Filter {
 		String restriction;
 	}
 
-	final static ThreadLocal<PageInfo> tl = new ThreadLocal<>();
-
 	final static DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 
 	@Override
@@ -97,40 +95,29 @@ public class PageFilter implements Filter {
 
 			if (requestURI.indexOf("../") >= 0) { // Red Alert!
 				System.out.println("Red Alert: Attacking URL is " + requestURI);
-				throw new SecurityException("Not allowed");
+				throw new LoginFailureException("Not allowed");
 			}
 			
 			LoginAction identity = (LoginAction)session.getAttribute(LoginConstants.LOGIN_FLAG);
 
-			// So first, if they are logged in, carry one.
-			if (identity != null && identity.isLoggedIn()) {
-				// User is logged in, continue processing, override getRemoteUser in request object.
-				if (DEBUG) {
-					System.out.printf("Logged in user is %s%n", identity.getLoggedInUser());
-				}
-				chain.doFilter(new LoginFilterHTTPServletRequest((HttpServletRequest) req, identity.getEmail()), resp);
-				return;
-			}
-
-			if (requestURI.indexOf(LoginConstants.HOME_PAGE) != -1 ||
+			// These pages are available to anybody
+			if ((identity == null || !identity.isLoggedIn()) && (
+				requestURI.indexOf(LoginConstants.HOME_PAGE) != -1 ||
 				requestURI.indexOf(LoginConstants.LOGIN_PAGE) != -1 ||
 				requestURI.indexOf(LoginConstants.WEB_IMAGES_DIR) != -1 ||
 				requestURI.indexOf(LoginConstants.WEB_TEMPLATE_DIR) != -1 ||
 				requestURI.indexOf(LoginConstants.JSF_RESOURCE_DIR) != -1 ||
 				requestURI.indexOf(LoginConstants.WEB_CSS_DIR) != -1 ||
 				requestURI.indexOf(LoginConstants.WEB_JS_DIR) != -1 ||
-				requestURI.indexOf(LoginConstants.FAVICON) != -1) {
+				requestURI.indexOf(LoginConstants.FAVICON) != -1)) {
 				// User not logged in and trying to log in
 				if (DEBUG) {
-					System.out.println("(allowing)");
+					System.out.println("(allowing, from list)");
 				}
 				chain.doFilter(req, resp);
 				return;
 			}
 
-			// User not logged in and trying unauthorized access
-			// Save where the user was trying to get to:
-			session.setAttribute(LoginConstants.TARGET_URI_KEY, requestURI);
 			// Redirect user to the login page
 			if (DEBUG) {
 				System.out.println("(-->login)");
@@ -161,11 +148,11 @@ boolean XXX = false;
 					System.err.println("FOUND .page.xml " + pagePath + " for " + requestURI + " --> allow");
 				}
 
-				process(inputStrm);	// Side effect: calls tl.set() with a new PageInfo.
-
-				PageInfo pageInfo = tl.get();
-				// XXX check for null? or prove we don't need to...
+				PageInfo pageInfo = process(inputStrm);
 				if (pageInfo.loginRequired && identity == null) {
+					// User not logged in and trying unauthorized access
+					// Save where the user was trying to get to:
+					session.setAttribute(LoginConstants.TARGET_URI_KEY, requestURI);
 					response.sendRedirect(contextPath + LoginConstants.LOGIN_PAGE);
 					return;
 				}
@@ -178,9 +165,6 @@ boolean XXX = false;
 			
 		} catch (IOException | ServletException e) {
 			throw new LoginFailureException(e.toString(), e);
-		} finally {
-			// set this empty after use!
-			tl.set(null);
 		}
 
 		// LAST CALL - If we get here instead of hitting a "return" above, ALLOW THE PAGE
@@ -188,13 +172,12 @@ boolean XXX = false;
 	}
 	
 	/** Read the XML document */
-	static void process(InputStream is) {
+	static PageInfo process(InputStream is) {
 		System.out.println("PageFilter.process()");
 
 		try {
 		// Need to do the PageInfo get first, for testing
 		PageInfo info = new PageInfo();
-		tl.set(info);
 		
 		// So the file exists, let's parse it.
 		DocumentBuilder parser = fact.newDocumentBuilder();
@@ -210,6 +193,7 @@ boolean XXX = false;
 		}
 		System.out.println("Results: login req'd: " + info.loginRequired + "; restriction: " + info.restriction);
 		// parser.close(); // Doesn't have any cleanup method.
+		return info;
 		} catch (IOException | ParserConfigurationException | SAXException ex) {
 			throw new LoginFailureException("Failure in page.xml processing", ex);
 		}
