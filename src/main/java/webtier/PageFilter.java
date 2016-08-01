@@ -61,7 +61,11 @@ public class PageFilter implements Filter {
 	
 	private final boolean DEBUG = false;
 	
-	/** Communication between the parser and the mainline */
+	/** Communication between the parser and the mainline;
+	 * we only look at two things in the page.xml:
+	 * loginRequired attribute of the <page> root element;
+	 * restriction - content of <restrict> element
+	 */
 	static class PageInfo {
 		boolean loginRequired;
 		String restriction;
@@ -117,17 +121,6 @@ public class PageFilter implements Filter {
 				chain.doFilter(req, resp);
 				return;
 			}
-
-			// Redirect user to the login page
-			if (DEBUG) {
-				System.out.println("(-->login)");
-			}
-boolean XXX = false;
-			if (XXX) {
-				response.sendRedirect("." + LoginConstants.LOGIN_PAGE); // . in case a sub-directory
-				// DO NOT do chain.doFilter for this case!
-			return;
-			}
 			
 			final String JSF_PAGE_EXT = ".web";		// XXX get from JSF
 			if (requestURI.endsWith(JSF_PAGE_EXT)) {
@@ -144,11 +137,10 @@ boolean XXX = false;
 					System.err.println("No page.xml " + pagePath + " for " + requestURI + " --> allow");
 					chain.doFilter(req, resp);
 					return;
-				} else {
-					System.err.println("FOUND .page.xml " + pagePath + " for " + requestURI + " --> allow");
 				}
+				System.err.println("FOUND .page.xml " + pagePath + " for " + requestURI);
 
-				PageInfo pageInfo = process(inputStrm);
+				PageInfo pageInfo = parsePageFile(inputStrm);
 				if (pageInfo.loginRequired && identity == null) {
 					// User not logged in and trying unauthorized access
 					// Save where the user was trying to get to:
@@ -172,8 +164,8 @@ boolean XXX = false;
 	}
 	
 	/** Read the XML document */
-	static PageInfo process(InputStream is) {
-		System.out.println("PageFilter.process()");
+	static PageInfo parsePageFile(InputStream is) {
+		System.out.println("PageFilter.parsePageFile()");
 
 		try {
 		// Need to do the PageInfo get first, for testing

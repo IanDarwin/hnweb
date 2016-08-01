@@ -20,7 +20,7 @@ public class PageViewFilterTest {
 
 	@Test
 	public void testGoodParseLoginReqdRestriction() throws Exception {
-		PageFilter.PageInfo pi = PageFilter.process(new FileInputStream(
+		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginreqd-restriction.xml"));
 		assertTrue(pi.loginRequired);
 		assertNotNull(pi.restriction);
@@ -28,7 +28,7 @@ public class PageViewFilterTest {
 	
 	@Test
 	public void testGoodParseLoginNotReqdRestriction() throws Exception {
-		PageFilter.PageInfo pi = PageFilter.process(new FileInputStream(
+		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginNotreqd-restriction.xml"));
 		assertFalse(pi.loginRequired);
 		assertNotNull(pi.restriction);
@@ -36,7 +36,7 @@ public class PageViewFilterTest {
 	
 	@Test
 	public void testGoodParseLoginUnspecNoRestriction() throws Exception {
-		PageFilter.PageInfo pi = PageFilter.process(new FileInputStream(
+		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginunspec-norestriction.xml"));
 		assertFalse(pi.loginRequired);
 		assertNull(pi.restriction);

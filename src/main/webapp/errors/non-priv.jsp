@@ -2,3 +2,4 @@
 <p>
 The server thinks you don't have permission to access that page.
 </p>
+<a href='/'>Back to site</a>
