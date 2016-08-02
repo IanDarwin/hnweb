@@ -21,9 +21,6 @@
 		<f:facet name="header">Event Detail</f:facet>
 		<p:panelGrid columns='2'>
 		
-		<h:outputText value="Id:"/>
-		<h:outputText id="idTF" value="#{eventHome.instance.id}"/>
-		
 		<h:outputText value="Date:"/>
 		<h:outputText id="dateTF" value="#{eventHome.instance.date}"/>
 
@@ -48,7 +45,10 @@
 		</p:panelGrid>
 	</p:panel>
 
-	<p:commandButton value="Edit" action="/eventEdit.web" ajax='false'/>
+	<p:commandButton value="Edit" action="/EventEdit.web?faces-redirect='true'" ajax='false'
+		rendered="#{identity.loggedIn and identity.hasRole("admin")}/>
+		<f:param name="eventId" value="#{eventHome.instance.id}"/>
+	</p:commandButton>
 	<p:commandButton value="Done" action="#{eventHome.done}" ajax='false'/>
 	</h:form>
 	

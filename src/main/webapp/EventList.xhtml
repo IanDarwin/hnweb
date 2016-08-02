@@ -72,7 +72,8 @@
 	<p:button outcome="EventView.web" value="Add"/>
 	</h:form>
 	<h:form>
-	<p:commandButton action="#{meetingEventProducer.addEvents()}" value="Add Next Year's Meetings"/>
+	<p:commandButton action="#{meetingEventProducer.addEvents()}" value="Add Next Year's Meetings"
+		rendered="#{identity.loggedIn && identity.hasRole("admin")}/>
 	</h:form>
 	</p:panel>
 </ui:define>
