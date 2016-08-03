@@ -50,13 +50,19 @@
 		<h:inputText id="newExpiryYearTF" value="#{memberTransactionHome.instance.newExpiryYear}" required='false'/>
 		<h:message id='newExpiryYearMessage' for='newExpiryYearTF'/>
 
-			
 		</h:panelGrid>
 	</p:panel>
 
 	<p:commandButton value="Save" action="#{memberTransactionHome.update}" ajax='false'/>
-	<p:commandButton value="Delete (no confirmation!)" action="#{memberTransactionHome.remove}" ajax='false'/>
+	<p:commandButton value="Delete)" action="#{memberTransactionHome.remove}" ajax='false'/>
+        <p:confirm header="Confirm Deletion" message="Really delete this Transaction? Really?" icon="ui-icon-alert" />
+    </p:commandButton>
 	<p:commandButton value="Cancel" action="#{memberTransactionHome.cancel}" ajax='false'/>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    </p:confirmDialog>
 	</h:form>
 	
 </ui:define>
