@@ -26,6 +26,7 @@ import javax.persistence.TemporalType;
 public class MemberTransaction {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
+	@Enumerated(EnumType.STRING)
 	private TransactionReason reason = TransactionReason.R;
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
