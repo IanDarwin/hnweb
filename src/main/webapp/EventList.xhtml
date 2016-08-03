@@ -73,7 +73,7 @@
 	</h:form>
 	<h:form>
 	<p:commandButton action="#{meetingEventProducer.addEvents()}" value="Add Next Year's Meetings"
-		rendered="#{identity.loggedIn && identity.hasRole("admin")}/>
+		rendered="#{identity.loggedIn and identity.hasRole('admin')}"/>
 	</h:form>
 	</p:panel>
 </ui:define>
