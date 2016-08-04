@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -23,7 +24,9 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name="transaction") // legacy + shorter in db
-public class MemberTransaction {
+public class MemberTransaction implements Serializable {
+
+	private static final long serialVersionUID = 4112042259125129308L;
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	@Enumerated(EnumType.STRING)

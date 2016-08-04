@@ -1,0 +1,56 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">MemberTransaction Details</ui:define>
+<h:head>
+<f:metadata>
+    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberTransactionId')}" listener="#{memberTransactionHome.wire(Long.parseLong(request.getParameter('memberTransactionId')))}"/>
+</f:metadata>
+</h:head>
+
+<ui:define name="body">
+
+	<h:form id="entityForm">
+	<p:panel>
+		<f:facet name="header">MemberTransaction Details</f:facet>
+		<p:panelGrid columns='2'>
+		
+		Id:
+		<h:outputText id="idTF" value="#{memberTransactionHome.instance.id}"/>
+		
+		<h:outputText value="reason:"/>
+		<h:outputText id="reasonTF" value="#{memberTransactionHome.instance.reason}"/>
+
+		<h:outputText value="paymentType:"/>
+		<h:outputText id="paymentTypeTF" value="#{memberTransactionHome.instance.paymentType}"/>
+
+		<h:outputText value="member:"/>
+		<h:outputText id="memberTF" value="#{memberTransactionHome.instance.member}"/>
+
+		<h:outputText value="dateRenewed:"/>
+		<h:outputText id="dateRenewedTF" value="#{memberTransactionHome.instance.dateRenewed}"/>
+
+		<h:outputText value="numYears:"/>
+		<h:outputText id="numYearsTF" value="#{memberTransactionHome.instance.numYears}"/>
+
+		<h:outputText value="newExpiryYear:"/>
+		<h:outputText id="newExpiryYearTF" value="#{memberTransactionHome.instance.newExpiryYear}"/>
+
+			
+		</p:panelGrid>
+	</p:panel>
+
+	<p:commandButton value="Edit" action="/memberTransactionEdit.web" ajax='false'>
+		<f:param name="memberTransactionId" value="#{memberTransactionHome.instance.id}"/>
+	</p:commandButton>
+	<p:commandButton value="Done" action="#{memberTransactionHome.done}" ajax='false'/>
+	</h:form>
+	
+</ui:define>
+</ui:composition>

@@ -1,0 +1,69 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">MemberTransaction Edit</ui:define>
+<h:head>
+<f:metadata>
+    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberTransactionId')}" listener="#{memberTransactionHome.wire(Long.parseLong(request.getParameter('memberTransactionId')))}"/>
+    <f:event type="preRenderView" rendered="#{ empty request.getParameter('memberTransactionId')}" listener="#{memberTransactionHome.create()}"/>
+</f:metadata>
+</h:head>
+
+<ui:define name="body">
+
+	<h:form id="entityForm">
+	<p:panel>
+		<f:facet name="header">MemberTransaction Edit</f:facet>
+		<h:panelGrid columns='3'>
+		
+		Id:
+		<h:inputText id="idTF" value="#{memberTransactionHome.instance.id}"/>
+		<h:outputText value=""/>
+		
+		<h:outputText value="reason:"/>
+		<h:inputText id="reasonTF" value="#{memberTransactionHome.instance.reason}" required='false'/>
+		<h:message id='reasonMessage' for='reasonTF'/>
+
+		<h:outputText value="paymentType:"/>
+		<h:inputText id="paymentTypeTF" value="#{memberTransactionHome.instance.paymentType}" required='false'/>
+		<h:message id='paymentTypeMessage' for='paymentTypeTF'/>
+
+		<h:outputText value="member:"/>
+		<h:inputText id="memberTF" value="#{memberTransactionHome.instance.member}" required='false'/>
+		<h:message id='memberMessage' for='memberTF'/>
+
+		<h:outputText value="dateRenewed:"/>
+		<h:inputText id="dateRenewedTF" value="#{memberTransactionHome.instance.dateRenewed}" required='false'/>
+		<h:message id='dateRenewedMessage' for='dateRenewedTF'/>
+
+		<h:outputText value="numYears:"/>
+		<h:inputText id="numYearsTF" value="#{memberTransactionHome.instance.numYears}" required='false'/>
+		<h:message id='numYearsMessage' for='numYearsTF'/>
+
+		<h:outputText value="newExpiryYear:"/>
+		<h:inputText id="newExpiryYearTF" value="#{memberTransactionHome.instance.newExpiryYear}" required='false'/>
+		<h:message id='newExpiryYearMessage' for='newExpiryYearTF'/>
+
+		</h:panelGrid>
+	</p:panel>
+
+	<p:commandButton value="Save" action="#{memberTransactionHome.update}" ajax='false'/>
+	<p:commandButton value="Delete)" action="#{memberTransactionHome.remove}" ajax='false'>
+        <p:confirm header="Confirm Deletion" message="Really delete this Transaction? Really?" icon="ui-icon-alert" />
+    </p:commandButton>
+	<p:commandButton value="Cancel" action="#{memberTransactionHome.cancel}" ajax='false'/>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    </p:confirmDialog>
+	</h:form>
+	
+</ui:define>
+</ui:composition>

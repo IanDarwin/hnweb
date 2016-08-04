@@ -1,0 +1,74 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">MemberTransaction List</ui:define>
+<ui:define name="body">
+
+	<p:panel>
+	<f:facet name="header">MemberTransaction</f:facet>
+
+	<!-- Print the table, or, an error -->
+	<h:outputText
+		value="Arrr, Billy! I can't find any MemberTransactions. Did we add any yet??"
+		rendered="#{empty memberTransactionList.findAll()}"/>
+
+	<!-- Display the main part of the whole page. -->
+	<p:dataTable border='1' 
+		rendered="#{!empty memberTransactionList.findAll()}"
+		var="_entity" value="#{memberTransactionList.findAll()}" 
+		paginator="true" rows="#{pfTableConstants.rows}"
+		paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
+		rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
+		>
+		<p:column width="5%">
+			<f:facet name="header">Id</f:facet>
+			<h:outputText value="#{_entity.id}"/>
+		</p:column>
+		
+		<p:column>
+			<f:facet name="header">reason</f:facet>
+			<h:outputText value="#{_entity.reason}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">paymentType</f:facet>
+			<h:outputText value="#{_entity.paymentType}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">member</f:facet>
+			<h:outputText value="#{_entity.member}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">dateRenewed</f:facet>
+			<h:outputText value="#{_entity.dateRenewed}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">numYears</f:facet>
+			<h:outputText value="#{_entity.numYears}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">newExpiryYear</f:facet>
+			<h:outputText value="#{_entity.newExpiryYear}"/>
+		</p:column>
+
+		<!-- Last column: action buttons -->
+		<p:column style="width: 15%">
+			<f:facet name="header">Operations</f:facet>
+			<h:outputLink value="MemberTransactionView.web">
+				View
+				<f:param name="memberTransactionId" value="#{_entity.id}"/>
+			</h:outputLink>
+			<h:outputLink value="MemberTransactionEdit.web">
+				Edit
+				<f:param name="memberTransactionId" value="#{_entity.id}"/>
+			</h:outputLink>
+		</p:column>
+	</p:dataTable>
+	</p:panel>
+</ui:define>
+</ui:composition>
