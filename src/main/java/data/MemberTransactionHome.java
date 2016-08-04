@@ -1,10 +1,10 @@
 package data;
 
 import javax.ejb.Stateful;
-import javax.inject.Named;
 import javax.enterprise.context.ConversationScoped;
-import entity.EntityHome;
+import javax.inject.Named;
 
+import entity.EntityHome;
 import model.MemberTransaction;
 
 @Stateful @Named @ConversationScoped

@@ -1,8 +1,8 @@
 package data;
 
-import javax.ejb.*;
+import javax.ejb.Stateful;
 import javax.enterprise.context.ConversationScoped;
-import javax.inject.*;
+import javax.inject.Named;
 
 import entity.EntityHome;
 import model.Event;
