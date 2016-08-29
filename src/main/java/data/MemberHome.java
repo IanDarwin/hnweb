@@ -144,7 +144,7 @@ public class MemberHome implements Serializable {
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + WebConstants.FORCE_REDIRECT;
+		return getListPage() + "#p" + instance.getId() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/** Update an existing member */
@@ -154,7 +154,7 @@ public class MemberHome implements Serializable {
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + WebConstants.FORCE_REDIRECT;
+		return getListPage() + "#p" + instance.getId() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/**
