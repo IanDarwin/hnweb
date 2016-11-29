@@ -31,7 +31,7 @@
 		<url-pattern>*.web</url-pattern>
 	</servlet-mapping>
 
-	<!-- Mime-mappings, needed by buggy Wildfly 8 -->
+	<!-- Mime-mappings, needed by some older servers -->
 	<mime-mapping>
 		<extension>jsp</extension>
 		<mime-type>text/html</mime-type>

@@ -1,0 +1,7 @@
+MailingList - attachments: PDF, PNG, JPG
+
+Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
+
+UserEdit += password
+
+SELF_RENEW W/ PAYPAL

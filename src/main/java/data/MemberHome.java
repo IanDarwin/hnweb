@@ -22,7 +22,6 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.persistence.Query;
 
 import org.omg.CORBA.StringHolder;
 
@@ -45,9 +44,9 @@ public class MemberHome implements Serializable {
 
 	@PersistenceContext(type=PersistenceContextType.EXTENDED) protected EntityManager em;
 
-	private static final String LIST_PAGE = "MemberList";
-
 	@Inject Conversation conv;
+
+	private static final String LIST_PAGE = "MemberList";
 
 	@Inject private MemberList lister;
 	List<Member> members;
@@ -113,7 +112,9 @@ public class MemberHome implements Serializable {
 		}
 		instance = em.find(Member.class, id);
 		if (instance == null) {
-			throw new IllegalArgumentException("Member not found by id! " + id);
+			String message = "Member not found by id! " + id;
+			FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(message));
 		}
 	}
 
@@ -212,9 +213,10 @@ public class MemberHome implements Serializable {
 
 		// Use raw sql to archive, via JPA Native Query mechanism
 		String archive_sql = "insert into member_archived select * from member where id = ?1";
-		Query q = em.createNativeQuery(archive_sql);
-		q.setParameter(1, instance.getId());
-		int rowCount = q.executeUpdate();
+		int rowCount = 
+			em.createNativeQuery(archive_sql).
+			setParameter(1, instance.getId()).
+			executeUpdate();
 		if (rowCount != 1) {
 			System.err.println("WARNING: archive did not succeed");
 			return ""; // Stay on page
