@@ -24,6 +24,6 @@ import model.Event;
 @Repository
 public interface EventList extends EntityRepository<Event, Long> {
 
-	@Query(value="select e from Event e where e.date > now() order by e.date asc")
+	@Query(value="select e from Event e where e.date >= now() order by e.date asc")
 	List<Event> findAll();
 }
