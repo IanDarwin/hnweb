@@ -1,0 +1,7 @@
+#!/bin/sh
+
+psql -d ucfn <<!
+
+select id,firstname,lastname,email,expiryyear from member order by lower(lastname);
+
+!
