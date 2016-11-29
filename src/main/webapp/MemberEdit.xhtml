@@ -1,20 +1,20 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:of="http://omnifaces.org/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Member Edit</ui:define>
 <h:head>
 <f:metadata>
-    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberId')}" listener="#{memberHome.wire(request.getParameter('memberId'))}"/>
-    <f:event type="preRenderView" rendered="#{ empty request.getParameter('memberId')}" listener="#{memberHome.create()}"/>
+	<f:event type="preRenderView" rendered="#{ empty request.getParameter('memberId')}" listener="#{memberHome.create()}"/>
+	<f:event type="preRenderView" rendered="#{!empty request.getParameter('memberId')}" listener="#{memberHome.wire(request.getParameter('memberId'))}"/>
 </f:metadata>
 </h:head>
+
+<ui:define name="pageTitle">Member Edit</ui:define>
 
 <ui:define name="body">
 	<h:form id="personForm">
@@ -46,16 +46,16 @@
 		</p:selectOneMenu>
 			Master: 
 			<h:selectOneMenu id="primoMenu" 
-                value="#{memberHome.instance.masterMember}"
+	            value="#{memberHome.instance.masterMember}"
 				disabled="#{!memberHome.enableMasterMember}"
 				converter="entityConverter"
-                >
-                <f:selectItems var="_member" value="#{memberHome.memberList}"
-                	noSelectionValue="#{memberHome.memberList[0]}"
-                	itemLabel="#{_member.name}"
-                    itemValue="#{_member}"/>
-            </h:selectOneMenu>
-        </ui:fragment>
+	            >
+	            <f:selectItems var="_member" value="#{memberHome.memberList}"
+	            	noSelectionValue="#{memberHome.memberList[0]}"
+	            	itemLabel="#{_member.name}"
+	                itemValue="#{_member}"/>
+	        </h:selectOneMenu>
+	    </ui:fragment>
 		<h:message id='primoMessage' for='primoMenu'/>
 
 		Address:
@@ -69,16 +69,16 @@
 		Province,Country,PostCode:
 		<ui:fragment>
 			<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
-                <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
-                <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                <f:selectItem itemLabel="Canada" itemValue="CA" />
-                <f:selectItem itemLabel="U.S.A." itemValue="US" />
-            </p:selectOneMenu>
+	            <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
+	            <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+	            <f:selectItem itemLabel="Canada" itemValue="CA" />
+	            <f:selectItem itemLabel="U.S.A." itemValue="US" />
+	        </p:selectOneMenu>
 			<p:selectOneMenu id="provinceMenu" value="#{memberHome.instance.province}" style="width:150px">
 				<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
-                    noSelectionValue="--SELECT--"
-                    itemValue="#{_prov.name()}"
-                    itemlabel="#{_prov.longName}"/>
+	                noSelectionValue="--SELECT--"
+	                itemValue="#{_prov.name()}"
+	                itemlabel="#{_prov.longName}"/>
 			</p:selectOneMenu>
 			<h:inputText id="postcodeTF" value="#{memberHome.instance.postCode}" 
 				validator="#{memberHome.validatePostCode}" required='true'/>
@@ -124,14 +124,14 @@
 	</h:form>
 	<h:form>
 	<!-- In their own form to avoid hanging on validation -->
-	<p:commandButton value="Delete" action="#{memberHome.remove}">
-        <p:confirm header="Confirm Deletion" message="Really delete this member?" icon="ui-icon-alert" />
-    </p:commandButton>
+	<p:commandButton value="Delete" action="#{memberHome.remove}" icon="ui-icon-trash">
+	    <p:confirm header="Confirm Deletion" message="Really delete this member?" icon="ui-icon-alert" />
+	</p:commandButton>
  
-    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-    </p:confirmDialog>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+	    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+	    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
 
 	<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
 	</h:form>
