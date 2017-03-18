@@ -23,7 +23,7 @@
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<javaee.version>7.0</javaee.version>
 		<darwinsys-api.version>1.2.0-SNAPSHOT</darwinsys-api.version>
-		<darwinsys-ee.version>0.2.0-SNAPSHOT</darwinsys-ee.version>
+		<darwinsys-ee.version>0.3.0-SNAPSHOT</darwinsys-ee.version>
 		<hibernate.version>4.3.8.Final</hibernate.version>
 		<hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
 		<primefaces.version>5.2</primefaces.version>
