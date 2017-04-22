@@ -27,8 +27,7 @@ public interface MemberList extends Serializable, EntityRepository<Member, Long>
 	@Query(value="select m from Member m order by m.lastName asc")
 	List<Member> findAll();
 
-	@Query(value="select m from member m where m.expiryYear >= 2017 OR " +
-			"(m.type = 'FS' and m.masterMember.expiryYear >= 2017)")
+	@Query(value="select m from Member m where m.expiryYear >= 2016 order by m.lastName asc")
 	List<Member> findCurrent();
 
 	/** Basic for login */
