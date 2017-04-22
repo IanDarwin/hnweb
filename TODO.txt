@@ -1,3 +1,5 @@
+NB: Update Secondary member when renewing or setting date!
+
 MailingList - attachments: PDF, PNG, JPG
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
