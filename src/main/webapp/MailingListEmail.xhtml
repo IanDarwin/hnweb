@@ -1,0 +1,13 @@
+<csv xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	>
+
+<!-- Display the club members' information in CSV -->
+# These will appear on their own lines in "View Source" or "File->SaveAs".
+# There is one line per person. 
+firstName lastName email
+<ui:repeat var="m" value="#{memberList.findCurrent()}">
+#{m.firstName} #{m.lastName} &lt;#{m.email}&gt;</ui:repeat>
+</csv>
