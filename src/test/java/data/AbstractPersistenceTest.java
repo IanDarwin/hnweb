@@ -14,7 +14,7 @@ public class AbstractPersistenceTest {
 
 	@BeforeClass
 	public static void preClass() {
-		emf = Persistence.createEntityManagerFactory("clublist");
+		emf = Persistence.createEntityManagerFactory("test");
 	}
 
 
