@@ -1,3 +1,4 @@
 psql -d ucfn <<!
-select distinct(email) from member where member.email is not null;
+select distinct(email) from member 
+	where member.email is not null;
 !

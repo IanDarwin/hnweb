@@ -16,11 +16,6 @@
 	<f:facet name="header">Here's looking at your Members at #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</f:facet>
 
 	<!-- Print the table, or, an error -->
-	<h:outputText
-		value="Arrr, Billy! I can't find any people. Did we add any yet??"
-		rendered="#{empty memberList.findAll()}"/>
-
-	<!-- Display the main part of the whole page. -->
 	<p:dataTable border='1' 
 		rendered="#{!empty memberList.findAll()}"
 		var="member" value="#{memberList.findAll()}" 

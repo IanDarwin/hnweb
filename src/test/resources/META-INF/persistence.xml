@@ -9,6 +9,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>model.Member</class>
 		<class>model.MemberTransaction</class>
+		<class>model.Config</class>
 
 		<properties>
 			<!-- Properties for type of database -->

@@ -1,4 +1,5 @@
-CURYEAR=2016
+CURYEAR=$(date +%Y)
+CURYEAR=2017
 echo Newsletter for ${CURYEAR}+ members
 psql -d ucfn <<!
 select firstname,lastname,address,city,postcode,province from member where 

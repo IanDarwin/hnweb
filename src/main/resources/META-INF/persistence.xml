@@ -10,6 +10,7 @@
 		<jta-data-source>java:jboss/datasources/UcfnClubDataSource</jta-data-source>
 		<class>model.Member</class>
 		<class>model.MemberTransaction</class>
+		<class>model.Config</class>
 
 		<properties>
 			<!-- Properties for PostgreSQL -->
