@@ -62,13 +62,14 @@ public class PageFilter implements Filter {
 	private final boolean DEBUG = false;
 	
 	/** Communication between the parser and the mainline;
-	 * we only look at two things in the page.xml:
+	 * WARNING we only look at two things in the page.xml:
 	 * loginRequired attribute of the <page> root element;
 	 * restriction - content of <restrict> element
 	 */
 	static class PageInfo {
-		boolean loginRequired;
-		String restriction;
+		boolean loginRequired;	// From root element.
+		String restriction;		// e.g., #{identity.hasRole('fool')}
+		String action;			// NOT USED YET, will be from: action execute attribute
 	}
 
 	final static DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
