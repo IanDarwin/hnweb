@@ -205,7 +205,7 @@ public class MemberHome implements Serializable {
 	 * @return The List Page
 	 */
 	public String done() {
-		return getListPage();
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
