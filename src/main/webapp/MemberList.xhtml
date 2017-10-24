@@ -41,7 +41,7 @@
 				<b><h:outputText value="#{member.position}"/></b>
 			</h:panelGroup>
 		</p:column>
-		<p:column>
+		<p:column width="14%">
 			<f:facet name="header">Email</f:facet>
 			<h:outputLink value="mailto:#{member.email}?subject=UCFN">#{member.email}</h:outputLink>
 		</p:column>
@@ -50,6 +50,10 @@
 			<h:outputText value="#{member.memberType.shortName}"/>
 		</p:column>
 		<p:column width="5%">
+			<f:facet name="header">Joined</f:facet>
+			<h:outputText value="#{member.yearJoined}"/>
+		</p:column>
+		<p:column width="7%">
 			<f:facet name="header">Expiry</f:facet>
 			<ui:fragment style="#{member.expired() ? 'color:red' : ''}">
 			<h:outputText rendered="#{member.memberType.shortName != 'FS'}" value="#{member.expiryYear}"/>
@@ -65,7 +69,7 @@
 			<f:facet name="header">Address</f:facet>
 			<h:outputText value="#{member.address}"/>
 		</p:column>
-		<p:column>
+		<p:column width="10%">
 			<f:facet name="header">City</f:facet>
 			<h:outputText value="#{member.city}"/>
 		</p:column>
