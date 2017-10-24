@@ -64,7 +64,11 @@
 			</p:panelGrid>
 
 	<h:form>
-	<p:commandButton value="Done" action="#{memberHome.done}"/>
+		<h:outputLink value="MemberEdit.web" rendered="#{identity.hasRole('admin')}">
+			Edit
+			<f:param name="memberId" value="#{member.id}"/>
+		</h:outputLink>
+		<p:commandButton value="Done" action="#{memberHome.done}"/>
 	</h:form>
 
 	</ui:define>
