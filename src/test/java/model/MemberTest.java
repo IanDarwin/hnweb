@@ -2,6 +2,8 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,4 +31,14 @@ public class MemberTest {
 		assertEquals("Thelmius T. Aquaddapodox", member.getName());
 	}
 
+	@Test
+	public void testIsExpiredFalse() {
+		member.setExpiryYear(LocalDate.now().getYear());
+		assertFalse(member.isExpired());
+	}
+	@Test
+	public void testIsExpiredTrue() {
+		member.setExpiryYear(LocalDate.now().getYear() - 1);
+		assertTrue(member.isExpired());
+	}
 }
