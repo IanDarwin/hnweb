@@ -25,8 +25,6 @@ import javax.persistence.Version;
 
 import com.darwinsys.geo.CanadaProvince;
 
-import static data.MemberHome.RENEWAL_MONTH;
-
 /**
  * Represents one person in our database.
  * Equals and hashCode() based solely on ID so we don't get new entries made
