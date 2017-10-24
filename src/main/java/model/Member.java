@@ -25,6 +25,8 @@ import javax.persistence.Version;
 
 import com.darwinsys.geo.CanadaProvince;
 
+import static data.MemberHome.RENEWAL_MONTH;
+
 /**
  * Represents one person in our database.
  * Equals and hashCode() based solely on ID so we don't get new entries made
@@ -397,6 +399,14 @@ public class Member {
 		roles.add(role);
 	}
 
+	public boolean isExpired() {
+		LocalDate now = LocalDate.now();
+		if (now.getYear() > getExpiryYear()) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -406,7 +416,7 @@ public class Member {
 	}
 
 	/**
-	 * CUIDATE! This is non-standard:
+	 * CUIDADO! This is non-standard:
 	 * Only compares on ID, AND:
 	 * No Entity can be equal to 'no entity' (id 0).
 	 */

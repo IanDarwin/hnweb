@@ -48,6 +48,11 @@ public class MemberHome implements Serializable {
 
 	private static final String LIST_PAGE = "MemberList";
 
+	/**
+	 * This should be externalized as it depends on our club's policies:
+	 * If you sign up on or after September 1 you get next year's membership
+	 */
+	public final static int RENEWAL_MONTH = 9;
 	@Inject private MemberList lister;
 	List<Member> members;
 
@@ -159,11 +164,10 @@ public class MemberHome implements Serializable {
 	}
 	
 	/**
-	 * This should be externalized as it depends on our club's policies:
-	 * If you sign up on or after September 1 you get next year's membership
+	 * See comment on RENEWAL_MONTH
 	 */
 	protected static int getNewMemberExpiryYear(LocalDate now) {
-		 return now.getMonthValue()>=9 ? now.getYear() + 1 : now.getYear();
+		 return now.getMonthValue()>=RENEWAL_MONTH ? now.getYear() + 1 : now.getYear();
 	}
 
 	public Member getInstance() {
