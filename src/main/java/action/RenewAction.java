@@ -38,7 +38,7 @@ public class RenewAction implements Serializable {
 	public String renew() {
 		String message = "RenewAction.renew() for " + member + " for " + numYears + " years.";
 		logger.info(message);
-		if (numYears == 0) {
+		if (numYears <= 0) {
 			throw new IllegalArgumentException(message);
 		}
 
