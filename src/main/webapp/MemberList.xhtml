@@ -55,7 +55,7 @@
 		</p:column>
 		<p:column width="7%">
 			<f:facet name="header">Expiry</f:facet>
-			<h:panelGroup style="color:#{member.expired() ? 'red' : 'green'}">
+			<h:panelGroup style="color:#{member.expired ? 'red' : 'green'}">
 			<h:outputText rendered="#{member.memberType.shortName != 'FS'}" value="#{member.expiryYear}"/>
 			<h:outputText rendered="#{member.memberType.shortName == 'FS'}" value="#{member.masterMember.expiryYear}"/>
 			</h:panelGroup>

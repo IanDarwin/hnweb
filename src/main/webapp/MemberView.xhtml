@@ -66,7 +66,7 @@
 	<h:form>
 		<h:outputLink value="MemberEdit.web" rendered="#{identity.hasRole('admin')}">
 			Edit
-			<f:param name="memberId" value="#{member.id}"/>
+			<f:param name="memberId" value="#{memberHome.instance.id}"/>
 		</h:outputLink>
 		<p:commandButton value="Done" action="#{memberHome.done}"/>
 	</h:form>
