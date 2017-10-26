@@ -55,10 +55,10 @@
 		</p:column>
 		<p:column width="7%">
 			<f:facet name="header">Expiry</f:facet>
-			<ui:fragment style="#{member.expired() ? 'color:red' : ''}">
+			<h:panelGroup style="#{member.expired() ? 'color:red' : ''}">
 			<h:outputText rendered="#{member.memberType.shortName != 'FS'}" value="#{member.expiryYear}"/>
 			<h:outputText rendered="#{member.memberType.shortName == 'FS'}" value="#{member.masterMember.expiryYear}"/>
-			</ui:fragment>
+			</h:panelGroup>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Home Phone<br/>Cell Phone</f:facet>
