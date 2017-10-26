@@ -1,0 +1,2 @@
+psql -d ucfn -c "select count(id) as Count, city as MailingAddress from member where membertype != 'Secondary' group by city order by city;"
+
