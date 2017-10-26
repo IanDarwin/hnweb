@@ -33,8 +33,14 @@ public class MemberTest {
 
 	@Test
 	public void testIsExpiredFalse() {
-		member.setExpiryYear(LocalDate.now().getYear());
+		final int curYear = LocalDate.now().getYear();
+		member.setExpiryYear(curYear);
+		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH - 1, 1));
 		assertFalse(member.isExpired());
+		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH, 1));
+		assertFalse(member.isExpired());
+		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH + 1, 1));
+		assertTrue(member.isExpired());
 	}
 	@Test
 	public void testIsExpiredTrue() {

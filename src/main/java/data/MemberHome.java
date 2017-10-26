@@ -50,7 +50,7 @@ public class MemberHome implements Serializable {
 
 	/**
 	 * This should be externalized as it depends on our club's policies:
-	 * If you sign up on or after September 1 you get next year's membership
+	 * NEW MEMBERS sign up on or after September 1 you get next year's membership
 	 */
 	public final static int RENEWAL_MONTH = 9;
 	@Inject private MemberList lister;

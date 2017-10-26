@@ -72,6 +72,9 @@ public class Member {
 	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
 	protected List<MemberTransaction> transactions = new ArrayList<>();
 	
+	// Modifiable for testing only
+	private LocalDate now = LocalDate.now();
+	
 	/** 
 	 * "A very public Person"
 	 */
@@ -398,10 +401,16 @@ public class Member {
 	}
 
 	public boolean isExpired() {
-		LocalDate now = LocalDate.now();
+		// If current year is past expiry year, obv. this member is expired.
 		if (now.getYear() > getExpiryYear()) {
 			return true;
 		}
+		// Not currently greater than exp year, so might be in it, must
+		// check if we are currently past the expiry month.
+		if (now.getYear() == getExpiryYear() &&
+				now.getMonth().getValue() > Config.RENEWAL_MONTH)
+			return true;
+		// Otherwise we are not yet in the expiry year.
 		return false;
 	}
 
@@ -431,6 +440,10 @@ public class Member {
 			return false;
 		}
 		return getId() == other.getId();
+	}
+
+	public void setNow(LocalDate now) {
+		this.now = now;
 	}
 }
 
