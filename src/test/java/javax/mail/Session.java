@@ -1,5 +1,8 @@
 package javax.mail;
 
+/** 
+ * Mock object for mail testing only
+ */
 import javax.mail.Authenticator;
 import javax.mail.Provider;
 import javax.mail.Store;
