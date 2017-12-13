@@ -73,6 +73,7 @@ public class Member {
 	protected List<MemberTransaction> transactions = new ArrayList<>();
 	
 	// Modifiable for testing only
+	@Transient
 	private LocalDate now = LocalDate.now();
 	
 	/** 
