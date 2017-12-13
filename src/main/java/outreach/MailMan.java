@@ -29,6 +29,8 @@ import javax.mail.internet.MimeMultipart;
 
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import action.LoginAction;
 import data.MemberList;
@@ -61,6 +63,8 @@ public class MailMan implements Serializable {
 	
 	String subject;
 	String messageBody;
+	byte[] uploadData = null;
+	String uploadContentType = null;
 	
 	static final Properties props = 
 		propsFromClassPath(MailMan.class, CONFIG_PROPERTIES_NAME);
@@ -201,7 +205,8 @@ public class MailMan implements Serializable {
 			throw new NullPointerException("Mail Session not injected; check configuration");
 		}
 
-		Message mesg = createMessage(fromAddress, message_subject, message_body, emails);
+		MimeMessage mesg = createMessage(fromAddress, message_subject, message_body, emails,
+				uploadContentType, uploadData);
 
 		// Finally, send the message!
 		try {
@@ -221,13 +226,17 @@ public class MailMan implements Serializable {
 	 * @param messageSubject The subject
 	 * @param htmlBody The body, as plain text only for now
 	 * @param recipients a List of String email addresses
+	 * @param uploadData2 
+	 * @param uploadContentType2 
 	 * @return The mail message
 	 * @throws MessagingException If the message format isn't quite right
 	 */
 	protected MimeMessage createMessage(String fromAddress, 
 			String messageSubject, 
 			String htmlBody,
-			List<String> recipients) throws MessagingException {
+			List<String> recipients,
+			String uploadContentType,
+			byte[] uploadData) throws MessagingException {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
@@ -255,11 +264,18 @@ public class MailMan implements Serializable {
         htmlPart.setContent(htmlBody, "text/html");
         mp.addBodyPart(htmlPart);
 
-        // Convert to plain and send it that way too.
+        // Convert to plain text and send it that way too, for olde mailers.
         BodyPart textPart = new MimeBodyPart();
         String plainBody = sanitizeToPlainText(htmlBody);
         textPart.setText(plainBody); // sets type of this part to "text/plain"
         mp.addBodyPart(textPart);
+        
+        // Toss in one attachment if there is one
+        if (uploadContentType != null) {
+        		BodyPart attachPart = new MimeBodyPart();
+        		attachPart.setContent(uploadData, uploadContentType);
+        		mp.addBodyPart(attachPart);
+        }
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
@@ -278,6 +294,14 @@ public class MailMan implements Serializable {
 			throw new NullPointerException("Value of " + name + " must not be null!");
 		}
 	}
+	public void handleFileUpload(FileUploadEvent event) {
+		System.out.println("MailMan.handleFileUpload()");
+        final UploadedFile file = event.getFile();
+        uploadData = file.getContents();
+        uploadContentType = file.getContentType();
+        
+        	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Succesful", file.getFileName() + " is uploaded."));
+    }
 
 	public String getSubject() {
 		return subject;

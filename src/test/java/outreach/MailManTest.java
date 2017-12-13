@@ -71,7 +71,8 @@ public class MailManTest {
 		final MimeMessage actual = sender.createMessage("from@dom.ain", 
 				"About your night life", 
 				"<html><p>Hello",
-				recipients);
+				recipients, 
+				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
 		assertEquals("Subject", "About your night life", actual.getSubject());
 	}
