@@ -13,6 +13,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,7 +55,7 @@ public class Member {
 	@Enumerated(EnumType.STRING)
 	protected MemberType memberType = MemberType.Individual;
 	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	protected Member masterMember;
 	/** Only if memberType is MemberType.Family */
 	@OneToMany(mappedBy="masterMember")
@@ -401,7 +402,12 @@ public class Member {
 		roles.add(role);
 	}
 
+	/** Return true iff this member (or their Master Member) is expired */
 	public boolean isExpired() {
+		if (memberType == MemberType.Secondary) {
+			return masterMember.isExpired();
+		}
+
 		// If current year is past expiry year, obv. this member is expired.
 		if (now.getYear() > getExpiryYear()) {
 			return true;

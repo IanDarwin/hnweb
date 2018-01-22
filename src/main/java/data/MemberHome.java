@@ -232,6 +232,7 @@ public class MemberHome implements Serializable {
 	}
 
 	@PreDestroy
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public void bfn() {
 		System.out.println("MemberHome.bfn()");
 	}
