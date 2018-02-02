@@ -13,7 +13,8 @@ import model.Member;
 @Stateful @Named @RequestScoped
 public class RemoveAction {
 	
-	@PersistenceContext EntityManager em;
+	@PersistenceContext
+	public EntityManager em;
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String remove(Member instance) {

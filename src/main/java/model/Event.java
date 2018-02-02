@@ -28,9 +28,7 @@ public class Event implements Serializable {
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
-		this.id = id;
-	}
+	// And no setId() please.
 
 	public LocalDate getDate() {
 		return date;

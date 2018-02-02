@@ -16,7 +16,9 @@ public class RemoveActionTest extends AbstractPersistenceTest {
 		Member member = new Member("A", "B", "C", "d@e.fg");
 		em.persist(member);
 		em.flush();
-		new RemoveAction().remove(member);
+		final RemoveAction removeAction = new RemoveAction();
+		removeAction.em = em;
+		removeAction.remove(member);
 		System.out.println("Remove did not throw exception");
 	}
 }

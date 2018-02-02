@@ -100,9 +100,7 @@ public class Member {
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
-		this.id = id;
-	}
+	// And no setId please.
 
 	/** Accessor for the password. May be hashed or not; the semantics
 	 * are provided by the external control implementation, not coded here.

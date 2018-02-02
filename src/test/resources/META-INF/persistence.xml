@@ -12,8 +12,6 @@
 		<class>model.Config</class>
 
 		<properties>
-			<!-- Properties for type of database -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
 
 			<!-- A local database, for dev/test -->
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
@@ -21,10 +19,23 @@
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
 
+			<!-- Property for type of database -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+
+			<!-- Properties controlling database setup for tests -->
+			<property name="javax.persistence.schema-generation.database.action" 
+				value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.create-source"
+				value="metadata-then-script"/>
+			<property name="javax.persistence.schema-generation.create-script-source"
+				value="sql/create-more.sql" />
+			<property name="javax.persistence.schema-generation.load-script-source"
+				value="sql/load-test-data.sql" />
+
 			<!-- Properties for Hibernate provider -->
-			<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
 			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.format_sql" value="false"/>
+
 		</properties>
 	</persistence-unit>
 </persistence>
