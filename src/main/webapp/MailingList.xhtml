@@ -55,12 +55,15 @@
 		<h:commandButton value="Send email to **entire list**" action="#{mailMan.sendMessageToAll}"/>
 		<h:commandButton value="Send nags to expired members only " action="#{mailMan.sendMessageToExpired}"/>
 		<br/>
-		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
-		<br/>
 		<b>N.B.</b>: You must use both Select and Upload buttons to attach a pdf or jpg/png.
 		Files limited to 3 MB.
 		You must log out after sending a message to the list, otherwise problems 
 		may occur, like old attachments getting sent with new messages.
+		<br/>
+		Also note: at present, it's limited to <b>one</b> attachment per email;
+		I can extend this if it's needed.
+		<br/>
+		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
 	</p:panel>
 	</h:form>
 </ui:define>
