@@ -39,12 +39,12 @@
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
-			PDF-Upload:
+			Attachment-Upload:
 			<p:fileUpload fileUploadListener="#{mailMan.handleFileUpload}" 
 				mode="advanced" dragDropSupport="true"
 				update="messages" sizeLimit="3000000" 
 				allowTypes="/\.(pdf|jpe?g|png)$/" />
-    			<p:growl id="messages" showDetail="true" />
+			<p:growl id="messages" showDetail="true" />
 
 		</h:panelGrid>
 		<br/>
