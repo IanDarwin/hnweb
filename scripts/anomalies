@@ -6,4 +6,9 @@ psql -d ucfn <<!
 
 select id,firstname,lastname from member where membertype = 'Secondary' and mastermember_id is null;
 
+\echo #1 Finding members with position != null but no position
+
+select firstname,lastname,yearjoined,position from member where position is not null and position = '';
+
+
 !
