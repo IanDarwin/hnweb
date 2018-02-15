@@ -212,25 +212,6 @@ public class MemberHome implements Serializable {
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public String remove() {
-
-		// Use raw sql to archive, via JPA Native Query mechanism
-		String archive_sql = "insert into member_archived select * from member where id = ?1";
-		int rowCount = 
-			em.createNativeQuery(archive_sql).
-			setParameter(1, instance.getId()).
-			executeUpdate();
-		if (rowCount != 1) {
-			System.err.println("WARNING: archive did not succeed");
-			return ""; // Stay on page
-		}
-		em.remove(instance);
-		conv.end();
-		invalidateMemberList();
-		return getListPage();
-	}
-
 	@PreDestroy
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public void bfn() {

@@ -4,9 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 
-import org.junit.*;
-
-import model.Member;
+import org.junit.Test;
 
 public class MemberHomeTest extends AbstractPersistenceTest {
 
@@ -18,17 +16,6 @@ public class MemberHomeTest extends AbstractPersistenceTest {
 		assertEquals(2012, MemberHome.getNewMemberExpiryYear(sep1));
 	}
 	
-	@Test
-	@Ignore // "insert ... select" Works in a real database, fails in H2
-	public void testRemove() {
-		MemberHome home = new MemberHome();
-		home.em = em;
-		em.getTransaction().begin();
-		Member member = new Member("A", "B", "C", "d@e.fg");
-		em.persist(member);
-		home.instance = member;
-		home.remove();
-		System.out.println("Remove did not throw exception");
-	}
+
 
 }

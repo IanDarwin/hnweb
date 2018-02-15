@@ -1,3 +1,5 @@
+Fix Delete (says EJB was removed)
+
 NB: Update Secondary member when renewing or setting date!
 
 MailingList - attachments: PDF, PNG, JPG

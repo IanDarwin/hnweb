@@ -14,12 +14,14 @@ public class AbstractPersistenceTest {
 
 	@BeforeClass
 	public static void preClass() {
+		System.out.println("AbstractPersistenceTest.preClass()");
 		emf = Persistence.createEntityManagerFactory("test");
 	}
 
 
 	@Before
 	public void preTest() {
+		System.out.println("AbstractPersistenceTest.preTest()");
 		em = emf.createEntityManager();
 	}
 
