@@ -2,10 +2,10 @@ Fix Delete (says EJB was removed)
 
 NB: Update Secondary member when renewing or setting date!
 
-MailingList - attachments: PDF, PNG, JPG
-
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 
 UserEdit += password
 
 SELF_RENEW W/ PAYPAL
+
+MailingList - multiple attachments?
