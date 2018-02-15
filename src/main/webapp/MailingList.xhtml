@@ -39,12 +39,12 @@
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
-			File-Upload:
+			Add-Attachment:
 			<p:fileUpload fileUploadListener="#{mailMan.handleFileUpload}" 
 				mode="advanced" dragDropSupport="true"
 				update="messages" sizeLimit="3000000" 
 				allowTypes="/\.(pdf|jpe?g|png)$/" />
-    			<p:growl id="messages" showDetail="true" />
+			<p:growl id="messages" showDetail="true" />
 
 		</h:panelGrid>
 		<br/>
@@ -58,8 +58,9 @@
 		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
 		<br/>
 		<b>N.B.</b>: You must use both Select and Upload buttons to attach a pdf or jpg/png.
+		Files limited to 3 MB.
 		You must log out after sending a message to the list, otherwise problems 
-		will occur, like old attachments getting sent with new messages.
+		may occur, like old attachments getting sent with new messages.
 	</p:panel>
 	</h:form>
 </ui:define>
