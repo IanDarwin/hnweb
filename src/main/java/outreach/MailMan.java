@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.mail.BodyPart;
@@ -43,8 +43,11 @@ import model.Member;
  * absent which the mail will be sent from the email of the logged-in user,
  * assuming that this is syntactically valid (failing that, an exception
  * will be thrown in the mailing process, and you don't want that).
+ * Has to be session scoped so the upload doesn't get done in a separate
+ * instance than the submit, so beware of field-reuse issues.
+ * XXX consider conversation scope?
  */
-@ManagedBean(name="mailMan") @RequestScoped
+@ManagedBean(name="mailMan") @SessionScoped
 public class MailMan implements Serializable {
 
 	private static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
@@ -61,11 +64,11 @@ public class MailMan implements Serializable {
 	@Resource(mappedName="java:jboss/mail/Default")
 	Session session;		// non-private only for testing.
 	
-	String subject;
-	String messageBody;
-	byte[] uploadData = null;
-	String uploadContentType = null;
-	
+	private String subject;
+	private String messageBody;
+	private byte[] uploadData = null;
+	private String uploadContentType = null;
+
 	static final Properties props = 
 		propsFromClassPath(MailMan.class, CONFIG_PROPERTIES_NAME);
 	
@@ -299,8 +302,7 @@ public class MailMan implements Serializable {
         final UploadedFile file = event.getFile();
         uploadData = file.getContents();
         uploadContentType = file.getContentType();
-        
-        	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Succesful", file.getFileName() + " is uploaded."));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Succesful", file.getFileName() + " is uploaded."));
     }
 
 	public String getSubject() {

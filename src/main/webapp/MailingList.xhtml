@@ -39,7 +39,7 @@
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
-			PDF-Upload:
+			File-Upload:
 			<p:fileUpload fileUploadListener="#{mailMan.handleFileUpload}" 
 				mode="advanced" dragDropSupport="true"
 				update="messages" sizeLimit="3000000" 
@@ -54,7 +54,12 @@
 		<h:commandButton value="Send to Trips Email List" disabled="true"/>
 		<h:commandButton value="Send email to **entire list**" action="#{mailMan.sendMessageToAll}"/>
 		<h:commandButton value="Send nags to expired members only " action="#{mailMan.sendMessageToExpired}"/>
+		<br/>
 		<h:outputLink value="MailingListCSV.web">Download Current List - CSV format</h:outputLink>
+		<br/>
+		<b>N.B.</b>: You must use both Select and Upload buttons to attach a pdf or jpg/png.
+		You must log out after sending a message to the list, otherwise problems 
+		will occur, like old attachments getting sent with new messages.
 	</p:panel>
 	</h:form>
 </ui:define>
