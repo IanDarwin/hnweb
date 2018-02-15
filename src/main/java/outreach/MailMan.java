@@ -66,6 +66,9 @@ public class MailMan implements Serializable {
 	
 	private String subject;
 	private String messageBody;
+
+	// For uploaded attachment
+	private String uploadFileName;
 	private byte[] uploadData = null;
 	private String uploadContentType = null;
 
@@ -277,6 +280,7 @@ public class MailMan implements Serializable {
         if (uploadContentType != null) {
         		BodyPart attachPart = new MimeBodyPart();
         		attachPart.setContent(uploadData, uploadContentType);
+			attachPart.setFileName(uploadFileName);
         		mp.addBodyPart(attachPart);
         }
 
@@ -300,6 +304,7 @@ public class MailMan implements Serializable {
 	public void handleFileUpload(FileUploadEvent event) {
 		System.out.println("MailMan.handleFileUpload()");
         final UploadedFile file = event.getFile();
+        uploadFileName = file.getFileName();
         uploadData = file.getContents();
         uploadContentType = file.getContentType();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Succesful", file.getFileName() + " is uploaded."));
