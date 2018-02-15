@@ -9,3 +9,5 @@ UserEdit += password
 SELF_RENEW W/ PAYPAL
 
 MailingList - multiple attachments?
+
+MailingListCSV - show master when displaying a secondary
