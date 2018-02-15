@@ -136,7 +136,7 @@ public class MailMan implements Serializable {
 	 */
 	public void sendMessageToExec() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExec()");
-		if (sendMessageToSome(m -> m.getPosition() != null)) {
+		if (sendMessageToSome(m -> m.getPosition() != null && m.getPosition().length() > 0)) {
 			addFacesMessage("Message sent to Exec List.");
 		}
 	}
