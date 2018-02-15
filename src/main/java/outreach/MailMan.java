@@ -62,10 +62,10 @@ public class MailMan implements Serializable {
 	LoginAction identity;
 	
 	@Resource(mappedName="java:jboss/mail/Default")
-	Session session;		// non-private only for testing.
+	protected /*Mail*/Session session;		// Non-private only for testing.
 	
-	private String subject;
-	private String messageBody;
+	protected String subject;				// Ditto
+	protected String messageBody;
 
 	// For uploaded attachment
 	private String uploadFileName;
