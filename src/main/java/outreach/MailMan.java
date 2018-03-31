@@ -249,7 +249,7 @@ public class MailMan implements Serializable {
 		// From Address: send with two headers:
 		// From: noreply@darwinsys.com
 		// Reply-to: $user.email
-		String listAddress = "List Sender <noreply@darwinsys.com>";
+		String listAddress = "noreply@darwinsys.com";
 		final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
 		mesg.setFrom(fromInternetAddress);
 		mesg.addHeader("Reply-to", fromAddress);
