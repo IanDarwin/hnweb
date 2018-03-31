@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -214,6 +215,15 @@ public class MailMan implements Serializable {
 		MimeMessage mesg = createMessage(fromAddress, message_subject, message_body, emails,
 				uploadContentType, uploadData);
 
+		if (true) {
+			String from = mesg.getFrom().toString();
+			String reply = mesg.getHeader("Reply-to").toString();
+			StringBuffer to = new StringBuffer("To: ");
+			for (Address recip : mesg.getAllRecipients()) {
+				to.append(recip);
+			}
+			System.out.printf("From %s, Reply %s, To %s\n", from, reply, to.toString());
+		}
 		// Finally, send the message!
 		try {
 			Transport.send(mesg);
