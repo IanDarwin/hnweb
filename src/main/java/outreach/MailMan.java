@@ -265,7 +265,7 @@ public class MailMan implements Serializable {
 		mesg.addHeader("Reply-to", fromAddress);
 		
 		// Send ourself a copy as the (only) 'To' address
-		mesg.addRecipient(Message.RecipientType.TO, fromInternetAddress);
+		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
 
 		// TO Addresses - may be a lot! But send as BCC as usual for privacy.
 		for (String message_recip : recipients) {
