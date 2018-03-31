@@ -216,11 +216,11 @@ public class MailMan implements Serializable {
 				uploadContentType, uploadData);
 
 		if (true) {
-			String from = mesg.getFrom().toString();
-			String reply = mesg.getHeader("Reply-to").toString();
-			StringBuffer to = new StringBuffer("To: ");
+			String from = mesg.getFrom()[0].toString();
+			String reply = mesg.getHeader("Reply-to")[0];
+			StringBuffer to = new StringBuffer();
 			for (Address recip : mesg.getAllRecipients()) {
-				to.append(recip);
+				to.append(recip).append(',');
 			}
 			System.out.printf("From %s, Reply %s, To %s\n", from, reply, to.toString());
 		}
