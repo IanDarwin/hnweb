@@ -246,9 +246,13 @@ public class MailMan implements Serializable {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
-		// From Address
-		final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
+		// From Address: send with two headers:
+		// From: noreply@darwinsys.com
+		// Reply-to: $user.email
+		String listAddress = "List Sender <noreply@darwinsys.com>";
+		final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
 		mesg.setFrom(fromInternetAddress);
+		mesg.addHeader("Reply-to", fromAddress);
 		
 		// Send ourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, fromInternetAddress);
