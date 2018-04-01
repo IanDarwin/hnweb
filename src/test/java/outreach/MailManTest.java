@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.faces.application.FacesMessage;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.junit.Before;
@@ -30,6 +31,7 @@ public class MailManTest {
 	List<Member> fakeList = Arrays.asList(
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
+	final String A_MESSAGE_SUBJECT = "About your night life";
 	private MailMan sender;
 	private Member member;
 	private LoginAction identity;
@@ -68,13 +70,30 @@ public class MailManTest {
 	@Test
 	public void testCreateMessage() throws Exception {
 		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
-		final MimeMessage actual = sender.createMessage("from@dom.ain", 
-				"About your night life", 
+		final String messageSender = "from@dom.ain";
+		final MimeMessage actual = sender.createMessage(messageSender,
+				A_MESSAGE_SUBJECT,
 				"<html><p>Hello",
-				recipients, 
+				recipients,
 				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
-		assertEquals("Subject", "About your night life", actual.getSubject());
+		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
+		assertEquals("From", new InternetAddress(messageSender), actual.getFrom()[0]);
+	}
+
+	@Test
+	public void testCreateMessageWithNoReply() throws Exception {
+		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
+		final String NO_REPLY_ADDR = "slugs@junglegarden.moc";
+		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_NO_REPLY, NO_REPLY_ADDR);
+		final MimeMessage actual = sender.createMessage("from@dom.ain",
+				A_MESSAGE_SUBJECT,
+				"<html><p>Hello",
+				recipients,
+				null, null);
+		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
+		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
+		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
 	}
 
 	@Test

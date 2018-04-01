@@ -40,11 +40,11 @@ import model.Member;
 /**
  * Sends email on behalf of the club.
  * The "mail.smtphost" property must be set.
- * The "mail.sender" property may be set to a fake "no-reply" type address,
+ * The PROPNAME_MAIL_NO_REPLY property may be set to a fake "no-reply" type address,
  * absent which the mail will be sent from the email of the logged-in user,
  * assuming that this is syntactically valid (failing that, an exception
  * will be thrown in the mailing process, and you don't want that).
- * Has to be session scoped so the upload doesn't get done in a separate
+ * Has to be session scoped so that the upload doesn't get done in a separate
  * instance than the submit, so beware of field-reuse issues.
  * XXX consider conversation scope?
  */
@@ -53,9 +53,11 @@ public class MailMan implements Serializable {
 
 	private static final String HEADER_REPLY_TO = "Reply-To";
 
-	private static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
+	public static final String CONFIG_PROPERTIES_NAME = "/config.properties";
 
-	private static final String CONFIG_PROPERTIES_NAME = "/config.properties";
+	public static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
+
+	public static final String PROPNAME_MAIL_NO_REPLY = "no-reply-address";
 
 	private static final long serialVersionUID = -1980670543127065573L;
 
@@ -75,26 +77,25 @@ public class MailMan implements Serializable {
 	private byte[] uploadData = null;
 	private String uploadContentType = null;
 
-	static final Properties props = 
-		propsFromClassPath(MailMan.class, CONFIG_PROPERTIES_NAME);
-	
 	public MailMan() {
 		System.out.println("MailMan.MailMan()");
 	}
-	
-	private static Properties propsFromClassPath(Class<?> clazz, String propsName) {
-		try (InputStream is = clazz.getResourceAsStream(propsName)) {
+
+	static final Properties props;
+
+	static {
+		try (InputStream is = MailMan.class.getResourceAsStream(CONFIG_PROPERTIES_NAME)) {
 			if (is == null) {
 				throw new IllegalArgumentException(
-					"File " + propsName + " not on CLASSPATH for " + clazz.getName());
+					"File " + CONFIG_PROPERTIES_NAME + " not on CLASSPATH for " +
+							MailMan.class.getName());
 			}
-			Properties p = new Properties();
-			p.load(is);
-			p.store(System.out, "Meh");
-			return p;
+			props = new Properties();
+			props.load(is);
+			props.store(System.out, "Dump of MailMan config properties");
 		} catch (IOException e) {
-			throw new IllegalStateException(
-				"CANTHAPPEN: IOException in close of resource " + propsName);
+			throw new ExceptionInInitializerError(
+				"CANTHAPPEN: IOException in close of resource " + CONFIG_PROPERTIES_NAME);
 		}
 	}
 	
@@ -219,7 +220,8 @@ public class MailMan implements Serializable {
 
 		if (true) {
 			String from = mesg.getFrom()[0].toString();
-			String reply = mesg.getHeader(HEADER_REPLY_TO)[0];
+			final String[] toHeaders = mesg.getHeader(HEADER_REPLY_TO);
+			String reply = toHeaders != null ? toHeaders[0] : "(unset)";
 			StringBuffer to = new StringBuffer();
 			for (Address recip : mesg.getAllRecipients()) {
 				to.append(recip).append(',');
@@ -258,16 +260,15 @@ public class MailMan implements Serializable {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
-		boolean useNoReply = false;
-		if (!useNoReply) {	// Simple mode
+		String noReplyAddress = props.getProperty(PROPNAME_MAIL_NO_REPLY);
+		if (noReplyAddress == null) {	// Simple mode
 			final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
 			mesg.setFrom(fromInternetAddress);
 		} else {
 			// In "no-reply" mode, for From Address: send with two headers:
 			// From: noreply@darwinsys.com
 			// Reply-to: $user.email
-			String listAddress = "noreply-ucfn@darwinsys.com";
-			final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
+			final InternetAddress fromInternetAddress = new InternetAddress(noReplyAddress);
 			mesg.setFrom(fromInternetAddress);
 			mesg.addHeader(HEADER_REPLY_TO, fromAddress);
 		}
