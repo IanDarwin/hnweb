@@ -258,13 +258,19 @@ public class MailMan implements Serializable {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
-		// From Address: send with two headers:
-		// From: noreply@darwinsys.com
-		// Reply-to: $user.email
-		String listAddress = "noreply@darwinsys.com";
-		final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
-		mesg.setFrom(fromInternetAddress);
-		mesg.addHeader(HEADER_REPLY_TO, fromAddress);
+		boolean useNoReply = false;
+		if (!useNoReply) {	// Simple mode
+			final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
+			mesg.setFrom(fromInternetAddress);
+		} else {
+			// In "no-reply" mode, for From Address: send with two headers:
+			// From: noreply@darwinsys.com
+			// Reply-to: $user.email
+			String listAddress = "noreply-ucfn@darwinsys.com";
+			final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
+			mesg.setFrom(fromInternetAddress);
+			mesg.addHeader(HEADER_REPLY_TO, fromAddress);
+		}
 
 		// Additional list headers
 		mesg.addHeader("List-Id", "UCFN <ucfn.darwinsys.com>");
