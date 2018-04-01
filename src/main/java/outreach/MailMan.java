@@ -51,6 +51,8 @@ import model.Member;
 @ManagedBean(name="mailMan") @SessionScoped
 public class MailMan implements Serializable {
 
+	private static final String HEADER_REPLY_TO = "Reply-To";
+
 	private static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
 
 	private static final String CONFIG_PROPERTIES_NAME = "/config.properties";
@@ -217,12 +219,12 @@ public class MailMan implements Serializable {
 
 		if (true) {
 			String from = mesg.getFrom()[0].toString();
-			String reply = mesg.getHeader("Reply-to")[0];
+			String reply = mesg.getHeader(HEADER_REPLY_TO)[0];
 			StringBuffer to = new StringBuffer();
 			for (Address recip : mesg.getAllRecipients()) {
 				to.append(recip).append(',');
 			}
-			System.out.printf("From %s, Reply %s, To %s\n", from, reply, to.toString());
+			System.out.printf("From %s, %s %s, To %s\n", from, HEADER_REPLY_TO, reply, to.toString());
 		}
 		// Finally, send the message!
 		try {
@@ -262,7 +264,7 @@ public class MailMan implements Serializable {
 		String listAddress = "noreply@darwinsys.com";
 		final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
 		mesg.setFrom(fromInternetAddress);
-		mesg.addHeader("Reply-to", fromAddress);
+		mesg.addHeader(HEADER_REPLY_TO, fromAddress);
 		
 		// Send ourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
