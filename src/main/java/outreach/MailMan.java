@@ -224,7 +224,7 @@ public class MailMan implements Serializable {
 			for (Address recip : mesg.getAllRecipients()) {
 				to.append(recip).append(',');
 			}
-			System.out.printf("From %s, %s %s, To %s\n", from, HEADER_REPLY_TO, reply, to.toString());
+			System.out.printf("MailMan: From %s, %s %s, To %s\n", from, HEADER_REPLY_TO, reply, to.toString());
 		}
 		// Finally, send the message!
 		try {
@@ -265,7 +265,10 @@ public class MailMan implements Serializable {
 		final InternetAddress fromInternetAddress = new InternetAddress(listAddress);
 		mesg.setFrom(fromInternetAddress);
 		mesg.addHeader(HEADER_REPLY_TO, fromAddress);
-		
+
+		// Additional list headers
+		mesg.addHeader("List-Id", "UCFN <ucfn.darwinsys.com>");
+
 		// Send ourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
 
