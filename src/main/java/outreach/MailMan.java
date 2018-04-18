@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,6 +123,7 @@ public class MailMan implements Serializable {
 		if (sendMessage(Arrays.asList(identity.getLoggedInUser().getEmail()), subject, messageBody)) {
 			addFacesMessage("Message sent to your email, please proof-read.");
 		}
+		// Gotta stay on same page here!
 	}
 
 	/**
@@ -129,31 +131,70 @@ public class MailMan implements Serializable {
 	 */
 	public String sendMessageToAll() throws MessagingException {
 		System.out.println("MailMan.sendMessageToAll()");
-		if (sendMessageToSome(null)) {
-			addFacesMessage("Message sent to entire list.");
+		final int numSent = sendMessageToSome(null);
+		if (numSent > 0) {
+			addFacesMessage(
+				String.format("Message sent to entire list - %d current and former members.", numSent));
+			return "/";
+		} else {
+			addFacesMessage("Unable to send message!");
+			return null;
 		}
-		return "/";
 	}
 
 	/**
 	 * Send an email to the executive only.
 	 */
-	public void sendMessageToExec() throws MessagingException {
+	public String sendMessageToExec() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExec()");
-		if (sendMessageToSome(m -> m.getPosition() != null && m.getPosition().length() > 0)) {
-			addFacesMessage("Message sent to Exec List.");
+		int numSent = sendMessageToSome(m -> m.getPosition() != null && m.getPosition().length() > 0);
+		if (numSent > 0) {
+			addFacesMessage(String.format("Message sent to %d Exec Members.", numSent));
+			return "/";
+		} else {
+			addFacesMessage("Unable to send message!");
+			return null; // stay on page to try to fix it??
+		}
+	}
+	
+	/** This is non-final only to allow easier mocking */
+	static int currentCalendarYear = Year.now().getValue();
+	/** This has to be just right:
+	 * If it is now December, and you expired in September, you should still get the newsletter.
+	 * If it is now January, and you expired in September, you should still get the newsletter
+	 * If it is now January and you expired 15 months ago, you should NOT get the newsletter
+	 */
+	final static Chooser paidMemberChooser = m -> m.getExpiryYear() >= currentCalendarYear - 1;
+
+	/**
+	 * Send an email to the paid-up membership only.
+	 */
+	public String sendMessageToPaidUp() throws MessagingException {
+		System.out.println("MailMan.sendMessageToPaidUp()");
+		int numSent = sendMessageToSome(paidMemberChooser);
+		if (numSent > 0) {
+			addFacesMessage(String.format("Message sent to %d Paid-up Members.", numSent));
+			return "/";
+		} else {
+			addFacesMessage("Unable to send message!");
+			return null;
 		}
 	}
 
 	/**
 	 * Send a dunning letter to members that have not renewed.
 	 */
-	public void sendMessageToExpired() throws MessagingException {
+	public String sendMessageToExpired() throws MessagingException {
 		System.out.println("MailMan.sendMessageToExpired()");
 		LocalDate d = LocalDate.now();
 		int year = d.getYear();
-		if (sendMessageToSome(m -> m.getExpiryYear() < year)) {
-			addFacesMessage("Message sent to expired members.");
+		final int numSent = sendMessageToSome(m -> m.getExpiryYear() < year);
+		if (numSent > 0) {
+			addFacesMessage(String.format("Message sent to %d expired members.", numSent));
+			return "/";
+		} else {
+			addFacesMessage("Unable to send message!");
+			return null;
 		}
 	}
 
@@ -161,7 +202,7 @@ public class MailMan implements Serializable {
 	 * Common code for Some of the sendMessageToXXX() methods;
 	 * takes a lambda for including/excluding each member from the list.
 	 */
-	public boolean sendMessageToSome(Chooser ch) throws MessagingException {
+	int sendMessageToSome(Chooser ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
 		List<String> emails = selectListMembers(all, ch);
@@ -172,7 +213,7 @@ public class MailMan implements Serializable {
 		}
 		return sendMessage(
 				emails, 
-				subject, messageBody);
+				subject, messageBody) ? emails.size() : 0;
 	}
 
 	/**
@@ -181,7 +222,7 @@ public class MailMan implements Serializable {
 	 * @param ch The chooser
 	 * @return The subset list
 	 */
-	public static List<String> selectListMembers(List<Member> list, Chooser ch) {
+	static List<String> selectListMembers(List<Member> list, Chooser ch) {
 		List<String> emails = new ArrayList<>(list.size());
 		for (Member p : list) {
 			final String email = p.getEmail();
