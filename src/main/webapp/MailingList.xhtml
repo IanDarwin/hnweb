@@ -42,14 +42,14 @@
 			Add-Attachment:
 			<p:fileUpload fileUploadListener="#{mailMan.handleFileUpload}" 
 				mode="advanced" dragDropSupport="true"
-				update="messages" sizeLimit="3000000" 
+				update="messages" sizeLimit="5000000" 
 				allowTypes="/\.(pdf|jpe?g|png)$/" />
 			<p:growl id="messages" showDetail="true" />
 
 		</h:panelGrid>
 		
-		<b>N.B.</b>: You must use both Choose and Upload buttons to attach a pdf or jpg/png.
-		Files limited to 3 MB.
+		<b>N.B.</b>: To attach a pdf or jpg/png, you <b>must use both Choose and Upload buttons</b>.
+		Files limited to 5 MB.
 		You must log out after sending a message to the list, otherwise problems 
 		may occur, like old attachments getting sent with new messages.
 		<br/>
