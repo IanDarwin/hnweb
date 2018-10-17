@@ -341,6 +341,7 @@ public class MailMan implements Serializable {
         BodyPart textPart = new MimeBodyPart();
         String plainBody = sanitizeToPlainText(htmlBody);
         textPart.setText(plainBody); // sets type of this part to "text/plain"
+		textPart.addHeader("Content-Type", "text/plain; charset=iso-8859-1");
         mp.addBodyPart(textPart);
         
         // Toss in one attachment if there is one
