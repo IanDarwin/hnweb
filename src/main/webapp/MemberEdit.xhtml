@@ -27,15 +27,15 @@
 		<h:message id='idMessage' for='idTF'/>
 		
 		First Name:
-		<h:inputText id="firstnameTF" value="#{memberHome.instance.firstName}" required='true'/>
+		<h:inputText id="firstnameTF" value="#{memberHome.instance.firstName}" required='true' size="50"/>
 		<h:message id='firstnameMessage' for='firstnameTF'/>
 		
 		M.I.:
-		<h:inputText id="middlenameTF" value="#{memberHome.instance.middle}" required='false'/>
+		<h:inputText id="middlenameTF" value="#{memberHome.instance.middle}" required='false' size="50"/>
 		<h:message id='middlenameMessage' for='middlenameTF'/>
 		
 		Last Name:
-		<h:inputText id="lastnameTF" value="#{memberHome.instance.lastName}" required='true'/>
+		<h:inputText id="lastnameTF" value="#{memberHome.instance.lastName}" required='true' size="50"/>
 		<h:message id='lastnameMessage' for='lastnameTF'/>
 
 		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
@@ -97,7 +97,8 @@
 
 		Email:
 		<h:inputText id="emailTF" value="#{memberHome.instance.email}"
-			validator="#{memberHome.validateEmail}">
+			validator="#{memberHome.validateEmail}"
+			size="50">
 			<f:ajax event="blur" render='emailMessage'/>
 		</h:inputText>
 		<h:message id='emailMessage' for='emailTF'/>
