@@ -354,6 +354,7 @@ public class MailMan implements Serializable {
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
+		mesg.addHeader("Content-Type", "multipart/alternative");
 		return mesg;
 	}
 
