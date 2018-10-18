@@ -335,6 +335,7 @@ public class MailMan implements Serializable {
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
         htmlPart.setContent(htmlBody, "text/html");
+		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
 
         // Convert to plain text and send it that way too, for olde mailers.
@@ -342,6 +343,7 @@ public class MailMan implements Serializable {
         String plainBody = sanitizeToPlainText(htmlBody);
         textPart.setText(plainBody); // sets type of this part to "text/plain"
 		textPart.addHeader("Content-Type", "text/plain; charset=iso-8859-1");
+		textPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(textPart);
         
         // Toss in one attachment if there is one
@@ -354,7 +356,7 @@ public class MailMan implements Serializable {
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
-		mesg.addHeader("Content-Type", "multipart/alternative");
+		//mesg.setContentType("multipart/alternative");
 		return mesg;
 	}
 
