@@ -19,10 +19,12 @@ public class MemberArchived extends Member {
 	private LocalDate archivedDate;
 	
 	public MemberArchived() {
-		// Empty, needed by JPA
+		archivedDate = LocalDate.now(); // Do this "now", avoid NPE later
+		archivedReason = "Deleted";
 	}
 
 	public MemberArchived(Member m) {
+		this();
 		try {
 			BeanUtils.copyProperties(this, m);		// (dest, src)
 		} catch (IllegalAccessException|InvocationTargetException ex) {
@@ -30,8 +32,6 @@ public class MemberArchived extends Member {
 			// t.setCause(ex);
 			throw t;
 		}
-		archivedDate = LocalDate.now();
-		archivedReason = "Deleted";
 	}
 
 	public String getArchivedReason() {
