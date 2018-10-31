@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 
 import model.Member;
 import model.MemberArchived;
+import model.MemberBase;
 
 @Stateful @Named @RequestScoped
 public class RemoveAction {
@@ -25,9 +26,12 @@ public class RemoveAction {
 		em.createNativeQuery(archive_sql).
 			setParameter(1, instance.getId()).
 			executeUpdate();
+		for (MemberBase sm : instance.getSecondaryMembers()) {
+			em.remove(sm);
+		}
 		em.remove(em.getReference(Member.class, instance.getId()));
 		em.flush();
-		// I don't like this, but it's all one transaction despite the flush (hopes).
+		// I don't like this, but it is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
 		System.out.println("Removed!");
 		return "MemberList";
