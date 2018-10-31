@@ -28,4 +28,14 @@ public class MemberArchived extends Member {
 		archivedDate = LocalDate.now();
 		archivedReason = "Deleted";
 	}
+
+	@Column(name="archive_reason")
+	public String getArchivedReason() {
+		return archivedReason;
+	}
+
+	@Column(name="archive_date")
+	public LocalDate(archivedDate() {
+		return archivedDate;
+	}
 }
