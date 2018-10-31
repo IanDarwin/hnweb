@@ -19,7 +19,7 @@
 		<h:outputText value="Member"/>
 		<p:autoComplete id="member" queryDelay="50" 
 			value="#{renewAction.member}" 
-			completeMethod="#{renewAction.completeText}" effect="blind" />
+			completeMethod="#{memberCompleteAction.completeText}" effect="blind" />
 
 		<h:outputText value="Number of Years"/>
 		<h:selectOneMenu value="#{renewAction.numYears}">
