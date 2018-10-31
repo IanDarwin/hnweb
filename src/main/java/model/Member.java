@@ -17,6 +17,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -33,10 +35,11 @@ import com.darwinsys.geo.CanadaProvince;
  * @author Ian Darwin
  */
 @Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @ManagedBean(name="person")
 public class Member {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
 	protected String email;
 	protected String password;
