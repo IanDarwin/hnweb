@@ -1,7 +1,6 @@
 package jpa;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.AttributeConverter;

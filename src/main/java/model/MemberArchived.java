@@ -1,10 +1,16 @@
 package model;
 
 import java.lang.reflect.InvocationTargetException;
-import javax.persistence.*;
-import org.apache.commons.beanutils.*;
 import java.time.LocalDate;
-import lombok.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.apache.commons.beanutils.BeanUtils;
+
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Archived Member has all fields of regular member, plus archived date and reason.
