@@ -37,6 +37,7 @@ public class MemberTransaction implements Serializable {
 	@JoinColumn(name="member_id")
 	private Member member;
 	@Temporal(TemporalType.DATE)
+	@Column(name="date")
 	private Date dateRenewed = new Date();
 	private int numYears;
 	private int newExpiryYear;
