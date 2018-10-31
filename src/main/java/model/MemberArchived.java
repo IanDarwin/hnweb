@@ -9,13 +9,18 @@ import lombok.*;
 /**
  * Archived Member has all fields of regular member, plus archived date and reason.
  */
-@NoArgsConstructor()
 @ToString() 
 @EqualsAndHashCode()
 @Entity @Table(name="member_archived")
 public class MemberArchived extends Member {
-	String archivedReason;
-	LocalDate archivedDate;
+	@Column(name="archive_reason")
+	private String archivedReason;
+	@Column(name="archive_date")
+	private LocalDate archivedDate;
+	
+	public MemberArchived() {
+		// Empty, needed by JPA
+	}
 
 	public MemberArchived(Member m) {
 		try {
@@ -29,12 +34,10 @@ public class MemberArchived extends Member {
 		archivedReason = "Deleted";
 	}
 
-	@Column(name="archive_reason")
 	public String getArchivedReason() {
 		return archivedReason;
 	}
 
-	@Column(name="archive_date")
 	public LocalDate getArchivedDate() {
 		return archivedDate;
 	}
