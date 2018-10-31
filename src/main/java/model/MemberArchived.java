@@ -35,7 +35,7 @@ public class MemberArchived extends Member {
 	}
 
 	@Column(name="archive_date")
-	public LocalDate(archivedDate() {
+	public LocalDate getArchivedDate() {
 		return archivedDate;
 	}
 }
