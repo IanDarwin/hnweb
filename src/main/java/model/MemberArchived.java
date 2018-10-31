@@ -2,6 +2,8 @@ package model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +41,10 @@ public class MemberArchived extends MemberBase {
 			// t.setCause(ex);
 			throw t;
 		}
+		// Now have to clear some fields. For now.
 		id = 0;
+		transactions = new ArrayList<>();
+		secondaryMembers = new HashSet<>();
 	}
 
 	public String getArchivedReason() {
