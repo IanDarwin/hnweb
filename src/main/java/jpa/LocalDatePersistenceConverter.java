@@ -20,6 +20,9 @@ public class LocalDatePersistenceConverter
 
 	@Override
 	public LocalDate convertToEntityAttribute(Date databaseValue) {
+		if (databaseValue == null) {
+			return LocalDate.now();
+		}
 		return databaseValue.toLocalDate();
 	}
 }

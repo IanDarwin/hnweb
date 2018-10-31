@@ -1,6 +1,7 @@
 package jpa;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.AttributeConverter;
@@ -20,6 +21,9 @@ public class LocalDateTimePersistenceConverter
 
     @Override
     public LocalDateTime convertToEntityAttribute(java.sql.Timestamp databaseValue) {
+    	if (databaseValue == null) {
+			return LocalDateTime.now();
+		}
         return databaseValue.toLocalDateTime();
     }
 }
