@@ -26,7 +26,7 @@ public class RemoveAction {
 			setParameter(1, instance.getId()).
 			executeUpdate();
 		em.persist(new MemberArchived(instance));
-		em.remove(instance);
+		em.remove(em.getReference(Member.class, instance.getId()));
 		System.out.println("Removed!");
 		return "MemberList";
 	}
