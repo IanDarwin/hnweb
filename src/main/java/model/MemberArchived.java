@@ -29,6 +29,7 @@ public class MemberArchived extends MemberBase {
 		archivedReason = "Deleted";
 	}
 
+	/** Copy Constructor: copies all field but for ID */
 	public MemberArchived(Member m) {
 		this();
 		try {
@@ -38,6 +39,7 @@ public class MemberArchived extends MemberBase {
 			// t.setCause(ex);
 			throw t;
 		}
+		id = 0;
 	}
 
 	public String getArchivedReason() {

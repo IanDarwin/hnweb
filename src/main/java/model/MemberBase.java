@@ -40,7 +40,7 @@ import com.darwinsys.geo.CanadaProvince;
 public abstract class MemberBase {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long id;
+	protected long id; // Should be private but Archived copy-constr needs it.
 	protected String email;
 	protected String password;
 	protected String firstName, middle, lastName;
