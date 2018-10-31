@@ -25,8 +25,10 @@ public class RemoveAction {
 		em.createNativeQuery(archive_sql).
 			setParameter(1, instance.getId()).
 			executeUpdate();
-		em.persist(new MemberArchived(instance));
 		em.remove(em.getReference(Member.class, instance.getId()));
+		em.flush();
+		// I don't like this, but it's all one transaction despite the flush (hopes).
+		em.persist(new MemberArchived(instance));
 		System.out.println("Removed!");
 		return "MemberList";
 	}
