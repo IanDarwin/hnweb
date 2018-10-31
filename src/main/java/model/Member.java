@@ -1,8 +1,10 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,6 +20,10 @@ import javax.persistence.Transient;
  */
 @Entity
 public class Member extends MemberBase {
+
+	// For app-managed security - only Members, not Archived, can be in rolese
+	@ElementCollection
+	protected List<String> roles = new ArrayList<>();
 	
 	// Modifiable for testing only; used in calculations
 	@Transient

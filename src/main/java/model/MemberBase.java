@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -38,7 +37,7 @@ import com.darwinsys.geo.CanadaProvince;
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @ManagedBean(name="person")
-public class MemberBase {
+public abstract class MemberBase {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long id;
@@ -72,8 +71,6 @@ public class MemberBase {
 	protected boolean emailTrips;
 	@Version // Field only used for optimistic locking
 	protected int version;
-	@ElementCollection
-	protected List<String> roles = new ArrayList<>();
 	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
 	protected List<MemberTransaction> transactions = new ArrayList<>();
 	
@@ -377,19 +374,6 @@ public class MemberBase {
 					postCode + " not valid Canadian postcode");
 			}
 		}
-	}
-
-	// For app-managed security
-
-	public List<String> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-
-	public void addRole(String role) {
-		roles.add(role);
 	}
 
 	/** Return true iff this member (or their Master Member) is expired */
