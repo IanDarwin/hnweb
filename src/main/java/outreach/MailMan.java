@@ -307,11 +307,10 @@ public class MailMan implements Serializable {
 			mesg.setFrom(fromInternetAddress);
 		} else {
 			// In "no-reply" mode, for From Address: send with two headers:
-			// From: noreply@darwinsys.com
+			// From: noreply@whatever.dom
 			// Reply-to: $user.email
-			final InternetAddress fromInternetAddress = new InternetAddress(noReplyAddress);
-			mesg.setFrom(fromInternetAddress);
-			mesg.addHeader(HEADER_REPLY_TO, fromAddress);
+			mesg.setFrom(new InternetAddress(noReplyAddress));
+			mesg.setReplyTo(new Address[] {new InternetAddress(fromAddress)});
 		}
 
 		// Additional list headers
@@ -356,6 +355,7 @@ public class MailMan implements Serializable {
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
+        System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type"));
 		//mesg.setContentType("multipart/alternative");
 		return mesg;
 	}

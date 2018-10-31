@@ -1,6 +1,7 @@
 package outreach;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -28,6 +30,7 @@ import model.Member;
 @RunWith(PowerMockRunner.class)
 public class MailManTest {
 
+	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
 	List<Member> fakeList = Arrays.asList(
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
@@ -64,7 +67,23 @@ public class MailManTest {
 		sender.sendMessageToAll();
 		
 		PowerMockito.verifyStatic();
-
+	}
+	
+	@Test
+	public void testCreateMessageGetBody() throws Exception {
+		List<String> recipients = Arrays.asList("a@b.c");
+		final MimeMessage actual = sender.createMessage("from@dom.ain",
+				A_MESSAGE_SUBJECT,
+				HTML_HELLO_WORLD,
+				recipients,
+				null, null);
+		Multipart content = (Multipart) actual.getContent();
+		for (int i = 0; i < content.getCount(); i++) {
+			if (HTML_HELLO_WORLD.equals(content.getBodyPart(i).getContent())) {
+				return;
+			}
+		}
+		fail("get content matching " + HTML_HELLO_WORLD);
 	}
 	
 	@Test
@@ -73,7 +92,7 @@ public class MailManTest {
 		final String messageSender = "from@dom.ain";
 		final MimeMessage actual = sender.createMessage(messageSender,
 				A_MESSAGE_SUBJECT,
-				"<html><p>Hello",
+				HTML_HELLO_WORLD,
 				recipients,
 				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
@@ -83,17 +102,18 @@ public class MailManTest {
 
 	@Test
 	public void testCreateMessageWithNoReply() throws Exception {
-		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
+		List<String> recipients = Arrays.asList("a@b.c");
 		final String NO_REPLY_ADDR = "slugs@junglegarden.moc";
 		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_NO_REPLY, NO_REPLY_ADDR);
 		final MimeMessage actual = sender.createMessage("from@dom.ain",
 				A_MESSAGE_SUBJECT,
-				"<html><p>Hello",
+				HTML_HELLO_WORLD,
 				recipients,
 				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
 		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
 		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
+		assertEquals("Reply-to", new InternetAddress("from@dom.ain"), actual.getReplyTo()[0]);
 	}
 
 	@Test
