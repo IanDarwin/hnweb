@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString() 
 @EqualsAndHashCode()
 @Entity @Table(name="member_archived")
-public class MemberArchived extends Member {
+public class MemberArchived extends MemberBase {
 	@Column(name="archive_reason")
 	private String archivedReason;
 	@Column(name="archive_date")

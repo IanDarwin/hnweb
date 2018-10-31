@@ -8,6 +8,7 @@
 	<persistence-unit name="ucfnclublist" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/UcfnClubDataSource</jta-data-source>
+		<class>model.MemberBase</class>
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
 		<class>model.MemberTransaction</class>
