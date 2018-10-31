@@ -1,6 +1,6 @@
-Fix Delete (says EJB was removed)
+= TODO
 
-NB: Update Secondary member when renewing or setting date!
+Update Secondary member when renewing or setting date!
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 

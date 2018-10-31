@@ -34,6 +34,14 @@
 
 	<dependencies>
 
+		<!-- Lombok boilerplate generator -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.4</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- My personal APIs -->
 		<dependency>
 			<groupId>com.darwinsys</groupId>
@@ -48,6 +56,13 @@
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-ee</artifactId>
 			<version>${darwinsys-ee.version}</version>
+		</dependency>
+
+		<!-- BeanUtils, just for copyProperties -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils-core</artifactId>
+			<version>1.8.3</version>
 		</dependency>
 	
 		<!-- Java EE API, Web Profile -->

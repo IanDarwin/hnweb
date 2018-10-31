@@ -8,6 +8,7 @@
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>model.Member</class>
+		<class>model.MemberArchived</class>
 		<class>model.MemberTransaction</class>
 		<class>model.Config</class>
 
