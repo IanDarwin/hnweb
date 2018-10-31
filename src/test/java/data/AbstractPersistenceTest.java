@@ -18,6 +18,12 @@ public class AbstractPersistenceTest {
 		emf = Persistence.createEntityManagerFactory("test");
 	}
 
+	public EntityManager getEntityManager() {
+		if (em == null) {
+			throw new IllegalStateException("getEntityManager() called before @Before method, how?");
+		}
+		return em;
+	}
 
 	@Before
 	public void preTest() {

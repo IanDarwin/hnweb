@@ -17,14 +17,9 @@
 		<p:panelGrid columns='2'>
 
 		<h:outputText value="Member"/>
-		<h:selectOneMenu value="#{renewAction.member}"
-			converter="entityConverter"
-			>
-			<f:selectItems var="_member" value="#{memberHome.memberList}"
-				noSelectionValue="#{memberHome.memberList[0]}"
-				itemLabel="#{_member.name}"
-				itemValue="#{_member}"/>
-		</h:selectOneMenu>
+		<p:autoComplete id="member" queryDelay="50" 
+			value="#{renewAction.member}" 
+			completeMethod="#{renewAction.completeText}" effect="blind" />
 
 		<h:outputText value="Number of Years"/>
 		<h:selectOneMenu value="#{renewAction.numYears}">
