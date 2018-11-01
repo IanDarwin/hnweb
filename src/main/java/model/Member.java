@@ -2,10 +2,15 @@ package model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
@@ -24,6 +29,14 @@ public class Member extends MemberBase {
 	// For app-managed security - only Members, not Archived, can be in rolese
 	@ElementCollection
 	protected List<String> roles = new ArrayList<>();
+	
+	// Member-only fields
+	/** Only if memberType is MemberType.Secondary */
+	@ManyToOne(fetch=FetchType.EAGER)
+	protected Member masterMember;
+	/** Only if memberType is MemberType.Family */
+	@OneToMany(mappedBy="masterMember")
+	protected Set<Member> secondaryMembers;
 	
 	// Modifiable for testing only; used in calculations
 	@Transient
@@ -47,6 +60,38 @@ public class Member extends MemberBase {
 		this.middle = middle;
 		this.lastName = lastName;
 		this.email = email;
+	}
+	
+	/** 
+	 * If this Member is a MemberType.Secondary member, this
+	 * Property will refer to the Master (e.g., paying!) member.
+	 * @return The master member
+	 */
+	public MemberBase getMasterMember() {
+		return masterMember;
+	}
+
+	public void setMasterMember(Member masterMember) {
+		this.masterMember = masterMember;
+		if (masterMember != null) {
+			masterMember.getSecondaryMembers().add((Member)this);
+		}
+	}
+
+	/** 
+	 * OTOH, if this Member is a MemberType.Family member, this
+	 * Property will refer to the Secondary member(s).
+	 * @return The secondary members
+	 */
+	public Set<Member> getSecondaryMembers() {
+		if (secondaryMembers == null) {
+			secondaryMembers = new HashSet<>();
+		}
+		return secondaryMembers;
+	}
+
+	public void setSecondaryMembers(Set<Member> secondaryMembers) {
+		this.secondaryMembers = secondaryMembers;
 	}
 
 	@Transient

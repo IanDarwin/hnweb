@@ -2,9 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.CascadeType;
@@ -12,16 +10,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -57,12 +51,7 @@ public abstract class MemberBase {
 	protected int expiryYear;
 	@Enumerated(EnumType.STRING)
 	protected MemberType memberType = MemberType.Individual;
-	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne(fetch=FetchType.EAGER)
-	protected MemberBase masterMember;
-	/** Only if memberType is MemberType.Family */
-	@OneToMany(mappedBy="masterMember")
-	protected Set<MemberBase> secondaryMembers;
+
 	/** How they get the club newsletter */
 	protected NewsletterMode newsletterMode;
 	protected Integer yearJoined = LocalDate.now().getYear();
@@ -146,37 +135,7 @@ public abstract class MemberBase {
 		this.memberType = memberType;
 	}
 
-	/** 
-	 * If this Member is a MemberType.Secondary member, this
-	 * Property will refer to the Master (e.g., paying!) member.
-	 * @return The master member
-	 */
-	public MemberBase getMasterMember() {
-		return masterMember;
-	}
 
-	public void setMasterMember(MemberBase masterMember) {
-		this.masterMember = masterMember;
-		if (masterMember != null) {
-			masterMember.getSecondaryMembers().add(this);
-		}
-	}
-
-	/** 
-	 * OTOH, if this Member is a MemberType.Family member, this
-	 * Property will refer to the Secondary member(s).
-	 * @return The secondary members
-	 */
-	public Set<MemberBase> getSecondaryMembers() {
-		if (secondaryMembers == null) {
-			secondaryMembers = new HashSet<>();
-		}
-		return secondaryMembers;
-	}
-
-	public void setSecondaryMembers(Set<MemberBase> secondaryMembers) {
-		this.secondaryMembers = secondaryMembers;
-	}
 
 	public String getHomePhone() {
 		return homePhone;
@@ -330,69 +289,6 @@ public abstract class MemberBase {
 	public void acceptRenewal(MemberTransaction renewal) {
 		setExpiryYear(getExpiryYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
-	}
-	
-	@PrePersist @PreUpdate
-	public void preJpa() {
-		fixMembership();
-		fixupPostCode();
-	}
-	
-	/** 
-	 * Only a Family membership "Secondary" can have a
-	 * master member, but the UI lets them be set...
-	 */
-	public void fixMembership() {
-		if (memberType == null) {
-			throw new NullPointerException("Saving Member w/ no MemberType");
-		}
-		if (MemberType.Secondary != memberType) {
-			masterMember = null;
-		}
-	}
-	/**
-	 * Canadian Post Codes can be entered in either case
-	 * and with or without the middle space; this
-	 * canonicalizes them to upper case and with the space.
-	 */
-	public void fixupPostCode() {
-		if (getPostCode() == null) {
-			return;
-		}
-		if (country == Country.CA) {
-			String ananan = getPostCode().toUpperCase();
-			switch(ananan.length()) {
-			case 7: // OK
-				break;
-			case 6: // Missing internal space
-				postCode = 
-					ananan.substring(0,3) + " " +
-					ananan.substring(3);
-				break;
-			default:
-				throw new IllegalStateException(
-					postCode + " not valid Canadian postcode");
-			}
-		}
-	}
-
-	/** Return true iff this member (or their Master Member) is expired */
-	public boolean isExpired() {
-		if (memberType == MemberType.Secondary) {
-			return masterMember.isExpired();
-		}
-
-		// If current year is past expiry year, obv. this member is expired.
-		if (now.getYear() > getExpiryYear()) {
-			return true;
-		}
-		// Not currently greater than exp year, so might be in it, must
-		// check if we are currently past the expiry month.
-		if (now.getYear() == getExpiryYear() &&
-				now.getMonth().getValue() > Config.RENEWAL_MONTH)
-			return true;
-		// Otherwise we are not yet in the expiry year.
-		return false;
 	}
 
 	@Override
