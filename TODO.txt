@@ -1,6 +1,8 @@
 = TODO
 
-Update Secondary member when renewing or setting date!
+Make MemberBase be an Embeddable, not a parent class. MESSY.
+
+Update Secondary member when renewing or setting date (low prio since we already display master's exp)
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 
