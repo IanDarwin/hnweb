@@ -13,22 +13,19 @@ import model.Member;
 @SessionScoped
 public class MemberCompleteAction {
 
-	public MemberCompleteAction() {
-		System.out.println("MemberCompleteAction()");
-	}
-
 	@Inject
 	MemberList service;
 	
 	List<Member> allMembers;
 
+	/** non-public; for testing */
 	void setAllMembers(List<Member> allMembers) {
 		this.allMembers = allMembers;
 	}
 
 	public List<Member> completeMember(String query) {
 		if (allMembers == null) {
-			allMembers = service.findAll();
+			allMembers = service.findNonSecondaries();
 		}
         List<Member> filteredMembers = new ArrayList<Member>();
         for (Member m : allMembers) {

@@ -47,6 +47,12 @@ public class RenewAction implements Serializable {
 		em.persist(tx);
 		member.getMemberTransactions().add(tx);
 		member.acceptRenewal(tx);
+		// XXX Needs more post-split refactoring
+//		if (member.getMemberType() == MemberType.Family) {
+//			for (Member m : member.getSecondaryMembers()) {
+//				m.acceptRenewal(renewal);
+//			}
+//		}
 		
 		return VIEW_PAGE + FORCE_REDIRECT + "&memberId=" + member.getId();
 	}

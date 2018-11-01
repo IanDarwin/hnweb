@@ -29,6 +29,9 @@ public interface MemberList extends Serializable, EntityRepository<Member, Long>
 	@Query(value=FIND_ALL_QUERY)
 	List<Member> findAll();
 
+	@Query(value="select m from Member m where m.memberType != 'Secondary' order by m.lastName asc")
+	List<Member> findNonSecondaries();
+	
 	@Query(value="select m from Member m where m.expiryYear >= 2019 order by m.lastName asc")
 	List<Member> findCurrent();
 
