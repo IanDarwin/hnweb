@@ -53,7 +53,13 @@ public class LoginAction implements Serializable {
                     new FacesMessage("Logged in as " + getLoggedInUser().getName()));
 			final HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 					.getExternalContext()
-					.getSession(false);
+					.getSession(true);
+
+			// Give logged-in user a bit of time
+			final int timeout = 2 * 60 * 60;
+			session.setMaxInactiveInterval(timeout);
+
+			// See if they got here by redirect from protected page
 			String redirTarget = (String) session
 					.getAttribute(LoginConstants.TARGET_URI_KEY);
 			if (redirTarget != null) {
@@ -83,6 +89,7 @@ public class LoginAction implements Serializable {
 		return userlist.findByEmailAndPassword(email, DigestUtils.md5(password));
 	}
 
+	/** Does what it says on the tin. */
 	public String logout() {
 		System.out.println("Logout " + getLoggedInUser());
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
@@ -119,6 +126,7 @@ public class LoginAction implements Serializable {
 		return loggedInUser;
 	}
 
+	/** Important for security */
 	public boolean hasRole(String role) {
 		if (role == null) {
 			throw new NullPointerException("isUserInRole(null) isn't sensible");
