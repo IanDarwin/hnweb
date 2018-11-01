@@ -11,15 +11,17 @@
 <ui:define name="body">
 
 	<p:panel>
-
-	<h:form>
+	  <h:form>
 
 		<p:panelGrid columns='2'>
 
 		<h:outputText value="Member"/>
 		<p:autoComplete id="member" queryDelay="50" 
 			value="#{renewAction.member}" 
-			completeMethod="#{memberCompleteAction.completeText}" effect="blind" />
+			completeMethod="#{memberCompleteAction.completeMember}"
+			converter="#{memberConverter}" 
+			var="_member" itemLabel="#{_member.name}" itemValue="#{_member.id}"
+			effect="blind" />
 
 		<h:outputText value="Number of Years"/>
 		<h:selectOneMenu value="#{renewAction.numYears}">

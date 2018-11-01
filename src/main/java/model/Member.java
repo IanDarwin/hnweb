@@ -60,6 +60,12 @@ public class Member extends MemberBase {
 		sb.append(' ').append(getLastName());
 		return sb.toString();
 	}
+	
+	@Transient
+	public String[] getNames() {
+		String[] names = {getFirstName(), getLastName()};
+		return names;
+	}
 
 	@PrePersist @PreUpdate
 	public void preJpa() {

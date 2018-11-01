@@ -3,14 +3,14 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import model.Member;
 
-@Named
-@ViewScoped
+@ManagedBean
+@SessionScoped
 public class MemberCompleteAction {
 
 	public MemberCompleteAction() {

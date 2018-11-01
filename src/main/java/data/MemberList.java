@@ -24,12 +24,17 @@ import org.apache.deltaspike.data.api.Repository;
 @Repository 
 public interface MemberList extends Serializable, EntityRepository<Member, Long>  {
 
-	@Query(value="select m from Member m order by m.lastName asc")
+	public static final String FIND_ALL_QUERY = "select m from Member m order by m.lastName asc";
+
+	@Query(value=FIND_ALL_QUERY)
 	List<Member> findAll();
 
 	@Query(value="select m from Member m where m.expiryYear >= 2019 order by m.lastName asc")
 	List<Member> findCurrent();
 
 	/** Basic for login */
-	public Member findByEmailAndPassword(String email, String passwordHash);
+	Member findByEmailAndPassword(String email, String passwordHash);
+
+	/** Find one member by both names; used in JSF converter */
+	Member findByFirstNameLastName(String string, String string2);
 }
