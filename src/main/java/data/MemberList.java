@@ -36,5 +36,5 @@ public interface MemberList extends Serializable, EntityRepository<Member, Long>
 	Member findByEmailAndPassword(String email, String passwordHash);
 
 	/** Find one member by both names; used in JSF converter */
-	Member findByFirstNameLastName(String string, String string2);
+	Member findByFirstNameAndLastName(String string, String string2);
 }

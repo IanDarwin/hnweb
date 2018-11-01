@@ -62,9 +62,8 @@ public class Member extends MemberBase {
 	}
 	
 	@Transient
-	public String[] getNames() {
-		String[] names = {getFirstName(), getLastName()};
-		return names;
+	public String getNames() {
+		return String.format("%s, %s", lastName, firstName);
 	}
 
 	@PrePersist @PreUpdate
