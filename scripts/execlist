@@ -2,6 +2,8 @@
 
 psql -d ucfn <<!
 
-select firstname,lastname,email,'#',id,position from member where position is not null;
+select firstname,lastname,email,'#',id,position from member 
+	where position is not null 
+	AND position != '';
 
 !
