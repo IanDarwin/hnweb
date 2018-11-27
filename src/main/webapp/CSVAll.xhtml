@@ -6,7 +6,7 @@
 	xmlns:of="http://omnifaces.org/functions"
 	>
 
-<!-- Display the club members' information in CSV -->
+<!-- Display ALL PAST AND PRESENT club members' information in CSV -->
 # This is a snapshot of the UCFN club membership list, and is restricted to use
 # by duly appointed members of the Club Executive.
 # It was only current as of #{of:formatDate(now, 'yyyy-MM-dd')}; if today's date is after
@@ -14,7 +14,7 @@
 # Entries will appear on their own lines in "View Source" or "File->SaveAs".
 # There is one line per person. "Family" has one or more "Secondary" members but we don't yet show the relationship
 # among them properly. 
-firstName,lastName,memberType,position-if-any,address,address2,city,province,postcode,email,homePhone,workPhone,cellPhone
+firstName,lastName,memberType,expiry-year,position-if-any,address,address2,city,province,postcode,email,homePhone,workPhone,cellPhone
 <ui:repeat var="m" value="#{memberList.findCurrent()}">
-"#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.position}","#{m.address}","#{m.address2}","#{m.city}","#{m.province}","#{m.postCode}","#{m.email}","#{m.homePhone}","#{m.workPhone}","#{m.cellPhone}" </ui:repeat>
+"#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.expiryYear}","#{m.position}","#{m.address}","#{m.address2}","#{m.city}","#{m.province}","#{m.postCode}","#{m.email}","#{m.homePhone}","#{m.workPhone}","#{m.cellPhone}" </ui:repeat>
 </csv>
