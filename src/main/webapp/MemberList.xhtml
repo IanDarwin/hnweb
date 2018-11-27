@@ -96,6 +96,19 @@
 	<h:outputLink value="CSVPaidUP.web">Current (Paid-up) List</h:outputLink>
 	-
 	<h:outputLink value="CSVAll.web">Current (Paid-up) List</h:outputLink>
+	<p>
+	<br>Notes on the member data</br>:
+	There is a Member Type field, with values FM, FS and IND. 
+	Individual is obvious. FM is Family - master member. FS is Family- secondary.
+	</p>
+	<p>
+	And I've not been totally consistent (this database was originally built
+	from a spreadsheet that had a few more irregularities). Sometimes if all the
+	secondary's info is the same they're listed in a single FM entry (e.g., John
+	& Jenny Jones), sometimes they're both listed even though all info is the
+	same. However the main reason for listing them separately is when they have the
+	same street address but different emails.
+	</p>
 	</p:panel>
 </ui:define>
 </ui:composition>
