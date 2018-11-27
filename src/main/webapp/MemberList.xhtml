@@ -93,22 +93,31 @@
 	</p:dataTable>
 	<br/>
 	CSV format dumps <b>for short-term use</b>:
-	<h:outputLink value="CSVPaidUP.web">Current (Paid-up) List</h:outputLink>
+	<h:outputLink value="CSVPaidUp.web">Current (Paid-up) List</h:outputLink>
 	-
-	<h:outputLink value="CSVAll.web">Current (Paid-up) List</h:outputLink>
-	<p>
-	<br>Notes on the member data</br>:
-	There is a Member Type field, with values FM, FS and IND. 
-	Individual is obvious. FM is Family - master member. FS is Family- secondary.
-	</p>
-	<p>
-	And I've not been totally consistent (this database was originally built
-	from a spreadsheet that had a few more irregularities). Sometimes if all the
-	secondary's info is the same they're listed in a single FM entry (e.g., John
-	& Jenny Jones), sometimes they're both listed even though all info is the
-	same. However the main reason for listing them separately is when they have the
-	same street address but different emails.
-	</p>
+	<h:outputLink value="CSVAll.web">Complete (incl. most historical) List</h:outputLink>
+	-
+	<b>Save, or do View Source and copy, to make them look right!</b>
+	</p:panel>
+	<p:panel>
+		<f:facet name="header">Notes on Member Data</f:facet>
+		<p>
+		There is a Member Type field, with values FM, FS and IND. 
+		Individual is obvious. FM is Family - master member. FS is Family- secondary.
+		</p>
+		<p>
+		I'm afraid I've not been totally consistent in filing familes (this database was originally
+		from a spreadsheet that had a few more irregularities). Sometimes if all the
+		secondary's info is the same they're listed in a single FM entry (e.g., John
+		&amp; Jenny Jones), sometimes they're both listed even though all info is the
+		same. However the main reason for listing them separately is when they have the
+		same street address but different emails.
+		</p>
+		<p>
+		The "includes most historical" includes non-renewed as well as
+		all members I've ever had in the database
+		except for the small number that I have been asked to delete
+		for one reason or another.
 	</p:panel>
 </ui:define>
 </ui:composition>
