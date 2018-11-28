@@ -139,6 +139,15 @@ public class LoginAction implements Serializable {
 				return true;
 			}
 		}
+		// "Synthetic" exec "role" based on "position" property of member
+		// Needs to be here for JSF hasRole() in xxx.pages.xml; can't hack
+		// it into roles in login() because it might get persisted, then
+		// you'd have a maintenance problem (it would persist after you
+		// removed their position when they relinquish it).
+		if ("exec".equals(role)) {
+			return getLoggedInUser().getPosition()!=null &&
+				getLoggedInUser().getPosition().trim().length() > 0;
+		}
 		return false;
 	}
 
