@@ -58,6 +58,14 @@
 	    </ui:fragment>
 		<h:message id='primoMessage' for='primoMenu'/>
 
+		Email:
+		<h:inputText id="emailTF" value="#{memberHome.instance.email}"
+			validator="#{memberHome.validateEmail}"
+			size="50">
+			<f:ajax event="blur" render='emailMessage'/>
+		</h:inputText>
+		<h:message id='emailMessage' for='emailTF'/>
+
 		Address:
 		<h:inputText id="addressTF" value="#{memberHome.instance.address}" required='true'/>
 		<h:message id='addressMessage' for='addressTF' width="45"/>
@@ -94,14 +102,6 @@
 			Mobile: <h:inputText id="cellPhoneTF" value="#{memberHome.instance.cellPhone}"/>
 		</ui:fragment>
 		<h:message id='homePhoneMessage' for='homePhoneTF'/>
-
-		Email:
-		<h:inputText id="emailTF" value="#{memberHome.instance.email}"
-			validator="#{memberHome.validateEmail}"
-			size="50">
-			<f:ajax event="blur" render='emailMessage'/>
-		</h:inputText>
-		<h:message id='emailMessage' for='emailTF'/>
 
 		<p:outputLabel for="expdt" value="Expiry:" />
 		<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryYear}">
