@@ -114,6 +114,7 @@ public class MailManTest {
 		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
 		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
 		assertEquals("Reply-to", new InternetAddress("from@dom.ain"), actual.getReplyTo()[0]);
+		MailMan.props.remove(MailMan.PROPNAME_MAIL_NO_REPLY);
 	}
 
 	@Test
