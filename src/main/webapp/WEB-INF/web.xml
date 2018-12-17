@@ -36,6 +36,13 @@
 	</filter-mapping>
 	
 	<!-- PrimeFaces Upload Filter -->
+<!--
+https://github.com/primefaces/primefaces/issues/2988
+tandraschko commented on Dec 8, 2017
+committed something and should work now.
+Some notes:
+
+you don't even need to the filter on JSF 2.2 environments, so therefore you can just remove it from your web.xml
 	<filter>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
@@ -44,6 +51,7 @@
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
+-->
 
 	<!-- Mime-mappings, needed by some older servers -->
 	<mime-mapping>
