@@ -1,14 +1,16 @@
 <p:toolbar
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui">
 
-    <p:toolbarGroup align="left">
-        <h:outputLink value="http://www.uppercreditfieldnaturalists.org/">Club Home @ Main Site</h:outputLink>
+	<p:toolbarGroup align="left">
+		<h:outputLink value="http://www.uppercreditfieldnaturalists.org/">Club Home @ Main Site</h:outputLink>
 		#{' '}
-        <h:outputLink value="index.web">Membership Home</h:outputLink>
+		<h:outputLink value="index.web">Membership Home</h:outputLink>
+		#{'  '}
+		<h:outputLink value="https://www.facebook.com/groups/HeadwatersNature">Facebook Group</h:outputLink>
 		#{'  '}
 		<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
 		<h:outputLink value="MemberList.web">Member List</h:outputLink>
@@ -21,9 +23,9 @@
 		#{'  '}
 		<h:outputLink value="MailingList.web">Member Mailings</h:outputLink>
 		</ui:fragment>
-    </p:toolbarGroup>
-    
-    <p:toolbarGroup align="right">
+	</p:toolbarGroup>
+
+	<p:toolbarGroup align="right">
 	<h:form>
 		<h:outputLink value="About.web">About ClubList</h:outputLink>
 		#{'  '}
@@ -38,5 +40,5 @@
 		#{'  '}
 		<h:commandLink action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}"/>
 	</h:form>
-    </p:toolbarGroup>
+	</p:toolbarGroup>
 </p:toolbar>
