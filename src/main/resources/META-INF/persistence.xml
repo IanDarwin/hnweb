@@ -5,7 +5,7 @@
     	http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
     version="2.1">
 
-	<persistence-unit name="ucfnclublist" transaction-type="JTA">
+	<persistence-unit name="hnclublist" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/UcfnClubDataSource</jta-data-source>
 		<class>model.MemberBase</class>
