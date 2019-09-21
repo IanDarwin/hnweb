@@ -171,6 +171,10 @@ public class Member extends MemberBase {
 	/** Return true iff this member (or their Master Member) is expired */
 	public boolean isExpired() {
 		if (memberType == MemberType.Secondary) {
+			if (masterMember == null) {
+				System.err.printf("Member %s has no Master Member!\n", this);
+				return true;	// flag it for attention!
+			}
 			return masterMember.isExpired();
 		}
 
