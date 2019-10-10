@@ -102,7 +102,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>5.2</version>
+			<version>6.1</version>
 		</dependency>
 
 		<!-- OmniFaces utility add-on -->
