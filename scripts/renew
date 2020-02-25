@@ -1,0 +1,9 @@
+case $# in 
+2);;
+*) echo usage: $0 year id
+exit 1
+;;
+esac
+year=$1
+id=$2
+psql -d ucfn -c "update member set expiryyear=$year where id=$id";
