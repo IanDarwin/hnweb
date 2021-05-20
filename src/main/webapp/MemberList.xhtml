@@ -5,15 +5,13 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui"
-	xmlns:of="http://omnifaces.org/functions"
 	template="/template/template.xhtml">
 
 <ui:define name="pageTitle">Full Membership List</ui:define>
 <ui:define name="body">
 
 	<p:panel>
-	<f:facet name="header">Here's looking at your Members at #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</f:facet>
+	<f:facet name="header">Here's looking at your Members at #{now}</f:facet>
 
 	<!-- Print the table, or, an error -->
 	<p:dataTable border='1' 

@@ -30,9 +30,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.jsoup.Jsoup;
-import org.jsoup.examples.HtmlToPlainText;
+import org.jsoup.safety.Whitelist;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import action.LoginAction;
 import data.MemberList;
@@ -362,8 +362,8 @@ public class MailMan implements Serializable {
 
 	/** Convert a string containing an HTML message into plain text */
 	protected String sanitizeToPlainText(String htmlBody) {
-		final String rendered = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlBody, "ISO-8859-1"));
-		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'...
+		final String rendered = Jsoup.clean(htmlBody, new Whitelist());
+		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'... XXX Still??
 		return rendered.replace('\u00a0', ' ');
 	}
 
@@ -376,7 +376,7 @@ public class MailMan implements Serializable {
 		System.out.println("MailMan.handleFileUpload()");
         final UploadedFile file = event.getFile();
         uploadFileName = file.getFileName();
-        uploadData = file.getContents();
+        uploadData = file.getContent();
         uploadContentType = file.getContentType();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Succesful", file.getFileName() + " is uploaded."));
     }

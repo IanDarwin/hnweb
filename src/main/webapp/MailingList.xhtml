@@ -35,7 +35,8 @@
 			<h:message id='subjectMessage' for='subject'/>
 
 			Message:
-			<p:editor id="bodyEditor" widgetVar="editorWidget" width="600"
+			<p:textEditor id="bodyEditor" widgetVar="editorWidget" width="600"
+secure='false'
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
