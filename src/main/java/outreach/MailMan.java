@@ -372,6 +372,7 @@ public class MailMan implements Serializable {
 			throw new NullPointerException("Value of " + name + " must not be null!");
 		}
 	}
+
 	public void handleFileUpload(FileUploadEvent event) {
 		System.out.println("MailMan.handleFileUpload()");
         final UploadedFile file = event.getFile();

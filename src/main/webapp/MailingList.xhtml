@@ -41,7 +41,7 @@ secure='false'
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
 			Add-Attachment:
-			<p:fileUpload fileUploadListener="#{mailMan.handleFileUpload}" 
+			<p:fileUpload listener="#{mailMan.handleFileUpload}" 
 				mode="advanced" dragDropSupport="true"
 				update="messages" sizeLimit="5000000" 
 				allowTypes="/\.(pdf|jpe?g|png)$/" />
@@ -51,7 +51,7 @@ secure='false'
 		
 		<b>N.B.</b>: To attach a pdf or jpg/png, you <b>must use both Choose and Upload buttons</b>.
 		Files limited to 5 MB.
-		You definitely want to log out after sending a message to the list, otherwise problems 
+		It's strongly suggested to log out after sending a message to the list, otherwise problems 
 		may occur, like old attachments getting sent with new messages.
 		<br/>
 		Also note: at present, it's limited to <b>one</b> attachment per email;
