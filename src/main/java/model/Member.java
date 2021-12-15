@@ -139,14 +139,14 @@ public class Member extends MemberBase {
 			return;
 		}
 		if (country == Country.CA) {
-			String ananan = getPostCode().toUpperCase();
-			switch(ananan.length()) {
+			postCode = getPostCode().toUpperCase();
+			switch(postCode.length()) {
 			case 7: // OK
 				break;
 			case 6: // Missing internal space
-				postCode = 
-					ananan.substring(0,3) + " " +
-					ananan.substring(3);
+				postCode =
+					postCode.substring(0,3) + " " +
+					postCode.substring(3);
 				break;
 			default:
 				throw new IllegalStateException(
