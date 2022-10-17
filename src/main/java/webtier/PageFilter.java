@@ -134,12 +134,12 @@ public class PageFilter implements Filter {
 				}
 				InputStream inputStrm = servletContext.getResourceAsStream(pagePath);
 				if (inputStrm == null) {
-					// No page.xml, so the request is allowed
+					// No page.xml, no restrictions, so the request is allowed
 					System.err.println("No page.xml " + pagePath + " for " + requestURI + " --> allow");
 					chain.doFilter(req, resp);
 					return;
 				}
-				System.err.println("FOUND .page.xml " + pagePath + " for " + requestURI);
+				System.out.println("FOUND .page.xml " + pagePath + " for " + requestURI);
 
 				PageInfo pageInfo = parsePageFile(inputStrm);
 				if (pageInfo.loginRequired && identity == null) {
