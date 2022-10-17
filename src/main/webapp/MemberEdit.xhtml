@@ -105,11 +105,13 @@
 
 		<p:outputLabel for="expdt" value="Expiry:" />
 		<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryYear}">
-			<f:selectItem itemLabel="2016" itemValue="2016" />
-			<f:selectItem itemLabel="2017" itemValue="2017" />
-			<f:selectItem itemLabel="2018" itemValue="2018" />
-			<f:selectItem itemLabel="2019" itemValue="2019" />
-			<f:selectItem itemLabel="2020" itemValue="2020" />
+			<!-- Maint note: always keep 1 entry that is < current expiry year -->
+			<f:selectItem itemLabel="2022" itemValue="2022" />
+			<f:selectItem itemLabel="2023" itemValue="2023" />
+			<f:selectItem itemLabel="2024" itemValue="2024" />
+			<f:selectItem itemLabel="2025" itemValue="2025" />
+			<f:selectItem itemLabel="2026" itemValue="2026" />
+			<f:selectItem itemLabel="2027" itemValue="2027" />
 		</p:selectOneMenu>
 		&nbsp;
 			
