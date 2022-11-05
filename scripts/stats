@@ -2,7 +2,7 @@
 
 . ./CURYEAR
 
-psql -d ucfn <<!
+psql -d hn <<!
 
 \echo #1 Counting total member entries (including family members)
 

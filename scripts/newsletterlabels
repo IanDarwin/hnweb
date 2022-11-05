@@ -1,6 +1,6 @@
 . ./CURYEAR
 echo Newsletter for ${CURYEAR}+ members
-psql -d ucfn <<!
+psql -d hn <<!
 select firstname,lastname,address,city,postcode,province from member where 
 	expiryYear >= ${CURYEAR} and
 	membertype != 'Secondary' and (email is null or newslettermode = 0) order by lastname;

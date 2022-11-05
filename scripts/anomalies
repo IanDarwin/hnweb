@@ -1,6 +1,6 @@
 #!/bin/sh
 
-psql -d ucfn <<!
+psql -d hn <<!
 
 \echo #1 Finding Secondary members with no master
 
