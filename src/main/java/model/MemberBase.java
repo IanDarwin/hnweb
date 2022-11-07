@@ -3,21 +3,8 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.faces.bean.ManagedBean;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import javax.inject.Named;
+import javax.persistence.*;
 
 import com.darwinsys.geo.CanadaProvince;
 
@@ -30,7 +17,7 @@ import com.darwinsys.geo.CanadaProvince;
  */
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@ManagedBean(name="person")
+@Named("person")
 public abstract class MemberBase {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
@@ -62,10 +49,6 @@ public abstract class MemberBase {
 	protected int version;
 	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
 	protected List<MemberTransaction> transactions = new ArrayList<>();
-	
-	// Modifiable for testing only
-	@Transient
-	private LocalDate now = LocalDate.now();
 	
 	/** 
 	 * "A very public Person"
@@ -134,8 +117,6 @@ public abstract class MemberBase {
 	public void setMemberType(MemberType memberType) {
 		this.memberType = memberType;
 	}
-
-
 
 	public String getHomePhone() {
 		return homePhone;
@@ -310,17 +291,14 @@ public abstract class MemberBase {
 			return true;
 		if (obj == null)
 			return false;
+		// Compare two Members or two MemberArchived, etc.
 		if (getClass() != obj.getClass())
 			return false;
-		Member other = (Member) obj;
+		MemberBase other = (MemberBase) obj;
 		if (id == 0 || other.getId() == 0) {
 			return false;
 		}
 		return getId() == other.getId();
-	}
-
-	public void setNow(LocalDate now) {
-		this.now = now;
 	}
 }
 
