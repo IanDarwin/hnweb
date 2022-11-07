@@ -2,7 +2,7 @@
 
 YEAR=$(date +%Y)
 
-psql -d ucfn <<!
+psql -d hn <<!
 
 \echo Finding Individual and Family (master) memberships that are NOT renewed for ${YEAR}
  

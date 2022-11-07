@@ -322,7 +322,7 @@ public class MailMan implements Serializable {
 		}
 
 		// Additional list headers
-		mesg.addHeader("List-Id", "Headwaters Nature <ucfn.darwinsys.com>");
+		mesg.addHeader("List-Id", "Headwaters Nature <hn.darwinsys.com>");
 
 		// Send ourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));

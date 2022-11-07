@@ -6,4 +6,4 @@ exit 1
 esac
 year=$1
 id=$2
-psql -d ucfn -c "update member set expiryyear=$year where id=$id";
+psql -d hn -c "update member set expiryyear=$year where id=$id";

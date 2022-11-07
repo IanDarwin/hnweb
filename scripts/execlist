@@ -1,6 +1,6 @@
 #!/bin/sh
 
-psql -d ucfn <<!
+psql -d hn <<!
 
 select firstname,lastname,email,'#',id,position from member 
 	where position is not null 

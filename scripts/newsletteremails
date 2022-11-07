@@ -1,5 +1,5 @@
 . ./CURYEAR
-psql -d ucfn <<!
+psql -d hn <<!
 select distinct(email) from member 
 	where member.email is not null AND member.expiryYear >= ${CURYEAR} - 1;
 !
