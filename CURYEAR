@@ -1,1 +1,1 @@
-CURYEAR=2019
+CURYEAR=$(date +%Y)
