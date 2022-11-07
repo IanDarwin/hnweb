@@ -22,14 +22,16 @@ public class RemoveAction {
 	public String remove(Member instance) {
 
 		// Use raw sql to archive, via JPA Native Query mechanism
-		String archive_sql = "delete from transaction where member_id = ?1";
-		em.createNativeQuery(archive_sql).
-			setParameter(1, instance.getId()).
-			executeUpdate();
+		// String archive_sql = "delete from transaction where member_id = ?1";
+		// em.createNativeQuery(archive_sql).
+			// setParameter(1, instance.getId()).
+			// executeUpdate();
+
+		// Remove secondaries, if any, before primary
 		for (MemberBase sm : instance.getSecondaryMembers()) {
 			em.remove(sm);
 		}
-		em.remove(em.getReference(Member.class, instance.getId()));
+		em.remove(member);
 		em.flush();
 		// I don't like this, but it is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
