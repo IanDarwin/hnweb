@@ -16,27 +16,19 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>11</javase.version>
-		<javaee.version>7.0</javaee.version>
+		<javase.version>17</javase.version>
+		<javaee.version>8.0.1</javaee.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
-		<hibernate.version>4.3.8.Final</hibernate.version>
-		<hibernate.validator.version>4.3.2.Final</hibernate.validator.version>
+		<hibernate.version>6.0.0.Alpha7</hibernate.version>
+		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
 	</properties>
 
 	<dependencies>
-
-		<!-- Lombok boilerplate generator -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.24</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- My personal APIs -->
 		<dependency>
@@ -194,6 +186,12 @@
         <defaultGoal>wildfly:deploy</defaultGoal>
 		<plugins>
 
+			<!-- Default version is rather stale -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
 			<!-- Java EE AppServer: WildFly (JBoss) -->
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
