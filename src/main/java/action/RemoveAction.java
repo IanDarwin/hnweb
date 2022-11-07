@@ -29,11 +29,11 @@ public class RemoveAction {
 
 		// Remove secondaries, if any, before primary
 		for (MemberBase sm : instance.getSecondaryMembers()) {
-			em.remove(sm);
+			em.remove(em.merge(sm));
 		}
-		em.remove(instance);
+		em.remove(em.merge(instance));
 		em.flush();
-		// I don't like this, but it is all one transaction despite the flush (hopes).
+		// This is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
 		System.out.println("Removed!");
 		return "MemberList";

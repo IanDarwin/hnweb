@@ -16,7 +16,7 @@ import model.Member;
 import model.MemberTransaction;
 import model.TransactionReason;
 
-@Stateless @Named @RequestScoped
+@Stateless @Named //@RequestScoped
 public class RenewAction implements Serializable {
 	
 	private static final long serialVersionUID = 832908490238178971L;
