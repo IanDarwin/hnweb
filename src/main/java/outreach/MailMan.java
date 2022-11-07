@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 import javax.annotation.Resource;
 import javax.faces.application.FacesMessage;
@@ -30,7 +32,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
@@ -157,14 +159,21 @@ public class MailMan implements Serializable {
 		}
 	}
 	
-	/** This is non-final only to allow easier mocking */
+	/** This is non-final to allow easier mocking */
 	static int currentCalendarYear = Year.now().getValue();
+	static int currentCalendarMonth = LocalDate.now().getMonthValue();
+
 	/** This has to be just right:
-	 * If it is now December, and you expired in September, you should still get the newsletter.
-	 * If it is now January, and you expired in September, you should still get the newsletter
-	 * If it is now January and you expired 15 months ago, you should NOT get the newsletter
+	 * If it is now December, and you expired in September, you are not paid up.
+	 * If it is now January, and you expired in September, are paid up.
+	 * If it is now January and you expired 15 months ago, you should NOT be considered paid up.
 	 */
-	final static Chooser paidMemberChooser = m -> m.getExpiryYear() >= currentCalendarYear - 1;
+	final static Predicate<Member> paidMemberChooser = member -> {
+		int memberExpYear = member.getExpiryYear();
+		if (currentCalendarYear > memberExpYear)
+			return false;
+		return currentCalendarMonth >= 9;
+	};
 
 	/**
 	 * Send an email to the paid-up membership only.
@@ -202,7 +211,7 @@ public class MailMan implements Serializable {
 	 * Common code for Some of the sendMessageToXXX() methods;
 	 * takes a lambda for including/excluding each member from the list.
 	 */
-	int sendMessageToSome(Chooser ch) throws MessagingException {
+	int sendMessageToSome(Predicate<Member> ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
 		List<String> emails = selectListMembers(all, ch);
@@ -219,17 +228,17 @@ public class MailMan implements Serializable {
 	/**
 	 * Perform list subsetting
 	 * @param list The list of members
-	 * @param ch The chooser
+	 * @param ch The Predicate
 	 * @return The subset list
 	 */
-	static List<String> selectListMembers(List<Member> list, Chooser ch) {
+	static List<String> selectListMembers(List<Member> list, Predicate<Member> ch) {
 		List<String> emails = new ArrayList<>(list.size());
 		for (Member p : list) {
 			final String email = p.getEmail();
 			if (email == null || email.isEmpty()) {
 				continue;
 			}
-			if (ch != null && !ch.accept(p)) {
+			if (ch != null && !ch.test(p)) {
 				continue;
 			}
 			emails.add(email);
@@ -287,8 +296,7 @@ public class MailMan implements Serializable {
 	 * @param messageSubject The subject
 	 * @param htmlBody The body, as plain text only for now
 	 * @param recipients a List of String email addresses
-	 * @param uploadData2 
-	 * @param uploadContentType2 
+	 * @param uploadContentType  The content type
 	 * @return The mail message
 	 * @throws MessagingException If the message format isn't quite right
 	 */
@@ -362,7 +370,7 @@ public class MailMan implements Serializable {
 
 	/** Convert a string containing an HTML message into plain text */
 	protected String sanitizeToPlainText(String htmlBody) {
-		final String rendered = Jsoup.clean(htmlBody, new Whitelist());
+		final String rendered = Jsoup.clean(htmlBody, new Safelist());
 		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'... XXX Still??
 		return rendered.replace('\u00a0', ' ');
 	}

@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.darwinsys</groupId>
-	<artifactId>ucfn-club</artifactId>
+	<artifactId>hn-clublist</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -97,15 +97,6 @@
 			<version>12.0.0</version>
 		</dependency>
 
-		<!-- OmniFaces utility add-on -->
-<!--
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnifaces</artifactId>
-			<version>4.0-M8</version>
-		</dependency>
--->
-
 		<!-- JSoup just to convert html text to plain for email -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -159,14 +150,12 @@
 			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
-<!--
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.7.4</version>
             <scope>test</scope>
         </dependency>
--->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
@@ -199,18 +188,11 @@
 				<version>2.0.2.Final</version>
 			</plugin>
 
-			<!-- Java EE AppServer: GlassFish (see https://maven-glassfish-plugin.java.net/usage.html) -->
-			<plugin>
-				<groupId>org.glassfish.maven.plugin</groupId>
-				<artifactId>maven-glassfish-plugin</artifactId>
-				<version>2.1</version>
-			</plugin>
-
 			<!-- Java EE AppServer: Apache TomEE (see http://tomee.apache.org/tomee-maven-plugin.html) -->
 			<plugin>
 				<groupId>org.apache.openejb.maven</groupId>
 				<artifactId>tomee-maven-plugin</artifactId>
-				<version>1.7.1</version>
+				<version>1.7.5</version>
 				<configuration>
 					<tomeeVersion>1.7.1</tomeeVersion>
 					<tomeeClassifier>plus</tomeeClassifier>

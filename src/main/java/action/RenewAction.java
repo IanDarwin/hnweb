@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
@@ -15,7 +16,7 @@ import model.Member;
 import model.MemberTransaction;
 import model.TransactionReason;
 
-@Stateful @Named @RequestScoped
+@Stateless @Named @RequestScoped
 public class RenewAction implements Serializable {
 	
 	private static final long serialVersionUID = 832908490238178971L;
@@ -47,6 +48,7 @@ public class RenewAction implements Serializable {
 		em.persist(tx);
 		member.getMemberTransactions().add(tx);
 		member.acceptRenewal(tx);
+		em.flush();
 		// XXX Needs more post-split refactoring
 //		if (member.getMemberType() == MemberType.Family) {
 //			for (Member m : member.getSecondaryMembers()) {
@@ -73,4 +75,4 @@ public class RenewAction implements Serializable {
 		this.numYears = numYears;
 	}
 }
-		
+
