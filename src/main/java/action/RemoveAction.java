@@ -31,7 +31,7 @@ public class RemoveAction {
 		for (MemberBase sm : instance.getSecondaryMembers()) {
 			em.remove(sm);
 		}
-		em.remove(member);
+		em.remove(instance);
 		em.flush();
 		// I don't like this, but it is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
