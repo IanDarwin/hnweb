@@ -10,15 +10,11 @@ import javax.persistence.Table;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 /**
  * Archived Member has all fields of regular member, plus archived date and reason.
  */
-@ToString() 
-@EqualsAndHashCode()
-@Entity @Table(name="member_archived")
+@Entity
+@Table(name="member_archived")
 public class MemberArchived extends MemberBase {
 	@Column(name="archive_reason")
 	private String archivedReason;

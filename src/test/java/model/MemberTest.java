@@ -42,6 +42,7 @@ public class MemberTest {
 		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH + 1, 1));
 		assertTrue(member.isExpired());
 	}
+
 	@Test
 	public void testIsExpiredTrue() {
 		member.setExpiryYear(LocalDate.now().getYear() - 1);
