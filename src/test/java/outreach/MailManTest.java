@@ -16,6 +16,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import action.LoginAction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import action.LoginAction;
 import data.MemberList;
 import model.Member;
 
@@ -31,7 +31,7 @@ import model.Member;
 public class MailManTest {
 
 	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
-	List<Member> fakeList = Arrays.asList(
+	List<Member> fakeList = List.of(
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	final String A_MESSAGE_SUBJECT = "About your night life";
@@ -54,7 +54,6 @@ public class MailManTest {
 	@PrepareForTest({Transport.class,FacesMessage.class})
 	public void testSendMessageToAll() throws Exception {
 
-		//final Properties properties = mockSession.getProperties();
 		PowerMockito.mockStatic(Transport.class);
 		Properties props = MailMan.props;
 		sender.identity = identity;

@@ -80,6 +80,9 @@ public class MailMan implements Serializable {
 	private byte[] uploadData = null;
 	private String uploadContentType = null;
 
+	/** This is non-final to allow mocking */
+	static LocalDate now = LocalDate.now();
+
 	public MailMan() {
 		System.out.println("MailMan.MailMan()");
 	}
@@ -159,9 +162,6 @@ public class MailMan implements Serializable {
 		}
 	}
 	
-	/** This is non-final to allow easier mocking */
-	static int currentCalendarYear = Year.now().getValue();
-	static int currentCalendarMonth = LocalDate.now().getMonthValue();
 
 	/** This has to be just right:
 	 * If it is now December, and you expired in September, you are not paid up.
@@ -169,10 +169,8 @@ public class MailMan implements Serializable {
 	 * If it is now January and you expired 15 months ago, you should NOT be considered paid up.
 	 */
 	final static Predicate<Member> paidMemberChooser = member -> {
-		int memberExpYear = member.getExpiryYear();
-		if (currentCalendarYear > memberExpYear)
-			return false;
-		return currentCalendarMonth >= 9;
+		LocalDate memberExpiry = LocalDate.of(member.getExpiryYear(), Month.AUGUST, 31);
+		return now.isAfter(memberExpiry);
 	};
 
 	/**
@@ -202,7 +200,7 @@ public class MailMan implements Serializable {
 			addFacesMessage(String.format("Message sent to %d expired members.", numSent));
 			return "/";
 		} else {
-			addFacesMessage("Unable to send message!");
+			addFacesMessage("Did not send message to anybody!");
 			return null;
 		}
 	}
