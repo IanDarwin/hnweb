@@ -10,4 +10,7 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="EclipseCompilerSettings">
+    <option name="PROCEED_ON_ERROR" value="false" />
+  </component>
 </project>

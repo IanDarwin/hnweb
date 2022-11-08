@@ -2,7 +2,11 @@
 
 Track members for a small non-profit club.
 
-This shows off some basic functionality of JPA and DeltaSpike Data in a JSF environment.
+Modified version for Orangeville "Headwaters Nature."
+
+Testing is broken due to ongoing work in MailMan.paidMemberChooser.
+
+This does show off some basic functionality of JPA and DeltaSpike Data in a JSF environment.
 
 == DB Design Issues
 
