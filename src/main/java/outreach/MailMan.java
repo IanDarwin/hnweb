@@ -170,7 +170,7 @@ public class MailMan implements Serializable {
 	 */
 	final static Predicate<Member> paidMemberChooser = member -> {
 		LocalDate memberExpiry = LocalDate.of(member.getExpiryYear(), Month.AUGUST, 31);
-		return now.isAfter(memberExpiry);
+		return now.isBefore(memberExpiry);
 	};
 
 	/**

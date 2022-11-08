@@ -18,7 +18,7 @@ import static org.junit.Assert.assertSame;
 public class ChooserTest {
 
 	final static List<Member> data = new ArrayList<>();
-	final static Member m1 = new Member();
+	final static Member m1 = new Member("Foo", "", "Bar", "ipwn@bar.com");
 	final static Member m2 = new Member();
 	final static Member m3 = new Member();
 	final static Member m4 = new Member();
@@ -51,19 +51,18 @@ public class ChooserTest {
 	 * 3) If it is now January and you expired 15 months ago, you are not paid up
 	 * Note the date in the test method before studying this!
 	 */
-	@ParameterizedTest(name = "{index} String {0} should give {1}")
+	@ParameterizedTest(name = "String {0} should give {1}")
 	@CsvSource({
+			"2023, 1",
 			"2022, 1",
 			"2021, 1",
-			"2020, 0",
+			"2020, 1",
 			"2019, 0",
 			"2018, 0",
 	})
-
 	public void testPaidMemberChooser(int expiryYear, int expectedMatches) {
 		MailMan.now = LocalDate.of(2020, 8, 15);
-		Member m = new Member("Jo", "J.", "Schmoe", "jo@schmo.net");
-
+		Member m = data.get(0);
 		m.setExpiryYear(expiryYear);
 		assertEquals(expectedMatches, selectListMembers(data, MailMan.paidMemberChooser).size());
 	}
