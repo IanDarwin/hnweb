@@ -16,6 +16,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
 		<javase.version>17</javase.version>
 		<javaee.version>8.0.1</javaee.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
@@ -24,8 +25,7 @@
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<hibernate.version>6.0.0.Alpha7</hibernate.version>
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
+		<junit5.version>5.9.0</junit5.version>
 	</properties>
 
 	<dependencies>
@@ -104,6 +104,13 @@
 			<version>1.15.3</version>
 		</dependency>
 
+		<!-- File Upload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+
 		<!-- Hibernate and its JPA Provider: test scope -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
@@ -138,24 +145,44 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- TESTING -->
+
+		<!-- JUnit 5 -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit5.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- JUnit 4 compat -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit5.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- JUnit 5 Parameterized -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit5.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>2.0.2-beta</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.7.4</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.7.4</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
@@ -163,25 +190,20 @@
             <scope>test</scope>
         </dependency>
 
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>1.4</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
         <defaultGoal>wildfly:deploy</defaultGoal>
 		<plugins>
 
-			<!-- Default version is rather stale -->
+			<!-- Default version is rather stale, specify new one here: -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.3.2</version>
 			</plugin>
-			<!-- Java EE AppServer: WildFly (JBoss) -->
+
+			<!-- Java EE AppServer deploy: WildFly (JBoss) -->
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
 				<artifactId>wildfly-maven-plugin</artifactId>
