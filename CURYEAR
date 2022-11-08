@@ -1,1 +1,4 @@
 CURYEAR=$(date +%Y)
+if [[ $(date +%m) -gt 8 ]]; then
+	CURYEAR=$((CURYEAR + 1))
+fi
