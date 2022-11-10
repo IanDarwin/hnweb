@@ -28,6 +28,11 @@
 	<h:form id="messageForm" enctype="multipart/form-data">
 	<p:panel>
 		<f:facet name="header">Mail a short note</f:facet>
+		<p>
+		N.B. If pasting in from Windows or Mac or the web, replace all quote characters with plain quote (' or ")
+		and replace all dashes with minus sign ('-').
+		<b>Really ugly characters will ensue if you skip this step!</b>
+		</p>
 		<h:panelGrid columns='3'>
 
 			Subject:
@@ -36,7 +41,7 @@
 
 			Message:
 			<p:textEditor id="bodyEditor" widgetVar="editorWidget" width="600"
-secure='false'
+				secure='false'
 				value="#{mailMan.messageBody}" required="true"/>
 			<h:message id='bodyMessage' for='bodyEditor'/>
 
