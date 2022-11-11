@@ -1,33 +1,22 @@
 package outreach;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import action.LoginAction;
+import data.MemberList;
+import model.Member;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-
-import javax.faces.application.FacesMessage;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import action.LoginAction;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import data.MemberList;
-import model.Member;
-
-@RunWith(PowerMockRunner.class)
 public class MailManTest {
 
 	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
@@ -48,24 +37,6 @@ public class MailManTest {
 		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
 		identity = new LoginAction();
 		identity.setLoggedInUser(member);
-	}
-	
-	@Test
-	@PrepareForTest({Transport.class,FacesMessage.class})
-	public void testSendMessageToAll() throws Exception {
-
-		PowerMockito.mockStatic(Transport.class);
-		Properties props = MailMan.props;
-		sender.identity = identity;
-		sender.session = 
-				// PowerMockito.mock(Session.class);
-				Session.getDefaultInstance(props);
-
-		sender.subject = "This is a test message";
-		sender.messageBody = "This is a test message body";
-		sender.sendMessageToAll();
-		
-		PowerMockito.verifyStatic();
 	}
 	
 	@Test
