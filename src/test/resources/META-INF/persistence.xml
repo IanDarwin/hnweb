@@ -6,7 +6,6 @@
 	version="2.1">
 
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>model.MemberBase</class>
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
@@ -14,6 +13,10 @@
 		<class>model.Config</class>
 
 		<properties>
+			<property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+			<!--
+			<property name="javax.persistence.provider" value="org.eclipselink.jpa.provider"/>
+			-->
 
 			<!-- A local database, for dev/test -->
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
@@ -23,6 +26,8 @@
 
 			<!-- Property for type of database -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+			<property name="eclipselink.target-database"
+				value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
 
 			<!-- Properties controlling database setup for tests -->
 			<property name="javax.persistence.schema-generation.database.action" 

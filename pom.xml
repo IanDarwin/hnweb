@@ -111,20 +111,39 @@
 			<version>1.4</version>
 		</dependency>
 
+		<!-- Here are TWO JPA providers. The uncommenting here MUST match
+		 *** the selection made in META-INF/persistence.xml
+		 -->
+
+		<!-- EclipseLink and its JPA Provider - test scope -->
+		<!--
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.core</artifactId>
+			<version>4.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.jpa</artifactId>
+			<version>4.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		-->
+
 		<!-- Hibernate and its JPA Provider: test scope -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
 			<exclusions>
-				<exclusion>  <!-- declare the exclusion here -->
+				<exclusion>
 					<groupId>xml-apis</groupId>
 					<artifactId>xml-apis</artifactId>
 				</exclusion>
 			</exclusions> 
 			<scope>test</scope>
 		</dependency>
-		<!-- Hibernate -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
