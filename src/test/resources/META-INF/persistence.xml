@@ -16,13 +16,13 @@
 		<properties>
 
 			<!-- A local database, for dev/test -->
-			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />
+			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
 
 			<!-- Property for type of database -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
 
 			<!-- Properties controlling database setup for tests -->
 			<property name="javax.persistence.schema-generation.database.action" 
