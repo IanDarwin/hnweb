@@ -220,7 +220,7 @@ public class MailMan implements Serializable {
 		}
 		return sendMessage(
 				emails, 
-				subject, sanitizeToUtf8(messageBody)) ? emails.size() : 0;
+				subject, messageBody) ? emails.size() : 0;
 	}
 
 	/**
