@@ -13,6 +13,7 @@ import model.Member;
 public class PersistenceTest extends AbstractPersistenceTest {
 
 	final static String FIRST = "Loodlie";
+	public static final String ROLE = "Dumpster Driver";
 
 	/** Live JPA (fake database): save a Member, then
 	 * assert that we find it in the list of Members from JPA
@@ -21,15 +22,15 @@ public class PersistenceTest extends AbstractPersistenceTest {
 	public void testLoadStore() {
 		Member tm = new Member();
 		tm.setFirstName(FIRST);
-		tm.setLastName("Lozz");
+		tm.setLastName("Lolz");
 		tm.setEmailTrips(true);
-		tm.addRole("Dumpster Driver");
+		tm.addRole(ROLE);
 
 		em.getTransaction().begin();
 		em.persist(tm);
 		em.getTransaction().commit();
 
-		List<Member> ms = em.createQuery("from Member", Member.class).getResultList();
+		List<Member> ms = em.createQuery("select m from Member m", Member.class).getResultList();
 		assertTrue("found any", ms.size() > 0);
 
 		for (Member m : ms) {
