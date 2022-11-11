@@ -368,7 +368,9 @@ public class MailMan implements Serializable {
 
 	/** Convert a string containing an HTML message into plain text */
 	protected static String sanitizeToPlainText(String htmlBody) {
-		final String rendered = Jsoup.clean(htmlBody, new Safelist());
+		// First get rid of whacko smart characters
+		String messageBody = sanitizeToUtf8(htmlBody);
+		final String rendered = Jsoup.clean(messageBody, new Safelist());
 		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'... XXX Still??
 		return rendered
 				.replaceAll("&nbsp;", " ")
