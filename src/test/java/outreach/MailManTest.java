@@ -87,7 +87,7 @@ public class MailManTest {
 	
 	@Test
 	public void testCreateMessage() throws Exception {
-		List<String> recipients = Arrays.asList(new String[]{"a@b.c"});
+		List<String> recipients = Arrays.asList("a@b.c");
 		final String messageSender = "from@dom.ain";
 		final MimeMessage actual = sender.createMessage(messageSender,
 				A_MESSAGE_SUBJECT,
@@ -114,12 +114,5 @@ public class MailManTest {
 		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
 		assertEquals("Reply-to", new InternetAddress("from@dom.ain"), actual.getReplyTo()[0]);
 		MailMan.props.remove(MailMan.PROPNAME_MAIL_NO_REPLY);
-	}
-
-	@Test
-	public void testsanitizeToPlainText() {
-		String htmlBody = "<span style='font-size: 12px; font-style: italic;'>Time</span><span style='font-size: 12px;'> is <span style='font-weight: bold;'>not</span> enough.</span>";
-		final String actual = sender.sanitizeToPlainText(htmlBody);
-		assertEquals("Sanitize to plain text", "Time is not enough.", actual);
 	}
 }

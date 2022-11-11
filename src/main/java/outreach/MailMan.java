@@ -220,7 +220,7 @@ public class MailMan implements Serializable {
 		}
 		return sendMessage(
 				emails, 
-				subject, messageBody) ? emails.size() : 0;
+				subject, sanitizeToUtf8(messageBody)) ? emails.size() : 0;
 	}
 
 	/**
@@ -367,11 +367,23 @@ public class MailMan implements Serializable {
 	}
 
 	/** Convert a string containing an HTML message into plain text */
-	protected String sanitizeToPlainText(String htmlBody) {
+	protected static String sanitizeToPlainText(String htmlBody) {
 		final String rendered = Jsoup.clean(htmlBody, new Safelist());
 		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'... XXX Still??
-		return rendered.replace('\u00a0', ' ');
+		return rendered
+				.replaceAll("&nbsp;", " ")
+				.replace('\u00a0', ' ');
 	}
+
+	/** For the HTML sending version, get rid of janky special characters that break badly in this stack */
+	static String sanitizeToUtf8(String s) {
+		return s
+				.replaceAll("\\u201c","\"") // "Smart" open dquote
+				.replaceAll("\\u201d","\"") // "Smart" close dquote
+				.replaceAll("\\u2014","--");// "Smart" em dash
+	}
+
+
 
 	private void notNull(String name, String value) {
 		if (value == null) {
