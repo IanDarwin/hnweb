@@ -339,7 +339,7 @@ public class MailMan implements Serializable {
         
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(htmlBody, "text/html");
+        htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
 
