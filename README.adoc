@@ -1,5 +1,10 @@
 = clublist - Club Membership List
 
+STATUS:
+	3 persistence tests fail - goes beyond capabilities of Hibernate-Hsqld2/h2 combination?
+	Member Mailing has serious charset issues - may be time to delete plain-text version?
+		And check the widget for charset options?
+
 Track members for a small non-profit club.
 
 Modified version for Orangeville "Headwaters Nature."
