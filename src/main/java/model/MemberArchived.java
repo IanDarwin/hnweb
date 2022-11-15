@@ -39,7 +39,8 @@ public class MemberArchived extends Member {
 		// Now have to clear some fields. For now.
 		id = 0;
 		transactions = new ArrayList<>();
-		//secondaryMembers = new HashSet<>();
+		secondaryMembers = new HashSet<>();
+		roles = new List<>();
 	}
 
 	public String getArchivedReason() {

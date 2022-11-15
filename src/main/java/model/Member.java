@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 @Entity
 public class Member extends MemberBase {
 
-	// For app-managed security - only Members, not Archived, can be in rolese
+	// For app-managed security - only Members, not Archived, can be in roles
 	@ElementCollection
 	protected List<String> roles = new ArrayList<>();
 	

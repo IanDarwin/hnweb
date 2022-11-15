@@ -31,6 +31,12 @@ public class RemoveAction {
 		for (MemberBase sm : instance.getSecondaryMembers()) {
 			em.remove(em.merge(sm));
 		}
+
+		// Do we also have to remove any roles?
+		// javax.persistence.PersistenceException: org.hibernate.HibernateException: 
+		// Illegal attempt to associate a collection with two open sessions. Collection : [model.Member.roles#233]
+
+		// Finally remove the member instance
 		em.remove(em.merge(instance));
 		em.flush();
 		// This is all one transaction despite the flush (hopes).
