@@ -30,6 +30,16 @@
 			<f:selectItem itemLabel='3' itemValue='3'/>
 		</h:selectOneMenu>
 
+		<h:outputText value="Payment Type"/>
+		<h:selectOneMenu value="#{renewAction.paymentType}">
+			<f:selectItem itemLabel='Cash' itemValue='PaymentType.CASH'/>
+			<f:selectItem itemLabel='Cheque' itemValue='PaymentType.CHEQUE'/>
+			<!-- PaymentType.CREDIT -->
+			<!-- PaymentType.DEBIT  -->
+			<f:selectItem itemLabel='eTransfer' itemValue='PaymentType.ETRANSFER'/>
+		</h:selectOneMenu>
+
+
 		&nbsp;
 		<p:commandButton value="Save" action="#{renewAction.renew}" ajax='false'/>
 		

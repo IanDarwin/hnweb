@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 
 import model.Member;
 import model.MemberTransaction;
+import model.PaymentType;
 import model.TransactionReason;
 
 @Stateless @Named //@RequestScoped
@@ -28,6 +29,7 @@ public class RenewAction implements Serializable {
 
 	private Member member;
 	private int numYears;
+	private PaymentType paymentType;
 	
 	@PersistenceContext EntityManager em;
 	
@@ -44,7 +46,7 @@ public class RenewAction implements Serializable {
 		}
 
 		member = em.merge(member);	// make member managed
-		MemberTransaction tx = new MemberTransaction(member, numYears, TransactionReason.R);
+		MemberTransaction tx = new MemberTransaction(member, numYears, TransactionReason.R, paymentType);
 		em.persist(tx);
 		member.getMemberTransactions().add(tx);
 		member.acceptRenewal(tx);
@@ -73,6 +75,14 @@ public class RenewAction implements Serializable {
 
 	public void setNumYears(int numYears) {
 		this.numYears = numYears;
+	}
+
+	public PaymentType getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
 	}
 }
 

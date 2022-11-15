@@ -3,6 +3,7 @@ package model;
 public enum PaymentType {
 	CASH,
 	CHEQUE,
-	// CREDIT,
-	// DEBIT,
+	CREDIT,
+	DEBIT,
+	ETANSFER,
 }

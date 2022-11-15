@@ -47,10 +47,15 @@ public class MemberTransaction implements Serializable {
 		// Required for JPA
 	}
 	
-	public MemberTransaction(Member member, int nYears, TransactionReason transactionReason) {
+	public MemberTransaction(Member member, int nYears, TransactionReason transactionReason, PaymentType paymentType) {
 		this.member = member;
 		this.numYears = nYears;
 		this.reason = transactionReason;
+		this.paymentType = paymentType;
+	}
+
+	public MemberTransaction(Member member, int nYears, TransactionReason transactionReason) {
+		this(member, nYears, transactionReason, null);
 	}
 	
 	public long getId() {

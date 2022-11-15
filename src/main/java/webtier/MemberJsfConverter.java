@@ -49,7 +49,8 @@ public class MemberJsfConverter implements Converter {
 			return null;
 		} else {
 			if (Long.class != object.getClass()) {
-				throw new IllegalArgumentException("getAsString expects long arg");
+				throw new IllegalArgumentException(
+					String.format("getAsString expects long arg, not `%s' of type %s", object, object.getClass()));
 			}
 			return memberList.findBy((Long)object).getNames();
 		}
