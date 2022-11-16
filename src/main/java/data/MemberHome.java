@@ -89,8 +89,6 @@ public class MemberHome implements Serializable {
 			members = new ArrayList<>();
 			members.add(noMember);
 			members.addAll(lister.findAll());
-		} else {
-			System.out.println("MemberHome.getMemberList() CACHE HIT");
 		}
 		return members;
 	}

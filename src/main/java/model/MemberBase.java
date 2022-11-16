@@ -255,6 +255,7 @@ public abstract class MemberBase {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		sb.append('#').append(getId()).append(' ');
 		sb.append(getFirstName())
 				.append(' ')
 				.append(getLastName());
