@@ -3,6 +3,7 @@ package model;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +41,7 @@ public class MemberArchived extends Member {
 		id = 0;
 		transactions = new ArrayList<>();
 		secondaryMembers = new HashSet<>();
-		roles = new List<>();
+		roles = new ArrayList<>();
 	}
 
 	public String getArchivedReason() {
