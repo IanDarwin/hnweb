@@ -83,8 +83,8 @@
 	            <f:selectItem itemLabel="U.S.A." itemValue="US" />
 	        </p:selectOneMenu>
 			<p:selectOneMenu id="provinceMenu" value="#{memberHome.instance.province}" style="width:150px">
+	            <f:selectItem itemLabel="Ontario" itemValue="ON" noSelectionOption="true" />
 				<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
-	                noSelectionValue="--SELECT--"
 	                itemValue="#{_prov.name()}"
 	                itemlabel="#{_prov.longName}"/>
 			</p:selectOneMenu>
@@ -105,9 +105,8 @@
 
 		<p:outputLabel for="expdt" value="Expiry:" />
 		<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryYear}">
-			<!-- Maint note: always keep 1 entry that is < current expiry year -->
-			<f:selectItem itemLabel="2022" itemValue="2022" />
-			<f:selectItem itemLabel="2023" itemValue="2023" />
+			<!-- Maint note: always set this to the current expiry year -->
+			<f:selectItem itemLabel="2023" itemValue="2023" noSelectionOption="true" />
 			<f:selectItem itemLabel="2024" itemValue="2024" />
 			<f:selectItem itemLabel="2025" itemValue="2025" />
 			<f:selectItem itemLabel="2026" itemValue="2026" />
