@@ -1,19 +1,32 @@
 package model;
 
-import static org.junit.Assert.*;
+
 
 import java.time.LocalDate;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class MemberTest {
 
 	Member member;
 	
-	@Before
+	@BeforeEach
 	public void test() {
 		member = new Member();
+	}
+
+	@Test
+	public void testCopyConstructor() {
+		MemberArchived memberArchived = new MemberArchived();
+		memberArchived.setFirstName("Thelmius");
+		memberArchived.setLastName("Aquaddapodox");
+		var member = new Member(memberArchived);
+		assertEquals("Thelmius", member.getFirstName());
+		assertEquals("Aquaddapodox", member.getLastName());
 	}
 	
 	@Test

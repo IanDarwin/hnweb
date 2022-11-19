@@ -1,17 +1,14 @@
 package model;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class MemberArchivedTest {
 
 	Member member;
 	
-	@Before
+	@Test
 	public void testCopyConstructor() {
 		member = new Member();
 		member.setFirstName("Thelmius");
