@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
+import action.YearCalcs;
 import com.darwinsys.lang.StringHolder;
 
 import model.Country;
@@ -142,7 +143,7 @@ public class MemberHome implements Serializable {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String save() {
-		instance.setExpiryYear(getNewMemberExpiryYear(LocalDate.now()));
+		instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
 		em.persist(instance);
 		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
 		// XXX em.persist(tx);
@@ -162,13 +163,6 @@ public class MemberHome implements Serializable {
 		return getListPage() + "#p" + instance.getId() + WebConstants.FORCE_REDIRECT;
 	}
 	
-	/**
-	 * See comment on RENEWAL_MONTH
-	 */
-	protected static int getNewMemberExpiryYear(LocalDate now) {
-		 return now.getMonthValue()>=RENEWAL_MONTH ? now.getYear() + 1 : now.getYear();
-	}
-
 	public Member getInstance() {
 		return instance;
 	}

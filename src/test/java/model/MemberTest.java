@@ -4,6 +4,7 @@ package model;
 
 import java.time.LocalDate;
 
+import action.YearCalcs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,17 +49,17 @@ public class MemberTest {
 	public void testIsExpiredFalse() {
 		final int curYear = LocalDate.now().getYear();
 		member.setExpiryYear(curYear);
-		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH - 1, 1));
-		assertFalse(member.isExpired());
-		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH, 1));
-		assertFalse(member.isExpired());
-		member.setNow(LocalDate.of(curYear, Config.RENEWAL_MONTH + 1, 1));
-		assertTrue(member.isExpired());
+		var d = LocalDate.of(curYear, Config.RENEWAL_MONTH - 1, 1);
+		assertFalse(YearCalcs.isExpired(member, d));
+		var e = LocalDate.of(curYear, Config.RENEWAL_MONTH, 1);
+		assertFalse(YearCalcs.isExpired(member, e));
+		var f = LocalDate.of(curYear, Config.RENEWAL_MONTH + 1, 1);
+		assertTrue(YearCalcs.isExpired(member, f));
 	}
 
 	@Test
 	public void testIsExpiredTrue() {
 		member.setExpiryYear(LocalDate.now().getYear() - 1);
-		assertTrue(member.isExpired());
+		assertTrue(YearCalcs.isExpired(member));
 	}
 }

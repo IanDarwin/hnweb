@@ -29,7 +29,7 @@ import org.apache.commons.beanutils.BeanUtils;
 @Entity
 public class Member extends MemberBase {
 
-	// For app-managed security - only Members, not Archived, can be in roles
+	// For app-managed security - only Members, not MemberArchiveds, can be in roles
 	@ElementCollection
 	protected List<String> roles = new ArrayList<>();
 	
@@ -41,11 +41,7 @@ public class Member extends MemberBase {
 	@OneToMany(mappedBy="masterMember")
 	protected Set<Member> secondaryMembers;
 	
-	// Modifiable for testing only; used in calculations
-	@Transient
-	private LocalDate now = LocalDate.now();
-	
-	/** 
+	/**
 	 * "A very public Person"
 	 */
 	public Member() {
@@ -85,7 +81,7 @@ public class Member extends MemberBase {
 	 * Property will refer to the Master (e.g., paying!) member.
 	 * @return The master member
 	 */
-	public MemberBase getMasterMember() {
+	public Member getMasterMember() {
 		return masterMember;
 	}
 
@@ -186,31 +182,5 @@ public class Member extends MemberBase {
 		roles.add(role);
 	}
 
-	/** Return true iff this member (or their Master Member) is expired */
-	public boolean isExpired() {
-		if (memberType == MemberType.Secondary) {
-			if (masterMember == null) {
-				System.err.printf("Member %s has no Master Member!\n", this);
-				return true;	// flag it for attention!
-			}
-			return masterMember.isExpired();
-		}
-
-		// If current year is past expiry year, obv. this member is expired.
-		if (now.getYear() > getExpiryYear()) {
-			return true;
-		}
-		// Not currently greater than exp year, so might be in it, must
-		// check if we are currently past the expiry month.
-		if (now.getYear() == getExpiryYear() &&
-				now.getMonth().getValue() > Config.RENEWAL_MONTH)
-			return true;
-		// Otherwise we are not yet in the expiry year.
-		return false;
-	}
-
-	public void setNow(LocalDate now) {
-		this.now = now;
-	}
 }
 
