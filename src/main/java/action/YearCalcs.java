@@ -2,6 +2,8 @@ package action;
 
 import java.time.LocalDate;
 
+import javax.inject.Named;
+
 import model.Config;
 import model.Member;
 import model.MemberType;
@@ -9,6 +11,7 @@ import model.MemberType;
 /**
  * Membership year is from Sept 1 to Aug 31.
  */
+@Named
 public class YearCalcs {
 			
 	public static final int getCurrentMembershipYear(LocalDate now) {
