@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
- * Archived Member has all fields of regular member, plus archived date and reason.
+ * Archived Member has all non-relationship fields of regular member, plus archived date and reason.
  */
 @Entity
 @Table(name="member_archived")
@@ -22,12 +22,16 @@ public class MemberArchived extends MemberBase {
 	@Column(name="archive_date")
 	private LocalDate archivedDate;
 	
-	public MemberArchived() {
+	public MemberArchived(String reason) {
 		archivedDate = LocalDate.now(); // Do this "now", avoid NPE later
-		archivedReason = "Deleted";
+		archivedReason = reason;
 	}
 
-	/** Copy Constructor: copies all field but for ID */
+	public MemberArchived() {
+		this("Deleted");
+	}
+
+	/** Copy Constructor: copies all non-relationship fields but for ID */
 	public MemberArchived(Member m) {
 		this();
 		try {

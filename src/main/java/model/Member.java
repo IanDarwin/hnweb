@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Represents one person in our database.
@@ -60,6 +63,21 @@ public class Member extends MemberBase {
 		this.middle = middle;
 		this.lastName = lastName;
 		this.email = email;
+	}
+
+	/** Copy Constructor: copies all field but for ID */
+	public Member(MemberArchived m) {
+		this();
+		try {
+			BeanUtils.copyProperties(this, m);		// (dest, src)
+		} catch (IllegalAccessException|InvocationTargetException ex) {
+			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
+		}
+		// Now have to clear some fields.
+		id = 0;
+		transactions = new ArrayList<>();
+		secondaryMembers = new HashSet<>();
+		roles = new ArrayList<>();
 	}
 	
 	/** 
