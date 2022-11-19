@@ -6,7 +6,6 @@
 	version="2.1">
 
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
-		<class>model.MemberBase</class>
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
 		<class>model.MemberTransaction</class>
@@ -29,7 +28,7 @@
 			<property name="eclipselink.target-database"
 				value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
 
-			<!-- Properties controlling database setup for tests -->
+			<!-- Properties controlling database setup -->
 			<property name="javax.persistence.schema-generation.database.action" 
 				value="drop-and-create"/>
 			<property name="javax.persistence.schema-generation.load-script-source"

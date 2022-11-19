@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-    	http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
-    version="2.1">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+		http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
+	version="2.1">
 
 	<persistence-unit name="hnclublist" transaction-type="JTA">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/UcfnClubDataSource</jta-data-source>
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
@@ -17,8 +16,14 @@
 			<!-- Properties for PostgreSQL -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
 
+			<!-- Property for type of database -->
+			<property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+
+			<!-- Properties controlling database setup -->
+			<property name="javax.persistence.schema-generation.database.action" 
+				value="update"/>
+
 			<!-- Properties for Hibernate provider -->
-			<property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.show_sql" value="false"/>
 			<property name="hibernate.format_sql" value="false"/>
 		</properties>
