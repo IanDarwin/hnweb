@@ -46,7 +46,7 @@ public class MemberHome implements Serializable {
 
 	@Inject Conversation conv;
 
-	private static final String LIST_PAGE = "MemberList";
+	private static final String LIST_PAGE = "/MemberList";
 
 	/**
 	 * This should be externalized as it depends on our club's policies:
@@ -62,7 +62,7 @@ public class MemberHome implements Serializable {
 	protected Member instance = new Member();
 	// Used to enable the "Master Member" UI control while editing a Secondary Member
 	private boolean enableMasterMember;
-	// For the benefit of the UI controls only
+	// XXX Use the UI tools correctly, won't need this for the benefit of the UI controls only
 	final static Member noMember = new Member("--", "Select a member", "---", null);
 
 	public MemberHome() {
@@ -92,6 +92,7 @@ public class MemberHome implements Serializable {
 		}
 		return members;
 	}
+
 	/**
 	 * But not too many! Has to be re-created after we update,
 	 * as it is disconnected copies and is now out of sync.

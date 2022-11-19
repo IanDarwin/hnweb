@@ -1,0 +1,27 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/template/template.xhtml">
+
+<h:head>
+</h:head>
+
+<ui:define name="pageTitle">Executive Functions</ui:define>
+
+<ui:define name="body">
+	<h:form id="personForm">
+	<p:panel>
+		<f:facet name="header">Executive Functions</f:facet>
+		
+		<h:inputText id="idTF" value="#{memberHome.id}"/>
+		<p:commandButton value="Save" action="#{memberHome.undelete}" ajax='false'/>
+
+		<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
+	</h:form>
+	
+</ui:define>
+</ui:composition>
