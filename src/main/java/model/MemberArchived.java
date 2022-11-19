@@ -16,7 +16,7 @@ import org.apache.commons.beanutils.BeanUtils;
  */
 @Entity
 @Table(name="member_archived")
-public class MemberArchived extends Member {
+public class MemberArchived extends MemberBase {
 	@Column(name="archive_reason")
 	private String archivedReason;
 	@Column(name="archive_date")
@@ -40,8 +40,6 @@ public class MemberArchived extends Member {
 		// Now have to clear some fields. For now.
 		id = 0;
 		transactions = new ArrayList<>();
-		secondaryMembers = new HashSet<>();
-		roles = new ArrayList<>();
 	}
 
 	public String getArchivedReason() {

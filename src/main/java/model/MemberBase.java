@@ -36,6 +36,10 @@ public abstract class MemberBase {
 	protected String position;
 	/** 4-digit year */
 	protected int expiryYear;
+	@Basic(optional = false)
+	@Temporal(TemporalType.DATE)
+	protected LocalDate lastModified;
+	
 	@Enumerated(EnumType.STRING)
 	protected MemberType memberType = MemberType.Individual;
 
@@ -252,6 +256,23 @@ public abstract class MemberBase {
 	public void setEmailTrips(boolean emailTrips) {
 		this.emailTrips = emailTrips;
 	}
+
+	public LocalDate getLastModified() {
+		return lastModified;
+	}
+	public void setLastModified(LocalDate lastModified) {
+		this.lastModified = lastModified;
+	}
+	
+	public void acceptRenewal(MemberTransaction renewal) {
+		setExpiryYear(getExpiryYear() + renewal.getNumYears());
+		renewal.setNewExpiryYear(getExpiryYear());
+	}
+
+	@PreUpdate @PrePersist
+	public void updateLastModified() {
+		lastModified = LocalDate.now();
+	}
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -266,11 +287,6 @@ public abstract class MemberBase {
 			.append('>');
 		}
 		return sb.toString();
-	}
-	
-	public void acceptRenewal(MemberTransaction renewal) {
-		setExpiryYear(getExpiryYear() + renewal.getNumYears());
-		renewal.setNewExpiryYear(getExpiryYear());
 	}
 
 	@Override
