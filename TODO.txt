@@ -1,14 +1,14 @@
 = TODO
 
-Make MemberBase be an Embeddable, not a parent class. MESSY.
-
-Update Secondary member when renewing or setting date (low prio since we already display master's exp)
+New members should get a welcome email with the latest Bluebird.
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 
 UserEdit += password
 
 SELF_RENEW W/ PAYPAL
+
+Update Secondary member when renewing or setting date (low prio since we already display master's exp)
 
 MailingList - multiple attachments?
 
