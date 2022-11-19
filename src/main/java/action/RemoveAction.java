@@ -12,11 +12,16 @@ import model.Member;
 import model.MemberArchived;
 import model.MemberBase;
 
+/**
+ * Remove or delete a Member
+ */
 @Stateful @Named @RequestScoped
 public class RemoveAction {
 	
 	@PersistenceContext
 	public EntityManager em;
+
+	public long id;	// only used in undelete case
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String remove(Member instance) {
@@ -41,7 +46,33 @@ public class RemoveAction {
 		em.flush();
 		// This is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
-		System.out.println("Removed!");
+		System.out.printf("Moved %s to archive!\n", instance);
 		return "MemberList";
 	}
+
+	/**
+	 * Restore, undelete, unarchive - whatever, it partly reverses the above.
+	 * Transactions, Secondaries, etc. all get lost in the shuffle.
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public String unDelete(long id) {
+		// The dead records don't (shouldn't) have transactions, so we can just restore
+		MemberArchived instance = em.find(MemberArchived.class, id);
+		System.out.println("Trying to ressurect " + instance + " with id " + id);
+		em.remove(instance);
+		em.flush();
+		// This is all one transaction despite the flush (hopes).
+		em.persist(new Member(instance));
+		em.flush();	// Ensure prints with updated id
+		System.out.printf("Restored %s from archive!\n", instance);
+		return "MemberList";
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	public long getId() {
+		return id;
+	}
 }
+
