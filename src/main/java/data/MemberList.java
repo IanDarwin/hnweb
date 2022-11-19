@@ -24,15 +24,15 @@ import org.apache.deltaspike.data.api.Repository;
 @Repository 
 public interface MemberList extends Serializable, EntityRepository<Member, Long>  {
 
-	public static final String FIND_ALL_QUERY = "select m from Member m order by m.lastName asc";
+	public static final String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";
 
 	@Query(value=FIND_ALL_QUERY)
 	List<Member> findAll();
 
-	@Query(value="select m from Member m where m.memberType != 'Secondary' order by m.lastName asc")
+	@Query(value="select m from Member m where m.memberType != 'Secondary' order by lower(m.lastName) asc")
 	List<Member> findNonSecondaries();
 	
-	@Query(value="select m from Member m where m.expiryYear >= 2019 order by m.lastName asc")
+	@Query(value="select m from Member m where m.expiryYear >= 2022 order by lower(m.lastName) asc")
 	List<Member> findCurrent();
 
 	/** Basic for login */
