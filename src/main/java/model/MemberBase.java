@@ -43,8 +43,6 @@ public abstract class MemberBase {
 	@Enumerated(EnumType.STRING)
 	protected MemberType memberType = MemberType.Individual;
 
-	/** How they get the club newsletter */
-	protected NewsletterMode newsletterMode;
 	protected Integer yearJoined = LocalDate.now().getYear();
 	@Column(name="email_trips",
 	         columnDefinition="boolean default false")
@@ -197,14 +195,6 @@ public abstract class MemberBase {
 
 	public void setCountry(Country country) {
 		this.country = country;
-	}
-
-	public NewsletterMode getNewsletterMode() {
-		return newsletterMode;
-	}
-
-	public void setNewsletterMode(NewsletterMode newsletterMode) {
-		this.newsletterMode = newsletterMode;
 	}
 
 	public String getPosition() {
