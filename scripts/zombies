@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# list the archived members
+
+psql -d hn -c 'select id, firstname, lastname from member_archived order by lastname'
