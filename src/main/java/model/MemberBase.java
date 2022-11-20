@@ -221,11 +221,17 @@ public abstract class MemberBase {
 	public void setYearJoined(Integer yearJoined) {
 		this.yearJoined = yearJoined;
 	}
-
 	public Integer getYearJoined() {
 		return yearJoined;
 	}
-	
+
+	public LocalDate getLastModified() {
+		return lastModified;
+	}
+	public void setLastModified(LocalDate lastModified) {
+		this.lastModified = lastModified;
+	}
+
 	public int getVersion() {
 		return version;
 	}
@@ -247,14 +253,8 @@ public abstract class MemberBase {
 		this.emailTrips = emailTrips;
 	}
 
-	public LocalDate getLastModified() {
-		return lastModified;
-	}
-	public void setLastModified(LocalDate lastModified) {
-		this.lastModified = lastModified;
-	}
-	
 	public void acceptRenewal(MemberTransaction renewal) {
+		// XXX This should be getCurrentMembershipYear() + renewal.getNumYears
 		setExpiryYear(getExpiryYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
 	}
