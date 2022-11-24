@@ -37,7 +37,9 @@ public abstract class MemberBase {
 	/** 4-digit year */
 	protected int expiryYear;
 	@Basic(optional = false)
-	@Temporal(TemporalType.DATE)
+	// This is an obvious fix, presumable a newer JPA will fix it
+	// @Temporal(TemporalType.DATE)
+	@Transient
 	protected LocalDate lastModified;
 	
 	@Enumerated(EnumType.STRING)
