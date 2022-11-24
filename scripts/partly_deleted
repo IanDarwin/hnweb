@@ -1,1 +1,1 @@
-select * from member where lastname in (select(lastname) from member_archived); 
+psql -d hn -c "select * from member where lastname in (select(lastname) from member_archived);" 
