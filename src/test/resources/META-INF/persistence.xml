@@ -12,10 +12,16 @@
 		<class>model.Config</class>
 
 		<properties>
+			<!-- Property for Provider ("JPA Driver") -->
 			<property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
 			<!--
 			<property name="javax.persistence.provider" value="org.eclipselink.jpa.provider"/>
 			-->
+
+			<!-- Properties for Dialect (brand of database) -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+			<property name="eclipselink.target-database"
+				value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
 
 			<!-- A local database, for dev/test -->
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
@@ -23,18 +29,13 @@
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
 
-			<!-- Property for type of database -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-			<property name="eclipselink.target-database"
-				value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
-
 			<!-- Properties controlling database setup -->
 			<property name="javax.persistence.schema-generation.database.action" 
 				value="drop-and-create"/>
 			<property name="javax.persistence.schema-generation.load-script-source"
 				value="sql/load-test-data.sql" />
 
-			<!-- Properties for Hibernate provider -->
+			<!-- Properties for Hibernate provider logging -->
 			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.format_sql" value="false"/>
 
