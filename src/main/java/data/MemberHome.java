@@ -181,7 +181,7 @@ public class MemberHome implements Serializable {
 		return enableMasterMember;
 	}
 
-	public static String getListPage() {
+	public String getListPage() {
 		return LIST_PAGE;
 	}
 
