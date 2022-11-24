@@ -19,15 +19,24 @@
 			-->
 
 			<!-- Properties for Dialect (brand of database) -->
+			<!--
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+			-->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-			<property name="eclipselink.target-database"
-				value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
 
-			<!-- A local database, for dev/test -->
+			<!-- A local hsqldb database, for dev/test -->
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
+
+			<!--
+			<!-- A local PostgreSQL database, for dev/test -->
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql:hntest" />
+			<property name="javax.persistence.jdbc.user" value="hntest" />
+			<property name="javax.persistence.jdbc.password" value="myxyzpytlk" />
+			-->
 
 			<!-- Properties controlling database setup -->
 			<property name="javax.persistence.schema-generation.database.action" 
