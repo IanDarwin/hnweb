@@ -215,7 +215,7 @@
         <defaultGoal>wildfly:deploy</defaultGoal>
 		<plugins>
 
-			<!-- Default version is rather stale, specify new one here: -->
+			<!-- Default war plugin version is rather stale, specify new one here: -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
