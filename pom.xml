@@ -157,7 +157,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- DRIVERS -->
+		<!-- DRIVERS... Only for testing (PROVIDED in prod'n) -->
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.4.1</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -172,8 +179,6 @@
 			<version>2.1.214</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- TESTING -->
 
 		<!-- JUnit 5 -->
 		<dependency>
