@@ -1,0 +1,52 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Deleted Members List</ui:define>
+<ui:define name="body">
+
+	<p:panel>
+	<f:facet name="header">Here's looking in the rear-view mirror</f:facet>
+
+	<!-- Print the table, or, an error -->
+	<p:dataTable border='1' 
+		rendered="#{!empty deletedList.findAll()}"
+		var="member" value="#{deletedList.findAll()}" 
+		>
+		<p:column>
+			<f:facet name="header">First Name</f:facet>
+			<h:outputText value="#{member.firstName}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Last Name</f:facet>
+			<h:outputText value="#{member.lastName}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Email</f:facet>
+			<h:outputText value="#{member.email}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Deleted Reason</f:facet>
+			<h:outputText value="#{member.archivedReason}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Deleted Date</f:facet>
+			<h:outputText value="#{member.archivedDate}"/>
+		</p:column>
+
+		<p:column style="width: 10%">
+			<f:facet name="header">Actions</f:facet>
+			<h:outputLink value="DeletedView.web">
+				Details<br/>(not available yet)
+				<f:param name="memberId" value="#{member.id}"/>
+			</h:outputLink>
+		</p:column>
+	</p:dataTable>
+	</p:panel>
+</ui:define>
+</ui:composition>

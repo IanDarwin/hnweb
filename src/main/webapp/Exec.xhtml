@@ -13,15 +13,19 @@
 <ui:define name="pageTitle">Executive Functions</ui:define>
 
 <ui:define name="body">
-	<p>
-	Site status:
-	<ul>
-	<li>2022-11-24 Solved a bug that caused deleted members to still appear active.</li>
-	<li>2022-11-23 Introduced a bug in deciding which members are expired - do not use "expired nagger" until fixed!</li>
-	<li>2022-11-01 Some tests are failing with 'interesting' failure modes, but I think the problem is the tests themselves
-	(uses a different brand of database in tests).</li>
-	</ul>
-	</p>
+	<p:panel>
+		<f:facet name="header">Site status/info</f:facet>
+		<ul>
+		<li>2022-11-24 Solved a bug that caused deleted members to still appear active.</li>
+		<li>2022-11-23 Introduced a bug in deciding which members are expired - do not use "expired nagger" until fixed!</li>
+		<li>2022-11-01 Some tests are failing with 'interesting' failure modes, but I think the problem is the tests themselves
+		(uses a different brand of database in tests).</li>
+		</ul>
+	</p:panel>
+	<p:panel>
+		<f:facet name="header">Executive-Only Information</f:facet>
+		<a href="/DeletedList.web">Deleted Members</a>
+	</p:panel>
 	<h:form id="personForm">
 		<p:panel>
 			<f:facet name="header">Executive Functions</f:facet>
