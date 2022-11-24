@@ -27,12 +27,12 @@ public class YearCalcsTest {
 
 	@ParameterizedTest(name = "String {0} should give {1}")
 	@CsvSource({
-			"2023, 1, 202x",
-			"2022, 1, 202x",
-			"2021, 1, 202x",
-			"2020, 1, 202x",
-			"2019, 0, 202x",
-			"2018, 0, 202x",
+			"2023, 1, 2023",
+			"2022, 1, 2022",
+			"2021, 1, 2021",
+			"2020, 1, 2020",
+			"2019, 1, 2019",
+			"2018, 1, 2018",
 	})
 	public void testGetNewMemberExpiryYear(int year, int month, int expectedYear) {
         LocalDate now = LocalDate.of(year, month, 1);
