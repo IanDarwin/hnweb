@@ -10,18 +10,19 @@ import com.darwinsys.geo.CanadaProvince;
 
 /**
  * Represents one person in our database.
- * ALL data properties are in MemberBase so we can use them both in
- * Equals and hashCode() based solely on ID so we don't get new entries made
+ * ALL data properties are in MemberBase, so we can use them both in
+ * Equals and hashCode() based solely on ID, so we don't get new entries made
  * when editing other fields.
  * @author Ian Darwin
  */
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @Named("person")
+@SuppressWarnings("unused")
 public abstract class MemberBase {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
-	protected long id; // Should be private but Archived copy-constr needs it.
+	protected long id; // Should be private but Archived copy-constructor needs it.
 	protected String email;
 	protected String password;
 	protected String firstName, middle, lastName;

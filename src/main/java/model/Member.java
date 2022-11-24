@@ -1,35 +1,27 @@
 package model;
 
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Represents one person in our database.
- * ALL data properties are in MemberBase so we can use them both in
+ * ALL data properties are in MemberBase, so we can use them both in
  * Member and in MemberArchived.
- * Equals and hashCode() based solely on ID so we don't get new entries made
+ * Equals and hashCode() based solely on ID, so we don't get new entries made
  * when editing other fields.
  * @author Ian Darwin
  */
 @Entity
+@SuppressWarnings("unused")
 public class Member extends MemberBase {
 
-	// For app-managed security - only Members, not MemberArchiveds, can be in roles
+	// For app-managed security - only Members, not MemberArchived elements, can be in roles
 	@ElementCollection
 	protected List<String> roles = new ArrayList<>();
 	
@@ -65,7 +57,7 @@ public class Member extends MemberBase {
 	public Member(MemberArchived m) {
 		this();
 		try {
-			BeanUtils.copyProperties(this, m);		// (dest, src)
+			BeanUtils.copyProperties(this, m);		// (destination, src)
 		} catch (IllegalAccessException|InvocationTargetException ex) {
 			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
 		}
@@ -88,7 +80,7 @@ public class Member extends MemberBase {
 	public void setMasterMember(Member masterMember) {
 		this.masterMember = masterMember;
 		if (masterMember != null) {
-			masterMember.getSecondaryMembers().add((Member)this);
+			masterMember.getSecondaryMembers().add(this);
 		}
 	}
 
@@ -128,7 +120,7 @@ public class Member extends MemberBase {
 	@PrePersist @PreUpdate
 	public void preJpa() {
 		fixMembership();
-		fixupPostCode();
+		fixPostCode();
 	}
 	
 	/** 
@@ -143,12 +135,13 @@ public class Member extends MemberBase {
 			masterMember = null;
 		}
 	}
+
 	/**
 	 * Canadian Post Codes can be entered in either case
 	 * and with or without the middle space; this
 	 * canonicalizes them to upper case and with the space.
 	 */
-	public void fixupPostCode() {
+	public void fixPostCode() {
 		if (getPostCode() == null) {
 			return;
 		}
