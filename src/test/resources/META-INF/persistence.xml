@@ -30,8 +30,8 @@
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
 
-			<!--
 			<!-- A local PostgreSQL database, for dev/test -->
+			<!--
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql:hntest" />
 			<property name="javax.persistence.jdbc.user" value="hntest" />
