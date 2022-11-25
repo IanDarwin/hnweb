@@ -4,9 +4,7 @@ FIX EXPIRY LOGIC
 
 MAKE TESTS PASS - Mockito, JPA
 
-Mail: drop plain-text version. HTML is here to stay.
-
-Add DeletedView.
+Add DeletedView (already linked to from DeletedList).
 
 Change Resurrected to requires-admin
 
