@@ -2,6 +2,7 @@ package action;
 
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ import webtier.WebConstants;
 /**
  * Simple DIY login.
  */
-@Named("identity") @SessionScoped
+@ManagedBean(name="identity") @SessionScoped
 public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
