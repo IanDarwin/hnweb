@@ -1,10 +1,22 @@
 = TODO
 
-New members should get a welcome email with the latest Bluebird.
+FIX EXPIRY LOGIC
+
+MAKE TESTS PASS - Mockito, JPA
+
+Mail: drop plain-text version. HTML is here to stay.
+
+Add DeletedView.
+
+Change Resurrected to requires-admin
+
+New members should get a welcome email *automatically* with the latest Bluebird.
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 
 UserEdit += password
+
+Get/Forgot Password
 
 SELF_RENEW W/ PAYPAL
 
