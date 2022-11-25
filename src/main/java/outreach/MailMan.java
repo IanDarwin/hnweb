@@ -5,40 +5,29 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Predicate;
-
 import javax.annotation.Resource;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.mail.Address;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.inject.Named;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
-
 import action.LoginAction;
 import data.MemberList;
 import model.Member;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 
 /**
  * Sends email on behalf of the club.
@@ -51,7 +40,7 @@ import model.Member;
  * instance than the submit, so beware of field-reuse issues.
  * XXX consider conversation scope?
  */
-@ManagedBean(name="mailMan") @SessionScoped
+@Named("mailMan") @SessionScoped
 public class MailMan implements Serializable {
 
 	private static final String HEADER_REPLY_TO = "Reply-To";
@@ -342,14 +331,6 @@ public class MailMan implements Serializable {
         htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
-
-        // Convert to plain text and send it that way too, for olde mailers.
-        BodyPart textPart = new MimeBodyPart();
-        String plainBody = sanitizeToPlainText(htmlBody);
-        textPart.setText(plainBody); // sets type of this part to "text/plain"
-		textPart.addHeader("Content-Type", "text/plain; charset=iso-8859-1");
-		textPart.addHeader("Content-Disposition", "inline");
-        mp.addBodyPart(textPart);
         
         // Toss in one attachment if there is one
         if (uploadContentType != null) {
@@ -364,17 +345,6 @@ public class MailMan implements Serializable {
         System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type"));
 		//mesg.setContentType("multipart/alternative");
 		return mesg;
-	}
-
-	/** Convert a string containing an HTML message into plain text */
-	protected static String sanitizeToPlainText(String htmlBody) {
-		// First get rid of whacko smart characters
-		String messageBody = sanitizeToUtf8(htmlBody);
-		final String rendered = Jsoup.clean(messageBody, new Safelist());
-		// For some braindead reason JSoup thinks spaces should print as char '160' not char '40'... XXX Still??
-		return rendered
-				.replaceAll("&nbsp;", " ")
-				.replace('\u00a0', ' ');
 	}
 
 	/** For the HTML sending version, get rid of janky special characters that break badly in this stack */
