@@ -3,8 +3,6 @@ package model;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;

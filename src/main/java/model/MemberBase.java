@@ -291,7 +291,7 @@ public abstract class MemberBase {
 	}
 
 	/**
-	 * CUIDADO! This is non-standard:
+	 * NOTE! This is non-standard:
 	 * Only compares on ID, AND
 	 * No Entity can be equal to 'no entity' (id 0).
 	 */

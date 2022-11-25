@@ -14,13 +14,13 @@ import model.MemberType;
 @Named
 public class YearCalcs {
 			
-	public static final int getCurrentMembershipYear(LocalDate now) {
+	public static int getCurrentMembershipYear(LocalDate now) {
 		int yearNow = now.getYear();
 		int monthNow = now.getMonthValue();
 		return (monthNow >= Config.RENEWAL_MONTH) ? yearNow + 1 : yearNow;
 	}
 
-	public static final int getNewMemberExpiryYear(LocalDate now) {
+	public static int getNewMemberExpiryYear(LocalDate now) {
 		if (now.getMonthValue()>=Config.RENEWAL_MONTH)
 			return getCurrentMembershipYear(now) + 1;
 		return getCurrentMembershipYear(now);

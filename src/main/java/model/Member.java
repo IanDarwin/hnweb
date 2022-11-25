@@ -53,7 +53,7 @@ public class Member extends MemberBase {
 		this.email = email;
 	}
 
-	/** Copy Constructor: copies all field but for ID */
+	/** Copy Constructor: copies all fields but for ID and some relationships */
 	public Member(MemberArchived m) {
 		this();
 		try {
