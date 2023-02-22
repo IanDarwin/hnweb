@@ -347,7 +347,7 @@ public class MailMan implements Serializable {
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
-        System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type")[0]);
+        System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type"));
 		//mesg.setContentType("multipart/alternative");
 		return mesg;
 	}
