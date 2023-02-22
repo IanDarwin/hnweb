@@ -2,21 +2,19 @@ package outreach;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Predicate;
 import javax.annotation.Resource;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -40,7 +38,7 @@ import org.primefaces.model.file.UploadedFile;
  * instance than the submit, so beware of field-reuse issues.
  * XXX consider conversation scope?
  */
-@Named("mailMan") @SessionScoped
+@ManagedBean(name="mailMan") @SessionScoped
 public class MailMan implements Serializable {
 
 	private static final String HEADER_REPLY_TO = "Reply-To";
@@ -49,12 +47,16 @@ public class MailMan implements Serializable {
 
 	public static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
 
-	public static final String PROPNAME_MAIL_NO_REPLY = "no-reply-address";
+	public static final String PROPNAME_MAIL_SMTP_FROM = "mail.smtp.from";
 
+	public static final String PROPNAME_MAIL_SUBJECT_PREFIX = "mail.subject.prefix";
+
+	@Serial
 	private static final long serialVersionUID = -1980670543127065573L;
 
 	@Inject
 	MemberList lister;
+
 	@ManagedProperty("#{identity}")
 	LoginAction identity;
 	
@@ -114,10 +116,10 @@ public class MailMan implements Serializable {
 			addFacesMessage("Are you sure you logged in?");
 			return;
 		}
-		if (sendMessage(Arrays.asList(identity.getLoggedInUser().getEmail()), subject, messageBody)) {
+		if (sendMessage(Collections.singletonList(identity.getLoggedInUser().getEmail()), subject, messageBody)) {
 			addFacesMessage("Message sent to your email, please proof-read.");
 		}
-		// Gotta stay on same page here!
+		// Must stay on same page here!
 	}
 
 	/**
@@ -195,7 +197,7 @@ public class MailMan implements Serializable {
 	}
 
 	/**
-	 * Common code for Some of the sendMessageToXXX() methods;
+	 * Common code for the sendMessageToXXX() methods;
 	 * takes a lambda for including/excluding each member from the list.
 	 */
 	int sendMessageToSome(Predicate<Member> ch) throws MessagingException {
@@ -255,16 +257,15 @@ public class MailMan implements Serializable {
 		MimeMessage mesg = createMessage(fromAddress, message_subject, message_body, emails,
 				uploadContentType, uploadData);
 
-		if (true) {
 			String from = mesg.getFrom()[0].toString();
 			final String[] toHeaders = mesg.getHeader(HEADER_REPLY_TO);
 			String reply = toHeaders != null ? toHeaders[0] : "(unset)";
-			StringBuffer to = new StringBuffer();
+			StringBuilder to = new StringBuilder();
 			for (Address recip : mesg.getAllRecipients()) {
 				to.append(recip).append(',');
 			}
-			System.out.printf("MailMan: From %s, %s %s, To %s\n", from, HEADER_REPLY_TO, reply, to.toString());
-		}
+			System.out.printf("MailMan: From %s, %s %s, To %s\n", from, HEADER_REPLY_TO, reply, to);
+
 		// Finally, send the message!
 		try {
 			Transport.send(mesg);
@@ -296,7 +297,7 @@ public class MailMan implements Serializable {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
-		String noReplyAddress = props.getProperty(PROPNAME_MAIL_NO_REPLY);
+		String noReplyAddress = props.getProperty(PROPNAME_MAIL_SMTP_FROM);
 		if (noReplyAddress == null) {	// Simple mode
 			final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
 			mesg.setFrom(fromInternetAddress);
@@ -311,7 +312,7 @@ public class MailMan implements Serializable {
 		// Additional list headers
 		mesg.addHeader("List-Id", "Headwaters Nature <hn.darwinsys.com>");
 
-		// Send ourself a copy as the (only) 'To' address
+		// Send yourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
 
 		// TO Addresses - may be a lot! But send as BCC as usual for privacy.
@@ -321,6 +322,10 @@ public class MailMan implements Serializable {
 		}
 
 		// The Subject
+		String prefix = props.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX);
+		if (prefix != null) {
+			messageSubject = prefix + " " + messageSubject;
+		}
 		mesg.setSubject(messageSubject);
 
         // Now the message body, in HTML and in plain text
@@ -342,7 +347,7 @@ public class MailMan implements Serializable {
 
         // Put the MultiPart into the Message
         mesg.setContent(mp);
-        System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type"));
+        System.out.println("outreach.MailMan: " + mesg.getHeader("Content-Type")[0]);
 		//mesg.setContentType("multipart/alternative");
 		return mesg;
 	}

@@ -2,6 +2,7 @@ package outreach;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -37,6 +38,7 @@ public class MailManTest {
 		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
 		identity = new LoginAction();
 		identity.setLoggedInUser(member);
+		MailMan.props.clear();
 	}
 	
 	@Test
@@ -74,7 +76,7 @@ public class MailManTest {
 	public void testCreateMessageWithNoReply() throws Exception {
 		List<String> recipients = Arrays.asList("a@b.c");
 		final String NO_REPLY_ADDR = "slugs@junglegarden.moc";
-		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_NO_REPLY, NO_REPLY_ADDR);
+		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, NO_REPLY_ADDR);
 		final MimeMessage actual = sender.createMessage("from@dom.ain",
 				A_MESSAGE_SUBJECT,
 				HTML_HELLO_WORLD,
@@ -84,6 +86,5 @@ public class MailManTest {
 		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
 		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
 		assertEquals("Reply-to", new InternetAddress("from@dom.ain"), actual.getReplyTo()[0]);
-		MailMan.props.remove(MailMan.PROPNAME_MAIL_NO_REPLY);
 	}
 }
