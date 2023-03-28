@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.persistence.*;
 
 import com.darwinsys.geo.CanadaProvince;
+import action.YearCalcs;
 
 /**
  * Represents one person in our database.
@@ -257,7 +258,7 @@ public abstract class MemberBase {
 	}
 
 	public void acceptRenewal(MemberTransaction renewal) {
-		setExpiryYear(getCurrentMembershipYear() + renewal.getNumYears());
+		setExpiryYear(YearCalcs.getCurrentMembershipYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
 	}
 
