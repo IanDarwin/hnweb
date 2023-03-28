@@ -257,8 +257,7 @@ public abstract class MemberBase {
 	}
 
 	public void acceptRenewal(MemberTransaction renewal) {
-		// XXX This should be getCurrentMembershipYear() + renewal.getNumYears
-		setExpiryYear(getExpiryYear() + renewal.getNumYears());
+		setExpiryYear(getCurrentMembershipYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
 	}
 

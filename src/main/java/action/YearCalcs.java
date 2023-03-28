@@ -19,6 +19,9 @@ public class YearCalcs {
 		int monthNow = now.getMonthValue();
 		return (monthNow >= Config.RENEWAL_MONTH) ? yearNow + 1 : yearNow;
 	}
+	public static int getCurrentMembershipYear() {
+		return getCurrentMembershipYear(LocalDate.now());
+	}
 
 	public static int getNewMemberExpiryYear(LocalDate now) {
 		if (now.getMonthValue()>=Config.RENEWAL_MONTH)
@@ -29,6 +32,7 @@ public class YearCalcs {
 	public static boolean isExpired(Member m) {
 		return isExpired(m, LocalDate.now());
 	}
+
 	/** Return true iff this member (or their Master Member) is expired */
 	public static boolean isExpired(Member m, LocalDate now) {
 		if (m.getMemberType() == MemberType.Secondary) {
