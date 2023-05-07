@@ -97,13 +97,6 @@
 			<version>12.0.0</version>
 		</dependency>
 
-		<!-- JSoup just to convert html text to plain for email -->
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.15.3</version>
-		</dependency>
-
 		<!-- File Upload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>

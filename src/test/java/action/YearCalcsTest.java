@@ -2,10 +2,11 @@ package action;
 
 import java.time.LocalDate;
 
+import model.Member;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Membership year is from Sept 1 to Aug 31.
@@ -38,4 +39,17 @@ public class YearCalcsTest {
         LocalDate now = LocalDate.of(year, month, 1);
 		assertEquals(expectedYear, YearCalcs.getCurrentMembershipYear(now));
 	}
-}
+
+	@ParameterizedTest(name = "Now {0}-{1} with expiry {2} should give {3}")
+	@CsvSource({
+			// now  | expYear
+			"2023, 1, 2023, false",
+			"2023, 6, 2023, false",
+			"2023, 5, 2022, true",
+	})
+	public void testIsExpired(int nowYear, int nowMonth, int memberExpYear, boolean exp) {
+		Member member = new Member();
+		member.setExpiryYear(memberExpYear);
+		var now = LocalDate.of(nowYear, nowMonth, 15);
+		assertSame(YearCalcs.isExpired(member, now), exp);
+	}}
