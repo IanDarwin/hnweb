@@ -1,19 +1,19 @@
 #!/bin/sh
 
-. ./CURYEAR
+CURYEAR=$(cat CURYEAR)
 
 psql -d hn <<!
 
-\echo #1 Counting total member entries (including family members)
+\echo #1 Counting total entries (including unpaid newbies and hangers-on)
 
 select count(id) from member;
 
-\echo #2 Counting just Individual and Family (master) memberships
+\echo #2 Counting just Individual paid-up memberships
 
-select count(id) from member where membertype != 'Secondary';
+select count(id) from member where membertype = 'Individual' AND expiryyear >= ${CURYEAR};
 
-\echo #3 Counting Individual and Family (master) memberships that ARE PAID for ${CURYEAR}
+\echo #3 Counting Family (master) paid-up memberships for ${CURYEAR}
  
-select count(id) from member where membertype != 'Secondary' and expiryyear >= ${CURYEAR};
+select count(id) from member where membertype = 'Family' and expiryyear >= ${CURYEAR};
 
 !

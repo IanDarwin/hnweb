@@ -6,9 +6,13 @@ psql -d hn <<!
 
 select id,firstname,lastname from member where membertype = 'Secondary' and mastermember_id is null;
 
-\echo #1 Finding members with position != null but no position
+\echo #2 Finding members with position != null but no position
 
 select firstname,lastname,yearjoined,position from member where position is not null and position = '';
+
+\echo #3 Fixing the above (#2)
+
+update member set position=null where position='';
 
 
 !

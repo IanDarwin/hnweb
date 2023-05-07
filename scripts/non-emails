@@ -1,5 +1,5 @@
-echo "select concat(firstname,' ',lastname),address,concat(city,' ',postcode,' ',province),'' from member where 
-	membertype != 'Secondary' and (email is null or email = '') order by lastname;" |
+echo "select concat(firstname,' ',lastname),expiryyear,address,concat(city,' ',postcode,' ',province),'' from member
+	where membertype != 'Secondary' and (email is null or email = '') order by lastname;" |
 		psql -d hn  |
 			sed 1,2d |
 				tr '|' '\n'
