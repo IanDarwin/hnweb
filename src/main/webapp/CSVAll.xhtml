@@ -12,7 +12,7 @@
 # Entries will appear on their own lines in "View Source" or "File->SaveAs".
 # There is one line per person. "Family" has one or more "Secondary" members but we don't yet show the relationship
 # among them properly. 
-firstName,lastName,memberType,expiry-year,position-if-any,address,address2,city,province,postcode,email,homePhone,workPhone,cellPhone
+firstName,lastName,memberType,expiry-year,position-if-any,city,province,email,homePhone,workPhone,cellPhone
 <ui:repeat var="m" value="#{memberList.findAll()}">
-"#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.expiryYear}","#{m.position}","#{m.address}","#{m.address2}","#{m.city}","#{m.province}","#{m.postCode}","#{m.email}","#{m.homePhone}","#{m.workPhone}","#{m.cellPhone}" </ui:repeat>
+"#{m.firstName}","#{m.lastName}","#{m.memberType}","#{m.expiryYear}","#{m.position}","#{m.city}","#{m.province}","#{m.email}","#{m.homePhone}","#{m.workPhone}","#{m.cellPhone}" </ui:repeat>
 </csv>

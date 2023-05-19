@@ -29,17 +29,13 @@
 				Expiry:
 				<h:outputText value="#{memberHome.instance.expiryYear}"/>
 
-				Address:
-				<h:outputText value="#{memberHome.instance.address}"/>
-
 				City:
 				<h:outputText value="#{memberHome.instance.city}"/>
 
-				Province,Country,PostCode:
+				Province,Country:
 				<ui:fragment>
-				<h:outputText value="#{memberHome.instance.province}"/>#{' '}
-				<h:outputText value="#{memberHome.instance.country}"/>#{' '}
-				<h:outputText value="#{memberHome.instance.postCode}"/>
+					<h:outputText value="#{memberHome.instance.province}"/>#{' '}
+					<h:outputText value="#{memberHome.instance.country}"/>#{' '}
 				</ui:fragment>
 
 				Phone:

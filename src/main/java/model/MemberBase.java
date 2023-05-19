@@ -28,8 +28,7 @@ public abstract class MemberBase {
 	protected String password;
 	protected String firstName, middle, lastName;
 	protected String homePhone, cellPhone, workPhone;
-	protected String address, address2;
-	protected String city, postCode;
+	protected String city;
 	@Enumerated(EnumType.STRING)
 	protected CanadaProvince province;
 	@Enumerated(EnumType.STRING)
@@ -153,22 +152,6 @@ public abstract class MemberBase {
 		this.email = email;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getAddress2() {
-		return address2;
-	}
-
-	public void setAddress2(String address2) {
-		this.address2 = address2;
-	}
-
 	public String getCity() {
 		return city;
 	}
@@ -183,14 +166,6 @@ public abstract class MemberBase {
 
 	public void setProvince(CanadaProvince province) {
 		this.province = province;
-	}
-
-	public String getPostCode() {
-		return postCode;
-	}
-
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
 	}
 
 	public Country getCountry() {

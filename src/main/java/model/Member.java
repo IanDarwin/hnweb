@@ -120,7 +120,6 @@ public class Member extends MemberBase {
 	@PrePersist @PreUpdate
 	public void preJpa() {
 		fixMembership();
-		fixPostCode();
 	}
 	
 	/** 
@@ -133,32 +132,6 @@ public class Member extends MemberBase {
 		}
 		if (MemberType.Secondary != memberType) {
 			masterMember = null;
-		}
-	}
-
-	/**
-	 * Canadian Post Codes can be entered in either case
-	 * and with or without the middle space; this
-	 * canonicalizes them to upper case and with the space.
-	 */
-	public void fixPostCode() {
-		if (getPostCode() == null) {
-			return;
-		}
-		if (country == Country.CA) {
-			postCode = getPostCode().toUpperCase();
-			switch(postCode.length()) {
-			case 7: // OK
-				break;
-			case 6: // Missing internal space
-				postCode =
-					postCode.substring(0,3) + " " +
-					postCode.substring(3);
-				break;
-			default:
-				throw new IllegalStateException(
-					postCode + " not valid Canadian postcode");
-			}
 		}
 	}
 

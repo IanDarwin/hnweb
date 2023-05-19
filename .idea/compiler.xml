@@ -7,9 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ucfn-club" />
+        <module name="hn-clublist" />
         <module name="hnweb" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hnweb" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="EclipseCompilerSettings">
     <option name="PROCEED_ON_ERROR" value="false" />

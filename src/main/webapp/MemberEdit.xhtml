@@ -66,15 +66,11 @@
 		</h:inputText>
 		<h:message id='emailMessage' for='emailTF'/>
 
-		Address:
-		<h:inputText id="addressTF" value="#{memberHome.instance.address}" required='true'/>
-		<h:message id='addressMessage' for='addressTF' width="45"/>
-
 		City:
 		<h:inputText id="cityTF" value="#{memberHome.instance.city}" required='true'/>
 		<h:message id='cityMessage' for='cityTF'/>
 		
-		Province,Country,PostCode:
+		Province,Country:
 		<ui:fragment>
 			<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
 	            <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
@@ -88,12 +84,9 @@
 	                itemValue="#{_prov.name()}"
 	                itemlabel="#{_prov.longName}"/>
 			</p:selectOneMenu>
-			<h:inputText id="postcodeTF" value="#{memberHome.instance.postCode}" 
-				validator="#{memberHome.validatePostCode}" required='true'/>
 		</ui:fragment>
 		<ui:fragment>
 			<h:message id='provinceMessage' for='provinceMenu'/>
-			<h:message id='postcodeMessage' for='postcodeTF'/>
 		</ui:fragment>
 
 		Phones:
@@ -111,6 +104,9 @@
 			<f:selectItem itemLabel="2025" itemValue="2025" />
 			<f:selectItem itemLabel="2026" itemValue="2026" />
 			<f:selectItem itemLabel="2027" itemValue="2027" />
+			<f:selectItem itemLabel="2028" itemValue="2028" />
+			<f:selectItem itemLabel="2029" itemValue="2029" />
+			<f:selectItem itemLabel="2030" itemValue="2030" />
 		</p:selectOneMenu>
 		&nbsp;
 			
