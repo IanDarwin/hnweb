@@ -2,7 +2,8 @@ package action;
 
 import java.time.LocalDate;
 
-import javax.inject.Named;
+// import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
 
 import model.Config;
 import model.Member;
@@ -11,7 +12,8 @@ import model.MemberType;
 /**
  * Membership year is from Sept 1 to Aug 31.
  */
-@Named
+//@Named // Named doesn't work, deprecated ManagedBean does.
+@ManagedBean
 public class YearCalcs {
 
 	/** Given a date (usually today's), find out what membership year it is in. */
