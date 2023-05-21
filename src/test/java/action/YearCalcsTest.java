@@ -15,14 +15,14 @@ public class YearCalcsTest {
 			
 	@ParameterizedTest(name = "Month {0}-{1} should give {2}")
 	@CsvSource({
-			"2019, 8, 2020",
+			"2019, 8, 2019",
 			"2019, 9, 2020",
 			"2020, 1, 2020",
-			"2020, 3, 2021",
+			"2020, 3, 2020",
 			"2050, 1, 2050",
 	})
 	public void testGetCurrentMembershipYear(int year, int month, int expectedYear) {
-		LocalDate now = LocalDate.of(year, month, 1);
+		LocalDate now = LocalDate.of(year, month, 12);
 		assertEquals(expectedYear, YearCalcs.getCurrentMembershipYear(now));
 	}
 

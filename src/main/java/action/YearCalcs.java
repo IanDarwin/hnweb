@@ -13,22 +13,26 @@ import model.MemberType;
  */
 @Named
 public class YearCalcs {
-			
+
+	/** Given a date (usually today's), find out what membership year it is in. */
 	public static int getCurrentMembershipYear(LocalDate now) {
 		int yearNow = now.getYear();
 		int monthNow = now.getMonthValue();
 		return (monthNow >= Config.RENEWAL_MONTH) ? yearNow + 1 : yearNow;
 	}
+	/** Find out what today's current membership year is */
 	public static int getCurrentMembershipYear() {
 		return getCurrentMembershipYear(LocalDate.now());
 	}
 
+	/** If a member joins today, what membership year does their membership run to?*/
 	public static int getNewMemberExpiryYear(LocalDate now) {
 		if (now.getMonthValue()>=Config.RENEWAL_MONTH)
 			return getCurrentMembershipYear(now) + 1;
 		return getCurrentMembershipYear(now);
 	}
 
+	/** Return true iff this member (or their Master Member) is expired */
 	public static boolean isExpired(Member m) {
 		return isExpired(m, LocalDate.now());
 	}
@@ -37,7 +41,7 @@ public class YearCalcs {
 	public static boolean isExpired(Member m, LocalDate now) {
 		if (m.getMemberType() == MemberType.Secondary) {
 			if (m.getMasterMember() == null) {
-				System.err.printf("Member %s has no Master Member!\n", m);
+				System.err.printf("Secondary Member %s has no Master Member!\n", m);
 				return true;	// flag it for attention!
 			}
 			return isExpired(m.getMasterMember(), now);
