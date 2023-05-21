@@ -43,6 +43,7 @@ public class YearCalcsTest {
 	@ParameterizedTest(name = "Now {0}-{1} with expiry {2} should give {3}")
 	@CsvSource({
 			// now  | expYear
+			"2023, 9, 2019, true",
 			"2023, 1, 2023, false",
 			"2023, 6, 2023, false",
 			"2023, 5, 2022, true",
@@ -50,6 +51,7 @@ public class YearCalcsTest {
 	public void testIsExpired(int nowYear, int nowMonth, int memberExpYear, boolean exp) {
 		Member member = new Member();
 		member.setExpiryYear(memberExpYear);
+		// Day of Month doesn't matter, arbitrarily use 15:
 		var now = LocalDate.of(nowYear, nowMonth, 15);
 		assertSame(YearCalcs.isExpired(member, now), exp);
 	}}
