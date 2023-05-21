@@ -15,14 +15,14 @@ public class YearCalcsTest {
 			
 	@ParameterizedTest(name = "Month {0}-{1} should give {2}")
 	@CsvSource({
-			"2019, 8, 2020",
+			"2019, 8, 2019",
 			"2019, 9, 2020",
 			"2020, 1, 2020",
-			"2020, 3, 2021",
+			"2020, 3, 2020",
 			"2050, 1, 2050",
 	})
 	public void testGetCurrentMembershipYear(int year, int month, int expectedYear) {
-		LocalDate now = LocalDate.of(year, month, 1);
+		LocalDate now = LocalDate.of(year, month, 12);
 		assertEquals(expectedYear, YearCalcs.getCurrentMembershipYear(now));
 	}
 
@@ -43,6 +43,7 @@ public class YearCalcsTest {
 	@ParameterizedTest(name = "Now {0}-{1} with expiry {2} should give {3}")
 	@CsvSource({
 			// now  | expYear
+			"2023, 9, 2019, true",
 			"2023, 1, 2023, false",
 			"2023, 6, 2023, false",
 			"2023, 5, 2022, true",
@@ -50,6 +51,7 @@ public class YearCalcsTest {
 	public void testIsExpired(int nowYear, int nowMonth, int memberExpYear, boolean exp) {
 		Member member = new Member();
 		member.setExpiryYear(memberExpYear);
+		// Day of Month doesn't matter, arbitrarily use 15:
 		var now = LocalDate.of(nowYear, nowMonth, 15);
 		assertSame(YearCalcs.isExpired(member, now), exp);
 	}}
