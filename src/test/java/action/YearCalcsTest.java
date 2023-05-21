@@ -42,7 +42,7 @@ public class YearCalcsTest {
 
 	@ParameterizedTest(name = "Member who expired {2}, as of {0}-{1}, should give {3}")
 	@CsvSource({
-			// now  | expYear
+			// now  | expYear | expect
 			"2023, 9, 2019, true",
 			"2023, 1, 2023, false",
 			"2023, 6, 2023, false",
