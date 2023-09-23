@@ -1,0 +1,1 @@
+psql -d hn -c "SELECT firstname,lastname FROM member where expiryYear = $1"
