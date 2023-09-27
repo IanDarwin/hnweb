@@ -61,8 +61,6 @@ public class MemberHome implements Serializable {
 	private Long id;
 
 	protected Member instance = new Member();
-	// Used to enable the "Master Member" UI control while editing a Secondary Member
-	private boolean enableMasterMember;
 	// XXX Use the UI tools correctly, won't need this for the benefit of the UI controls only
 	final static Member noMember = new Member("--", "Select a member", "---", null);
 
@@ -171,15 +169,19 @@ public class MemberHome implements Serializable {
 		// this.id = instance.getId();
 	}
 
+	/*
 	public void computeEnableMasterMember() {
 		// For AJAX
 		enableMasterMember = instance.getMemberType() == MemberType.Secondary;
 	}
+	*/
 	
+	/*
 	public boolean isEnableMasterMember() {
 		computeEnableMasterMember();
 		return enableMasterMember;
 	}
+	*/
 
 	public String getListPage() {
 		return LIST_PAGE;

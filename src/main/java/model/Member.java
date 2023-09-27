@@ -68,6 +68,7 @@ public class Member extends MemberBase {
 		roles = new ArrayList<>();
 	}
 	
+
 	/** 
 	 * If this Member is a MemberType.Secondary member, this
 	 * Property will refer to the Master (e.g., paying!) member.
@@ -84,8 +85,16 @@ public class Member extends MemberBase {
 		}
 	}
 
+	/**
+	 * If this Member is a MemberType.Family member, then
+	 * allow secondary members
+	 */
+	public boolean allowSecondaries() {
+		return memberType == MemberType.Family;
+	}
+
 	/** 
-	 * OTOH, if this Member is a MemberType.Family member, this
+	 * If this Member is a MemberType.Family member, this
 	 * Property will refer to the Secondary member(s).
 	 * @return The secondary members
 	 */
@@ -119,20 +128,7 @@ public class Member extends MemberBase {
 
 	@PrePersist @PreUpdate
 	public void preJpa() {
-		fixMembership();
-	}
-	
-	/** 
-	 * Only a Family membership "Secondary" can have a
-	 * master member, but the UI lets them be set...
-	 */
-	public void fixMembership() {
-		if (memberType == null) {
-			throw new NullPointerException("Saving Member w/ no MemberType");
-		}
-		if (MemberType.Secondary != memberType) {
-			masterMember = null;
-		}
+		// Nothing to do at present
 	}
 
 	// For app-managed security
