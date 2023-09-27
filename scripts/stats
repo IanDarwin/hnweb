@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CURYEAR=$(cat CURYEAR)
+. ./CURYEAR
 
 psql -d hn <<!
 
