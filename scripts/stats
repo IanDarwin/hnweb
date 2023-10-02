@@ -4,7 +4,7 @@
 
 echo "Headwaters Nature: Stats for membership year ${CURYEAR}"
 
-psql -d hn <<!
+cat >/tmp/st <<!
 
 \echo #1 Counting total entries (includes indivs, family members, unpaid newbies, hangers-on, &c)
 
@@ -14,11 +14,11 @@ SELECT COUNT(id) FROM member;
 
 select count(id) from member where membertype in ('Individual','Family') and expiryyear >= ${CURYEAR};
 
-\echo #3a Counting just Individual paid-up memberships
+\echo #3a Counting only Individual paid-up memberships
 
 SELECT COUNT(id) FROM member WHERE membertype = 'Individual' AND expiryyear >= ${CURYEAR};
 
-\echo #3b Counting Family (master) paid-up memberships for ${CURYEAR}
+\echo #3b Counting only Family (master) paid-up memberships for ${CURYEAR}
  
 SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CURYEAR};
 
@@ -27,3 +27,4 @@ SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CUR
 -- SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' and
 -- 	(SELECT ma FROM member WHERE id = m.mastermember_id AND ma.expiryyear >= ${CURYEAR});
 !
+psql -d hn < /tmp/st | rg -v '(rows?\))|^ count'
