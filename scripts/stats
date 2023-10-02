@@ -2,18 +2,28 @@
 
 . ./CURYEAR
 
+echo "Headwaters Nature: Stats for membership year ${CURYEAR}"
+
 psql -d hn <<!
 
-\echo #1 Counting total entries (including unpaid newbies and hangers-on)
+\echo #1 Counting total entries (includes indivs, family members, unpaid newbies, hangers-on, &c)
 
-select count(id) from member;
+SELECT COUNT(id) FROM member;
 
-\echo #2 Counting just Individual paid-up memberships
+\echo #2 Counting total PAID memberships of all types
 
-select count(id) from member where membertype = 'Individual' AND expiryyear >= ${CURYEAR};
+select count(id) from member where membertype in ('Individual','Family') and expiryyear >= ${CURYEAR};
 
-\echo #3 Counting Family (master) paid-up memberships for ${CURYEAR}
+\echo #3a Counting just Individual paid-up memberships
+
+SELECT COUNT(id) FROM member WHERE membertype = 'Individual' AND expiryyear >= ${CURYEAR};
+
+\echo #3b Counting Family (master) paid-up memberships for ${CURYEAR}
  
-select count(id) from member where membertype = 'Family' and expiryyear >= ${CURYEAR};
+SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CURYEAR};
 
+-- \echo #4 COUNTing Secondary Family memberships for ${CURYEAR}
+-- Sometimes SQL is a bit much...
+-- SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' and
+-- 	(SELECT ma FROM member WHERE id = m.mastermember_id AND ma.expiryyear >= ${CURYEAR});
 !

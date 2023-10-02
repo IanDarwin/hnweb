@@ -1,1 +1,1 @@
-psql -d hn -c "SELECT firstname,lastname FROM member where expiryYear = $1 ORDER BY lastname"
+psql -d hn -c "SELECT id, firstname, lastname FROM member where expiryYear = $1 ORDER BY lastname"
