@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Get current and lastyear members to make nametags
+
+year=$(date +%Y)
+
+if [ "$(date +%m)" -le 8 ]; then $((year--)); fi
+
+psql -d hn --csv \
+-c "COPY(select firstname, lastname, expiryyear from member where expiryyear >= $year order by lastname)
+		TO STDOUT WITH CSV QUOTE '\"' "

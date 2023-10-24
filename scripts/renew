@@ -1,9 +1,17 @@
+#!/bin/sh
+
+# renew member by id
+
+year=2024
+
 case $# in 
-2);;
-*) echo usage: $0 year id
+0) echo usage: $0 id ...
 exit 1
 ;;
 esac
-year=$1
-id=$2
-psql -d hn -c "update member set expiryyear=$year where id=$id";
+
+for id in $*
+do
+	echo psql -d hn -c "UPDATE member SET expiryyear = $YEAR WHERE id = memberId"
+	psql -d hn -c "UPDATE member SET expiryyear = $year WHERE id=$id";
+done
