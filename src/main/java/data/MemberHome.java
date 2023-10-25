@@ -148,7 +148,7 @@ public class MemberHome implements Serializable {
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + "#p" + instance.getId() + WebConstants.FORCE_REDIRECT;
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/** Update an existing member */
@@ -158,7 +158,7 @@ public class MemberHome implements Serializable {
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
 		invalidateMemberList();
-		return getListPage() + "#p" + instance.getId() + WebConstants.FORCE_REDIRECT;
+		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	public Member getInstance() {
@@ -169,19 +169,13 @@ public class MemberHome implements Serializable {
 		// this.id = instance.getId();
 	}
 
-	/*
-	public void computeEnableMasterMember() {
-		// For AJAX
-		enableMasterMember = instance.getMemberType() == MemberType.Secondary;
+	public void notifySetMemberType() {
+		// Empty
 	}
-	*/
 	
-	/*
 	public boolean isEnableMasterMember() {
-		computeEnableMasterMember();
-		return enableMasterMember;
+		return instance.getMemberType() == MemberType.Secondary;
 	}
-	*/
 
 	public String getListPage() {
 		return LIST_PAGE;
