@@ -326,13 +326,14 @@ public class MailMan implements Serializable {
 		if (prefix != null) {
 			messageSubject = prefix + " " + messageSubject;
 		}
-		mesg.setSubject(messageSubject);
+		mesg.setSubject(sanitizeToUtf8(messageSubject));
 
         // Now the message body, in HTML and in plain text
         Multipart mp = new MimeMultipart();
         
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
+		// Will often have been pasted from some kinda WP software w/ smartquotes &c
         htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
@@ -353,14 +354,27 @@ public class MailMan implements Serializable {
 	}
 
 	/** For the HTML sending version, get rid of janky special characters that break badly in this stack */
-	static String sanitizeToUtf8(String s) {
+	static String sanitizeToHtml(String s) {
 		return s
-				.replaceAll("\\u201c","\"") // "Smart" open dquote
-				.replaceAll("\\u201d","\"") // "Smart" close dquote
-				.replaceAll("\\u2014","--");// "Smart" em dash
+				.replaceAll("'","\\&apos;")  // Apostrophe into HTML,prob. unnecessary
+				.replaceAll("\u2014","\\&mdash;")  // "Smart" em dash
+				.replaceAll("\u8212","\\&mdash;")  // Another "Smart" em dash
+				.replaceAll("\u2018","\\&apos;") // "Smart" open single quote
+				.replaceAll("\u2019","\\&apos;") // "Smart" close single quote
+				.replaceAll("\u201c","\\&quot;") // "Smart" open dquote
+				.replaceAll("\u201d","\\&quot;") // "Smart" close dquote
+				;
 	}
 
-
+	static String sanitizeToUtf8(String s) {
+		return s
+				.replaceAll("\u2014","--") // "Smart" em dash
+				.replaceAll("\u2018","\'") // "Smart" open quote
+				.replaceAll("\u2019","\'") // "Smart" close quote
+				.replaceAll("\u201c","\"") // "Smart" open dquote
+				.replaceAll("\u201d","\"") // "Smart" close dquote
+				;
+	}
 
 	private void notNull(String name, String value) {
 		if (value == null) {
