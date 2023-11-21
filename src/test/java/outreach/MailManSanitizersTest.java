@@ -16,7 +16,7 @@ public class MailManSanitizersTest {
 		"\"Don't cry for me, Argentina -- 'Evita'";
 
 	final static String EXPECT_HTML =
-		"&quot;Don&apos;t cry for me, Argentina — &apos;Evita&apos";
+		"&quot;Don&apos;t cry for me, Argentina — &apos;Evita&apos;";
 
 	@AfterAll
 	public static void dump() {
