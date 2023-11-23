@@ -2,10 +2,12 @@
 
 STATUS:
 	3 persistence tests fail - goes beyond capabilities of Hibernate-Hsqld2/h2 combination?
+		The code works in production.
+	Just use _mwd -s_ or _mvn -DskipTests_ with your deploy target.
 	Member Mailing has serious charset issues - may be time to delete plain-text version?
 		And check the widget for charset options?
 
-Track members for a small non-profit club.
+Tracks members for a small non-profit club.
 
 Modified version for Orangeville "Headwaters Nature."
 
@@ -15,7 +17,7 @@ This does show off some basic functionality of JPA and DeltaSpike Data in a JSF 
 
 One of the issues is how to handle family memberships. In our club, some of the families are
 sufficiently internet-savvy that they have 3 or 4 email accounts (two parents, one or two kids)
-whereas some actually have zero. The way I handle families is to arbitrarily designate one
+whereas some actually have one for all. The way I handle families is to arbitrarily designate one
 as the "family master" and all the others as "secondaries" - in JPA/Hibernate terms, a one-to-many
 from Member to Member. Payments are attributed to the master member.
 
