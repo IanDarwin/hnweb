@@ -2,8 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +17,7 @@ public class Event implements Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	long id;
 	LocalDate date;
-	String times;
+	String startTime, endTime;
 	String title;
 	String location;
 	String eventAbstract;
@@ -37,27 +36,22 @@ public class Event implements Serializable {
 		this.date = date;
 	}
 
-	// KLUDGE because PrimeFaces doesn't support new date/time api yet
-	@Transient
-	public Date getLegacyDate() {
-		return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	public String getStartTime() {
+		return startTime;
 	}
-	@SuppressWarnings("deprecation")
-	public void setLegacyDate(Date legacyDate) {
-		// final Instant instant = legacyDate.toInstant();
-		// System.out.printf("Instant %s of type %s%n", instant, instant.getClass());
-		// date = LocalDate.from(instant);
-		date = LocalDate.of(
-				legacyDate.getYear() + 1900,
-				legacyDate.getMonth() + 1,
-				legacyDate.getDate());
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
-	public String getTimes() {
-		return times;
-	}
-	public void setTimes(String times) {
-		this.times = times;
+	@Transient
+	public LocalTime[] getTimes() {
+		return new LocalTime[]{LocalTime.parse(startTime), LocalTime.parse(endTime)};
 	}
 
 	public String getTitle() {

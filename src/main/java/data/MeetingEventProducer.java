@@ -57,7 +57,8 @@ public class MeetingEventProducer {
 			}
 			Event evt = new Event();
 			evt.setDate(mtgDate);
-			evt.setTimes("7-9 PM");
+			evt.setStartTime("1900");
+			evt.setEndTime("2100");
 			if (mtgDate.getMonth() != Month.FEBRUARY) {
 				evt.setTitle(REGULAR_MEETING);
 				evt.setSpeakerName("T.B.A.");

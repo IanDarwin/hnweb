@@ -1,0 +1,41 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Club List</ui:define>
+<ui:define name="body">
+
+<h:form>
+    <p:schedule 
+		value="#{scheduleBean.model}"
+			editable="true"
+			rightHeaderTemplate=""
+			view="dayGridMonth"
+			widgetVar="clubschedule">
+        <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
+			update="eventDetails" oncomplete="eventDialog.show()" />
+        <p:ajax event="eventSelect" listener="#{scheduleBean.onEventSelect}" />
+    </p:schedule>
+    <p:dialog widgetVar="eventDialog" header="Event Details">
+        <h:panelGrid id="eventDetails" columns="2">
+            <p:outputLabel for="title" value="Titles:" />
+            <p:inputText id="title" value="#{scheduleBean.event.title}" required="true" />
+            <p:outputLabel for="from" value="From:" />
+            <p:calendar id="from" value="#{scheduleBean.event.startDate}" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+            <p:outputLabel for="to" value="To:" />
+            <p:calendar id="to" value="#{scheduleBean.event.endDate}" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm" />
+            <p:outputLabel for="allDay" value="All Day (see #1164):" />
+            <h:selectBooleanCheckbox id="allDay" value="#{scheduleBean.event.allDay}" />
+            <p:commandButton type="reset" value="Reset" />
+            <p:commandButton id="addButton" value="Save" action="#{scheduleBean.addEvent}" oncomplete="PF('clubschedule').update();PF('eventDialog').hide();" />
+        </h:panelGrid>
+    </p:dialog>
+</h:form>
+
+</ui:define>
+</ui:composition>
