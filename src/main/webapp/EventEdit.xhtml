@@ -30,12 +30,15 @@
 		<p:calendar  id="dateTF" value="#{eventHome.instance.legacyDate}" pattern="EEEE, dd MMM, yyyy" navigator="true" showButtonPanel="true"/>
 		<h:message id='dateMessage' for='dateTF'/>
 
-		<h:outputText value="Start and End Times:"/>
-		<h:inputText id="timesTF" value="#{eventHome.instance.times}" required='false'/>
-		<h:message id='timesMessage' for='timesTF'/>
+		<h:outputText value="Start Time:"/>
+		<h:inputText id="startTimeTF" value="#{eventHome.instance.startTime}" required='true'/>
+		<h:message id='timesMessage' for='startTimeTF'/>
+		<h:outputText value="End Time:"/>
+		<h:inputText id="endTimeTF" value="#{eventHome.instance.endTime}" required='true'/>
+		<h:message id='timesMessage' for='endTimeTF'/>
 
 		<h:outputText value="Title:"/>
-		<h:inputText size='60' id="titleTF" value="#{eventHome.instance.title}" required='false'/>
+		<h:inputText size='60' id="titleTF" value="#{eventHome.instance.title}" required='true'/>
 		<h:message id='titleMessage' for='titleTF'/>
 
 		<h:outputText value="Location:"/>
