@@ -20,22 +20,29 @@
 	<h:form id="entityForm">
 	<p:panel>
 		<f:facet name="header">Edit Event</f:facet>
-		<p:panelGrid columns='3'>
+		<p:panelGrid columns='3' layout='flex'>
 		
 		<h:outputText value="Id:"/>
 		<h:outputText id="idTF" value="#{eventHome.instance.id}"/>
 		<h:outputText value=""/>
 		
 		<h:outputText value="Date:"/>
-		<p:calendar  id="dateTF" value="#{eventHome.instance.legacyDate}" pattern="EEEE, dd MMM, yyyy" navigator="true" showButtonPanel="true"/>
+		<p:calendar  id="dateTF" value="#{eventHome.instance.date}" pattern="EEEE, dd MMM, yyyy" navigator="true" showButtonPanel="true"/>
 		<h:message id='dateMessage' for='dateTF'/>
 
-		<h:outputText value="Start Time:"/>
-		<h:inputText id="startTimeTF" value="#{eventHome.instance.startTime}" required='true'/>
-		<h:message id='timesMessage' for='startTimeTF'/>
+		<h:outputText value="Start Time (24h clock, e.g., 12:30):"/>
+		<p:inputText id="startTimeTF" 
+			value="#{eventHome.instance.startTime}" 
+			type='integer' maxlength='5' size='5'
+			required='true'/>
+		<h:message id='startTimeMesssage' for='startTimeTF'/>
+
 		<h:outputText value="End Time:"/>
-		<h:inputText id="endTimeTF" value="#{eventHome.instance.endTime}" required='true'/>
-		<h:message id='timesMessage' for='endTimeTF'/>
+		<h:inputText id="endTimeTF"
+			value="#{eventHome.instance.endTime}"
+			type='integer' maxlength='5' size='5'
+			required='true'/>
+		<h:message id='endTimeMesssage' for='endTimeTF'/>
 
 		<h:outputText value="Title:"/>
 		<h:inputText size='60' id="titleTF" value="#{eventHome.instance.title}" required='true'/>

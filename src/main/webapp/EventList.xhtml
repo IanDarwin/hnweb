@@ -32,7 +32,7 @@
 		</p:column>
 		<p:column>
 			<f:facet name="header">Times</f:facet>
-			<h:outputText value="#{_entity.startTime - _entity.endTime}"/>
+			<h:outputText value="#{_entity.timesString}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Title</f:facet>
@@ -69,7 +69,7 @@
 		</p:column>
 	</p:dataTable>
 	<h:form>
-	<p:button outcome="EventView.web" value="Add"/>
+	<p:button outcome="EventEdit.web" value="Add"/>
 	</h:form>
 	<h:form>
 	<p:commandButton action="#{meetingEventProducer.addEvents()}" value="Add Next Year's Meetings"

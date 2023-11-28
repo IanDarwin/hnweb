@@ -20,8 +20,7 @@ public class EventTest {
 	public void testTimes() {
 		subject.setStartTime("12:34");
 		subject.setEndTime("15:00");
-		var ret = subject.getTimes();
-		assertEquals(ret[0], LocalTime.of(12,34));
-		assertEquals(ret[1], LocalTime.of(15,00));
+		assertEquals(subject.getStartTime(), LocalTime.of(12,34).toString());
+		assertEquals(subject.getEndTime(), LocalTime.of(15,00).toString());
 	}
 }

@@ -12,8 +12,7 @@ public class EventHome extends EntityHome<Event,Long> {
 	
 	private static final long serialVersionUID = 1L;
 
-	// This can't be EventList as non-priv users share the View page
-	static final String LIST_PAGE = "index";
+	static final String LIST_PAGE = "EventList";
 	
 	public EventHome() {
 		System.out.println("EventHome.EventHome()");
@@ -30,6 +29,10 @@ public class EventHome extends EntityHome<Event,Long> {
 	}
 
 	public void wire(String s) {
+		if (s == null || s.isEmpty()) {
+			instance = newInstance();
+			return;
+		}
 		wire(Long.parseLong(s));
 	}
 }

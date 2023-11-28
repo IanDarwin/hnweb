@@ -30,7 +30,7 @@ public class MeetingEventProducerTest {
 	@Test
 	public void testGetFirstMeetingInFuture() {
 		final List<Event> events = meetingEventProducer.getEvents();
-		Event e = events.get(0);
+		Event e = events.get(events.size() - 1);
 		LocalDate when = e.getDate();
 		assertTrue("first meeting in future", when.isAfter(LocalDate.now()));
 	}

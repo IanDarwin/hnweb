@@ -40,18 +40,24 @@ public class Event implements Serializable {
 		return startTime;
 	}
 	public void setStartTime(String startTime) {
+		if (startTime.length()!=5) {
+			throw new IllegalArgumentException("Please enter the time in 24h clock, like 15:30");
+		}
 		this.startTime = startTime;
 	}
 	public String getEndTime() {
 		return endTime;
 	}
 	public void setEndTime(String endTime) {
+		if (endTime.length()!=5) {
+			throw new IllegalArgumentException("Please enter the time in 24h clock, like 15:30");
+		}
 		this.endTime = endTime;
 	}
 
 	@Transient
-	public LocalTime[] getTimes() {
-		return new LocalTime[]{LocalTime.parse(startTime), LocalTime.parse(endTime)};
+	public String getTimesString() {
+		return String.format("%s - %s", LocalTime.parse(startTime), LocalTime.parse(endTime));
 	}
 
 	public String getTitle() {
