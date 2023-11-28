@@ -1,5 +1,9 @@
 = TODO
 
+EventsView - multi-column with rowspan?
+
+MailingList - FIX CHARACTER MESS-UP quotes dquoates emdash
+
 FIX EXPIRY LOGIC
 
 MAKE TESTS PASS - Mockito, JPA
@@ -19,7 +23,5 @@ Get/Forgot Password
 SELF_RENEW W/ PAYPAL
 
 Update Secondary member when renewing or setting date (low prio since we already display master's exp)
-
-MailingList - multiple attachments?
 
 MailingListCSV - show master when displaying a secondary
