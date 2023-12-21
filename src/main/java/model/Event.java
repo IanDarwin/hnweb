@@ -40,19 +40,29 @@ public class Event implements Serializable {
 		return startTime;
 	}
 	public void setStartTime(String startTime) {
-		if (startTime.length()!=5) {
-			throw new IllegalArgumentException("Please enter the time in 24h clock, like 15:30");
+		if (startTime.length() == 4) {
+			this.startTime=startTime.substring(0,1) + ':' + startTime.substring(2);
 		}
-		this.startTime = startTime;
+		else if (startTime.length()==5) {
+			this.startTime = startTime;
+		}
+		else {
+			throw new IllegalArgumentException("Please enter the start time in 24h clock, like 15:30");
+		}
 	}
 	public String getEndTime() {
 		return endTime;
 	}
 	public void setEndTime(String endTime) {
-		if (endTime.length()!=5) {
-			throw new IllegalArgumentException("Please enter the time in 24h clock, like 15:30");
+		if (endTime.length() == 4) {
+			this.endTime=endTime.substring(0,1) + ':' + endTime.substring(2);
 		}
-		this.endTime = endTime;
+		else if (endTime.length()==5) {
+			this.endTime = endTime;
+		}
+		else {
+			throw new IllegalArgumentException("Please enter the end time in 24h clock, like 15:30");
+		}
 	}
 
 	@Transient
