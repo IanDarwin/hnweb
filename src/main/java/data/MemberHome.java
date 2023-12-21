@@ -144,7 +144,7 @@ public class MemberHome implements Serializable {
 		instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
 		em.persist(instance);
 		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
-		// XXX em.persist(tx);
+		em.flush();
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
@@ -154,6 +154,7 @@ public class MemberHome implements Serializable {
 	/** Update an existing member */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String update() {
+		em.flush();
 		em.merge(instance); // in case detached - shouldn't be!
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
