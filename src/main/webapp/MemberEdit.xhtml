@@ -59,7 +59,7 @@
 		<h:message id='primoMessage' for='primoMenu'/>
 
 		Email:
-		<h:inputText id="emailTF" value="#{memberHome.instance.email}"
+		<h:inputText id="emailTF" value="#{memberHome.instance.email}" required='true'
 			validator="#{memberHome.validateEmail}"
 			size="50">
 			<f:ajax event="blur" render='emailMessage'/>
@@ -67,7 +67,7 @@
 		<h:message id='emailMessage' for='emailTF'/>
 
 		City:
-		<h:inputText id="cityTF" value="#{memberHome.instance.city}" required='true'/>
+		<h:inputText id="cityTF" value="#{memberHome.instance.city}" required='false'/>
 		<h:message id='cityMessage' for='cityTF'/>
 		
 		Province,Country:
