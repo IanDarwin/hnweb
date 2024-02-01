@@ -3,8 +3,8 @@ package jpa;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 /** JPA Converter for LocalDateTime, remove when JPA catches up with Java 8
  * @author Steven Gertiser, https://weblogs.java.net/blog/montanajava/archive/2014/06/17/using-java-8-datetime-classes-jpa

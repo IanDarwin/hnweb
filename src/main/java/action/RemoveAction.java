@@ -1,12 +1,12 @@
 package action;
 
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import model.Member;
 import model.MemberArchived;
@@ -38,7 +38,7 @@ public class RemoveAction {
 		}
 
 		// Do we also have to remove any roles?
-		// javax.persistence.PersistenceException: org.hibernate.HibernateException: 
+		// jakarta.persistence.PersistenceException: org.hibernate.HibernateException: 
 		// Illegal attempt to associate a collection with two open sessions. Collection : [model.Member.roles#233]
 
 		// Finally remove the member instance

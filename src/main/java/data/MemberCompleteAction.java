@@ -3,13 +3,13 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ManagedBean;
-import javax.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 
 import model.Member;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class MemberCompleteAction {
 

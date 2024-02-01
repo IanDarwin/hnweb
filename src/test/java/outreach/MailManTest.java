@@ -2,10 +2,11 @@ package outreach;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
-import javax.mail.Multipart;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import java.util.stream.Stream;
+
+import jakarta.mail.Multipart;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import action.LoginAction;
 import data.MemberList;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class MailManTest {
 
 	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
-	List<Member> fakeList = List.of(
+	Stream<Member> fakeList = Stream.of(
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	final String A_MESSAGE_SUBJECT = "About your night life";

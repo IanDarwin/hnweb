@@ -1,8 +1,8 @@
 package webtier;
 
 import java.time.LocalDateTime;
-import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
