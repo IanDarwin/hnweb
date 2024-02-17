@@ -8,18 +8,18 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 import java.util.function.Predicate;
-import javax.annotation.Resource;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import jakarta.annotation.Resource;
+import jakarta.faces.annotation.ManagedProperty;
+import jakarta.faces.application.FacesMessage;
+import jakarta.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import action.LoginAction;
 import data.MemberList;
@@ -38,7 +38,7 @@ import org.primefaces.model.file.UploadedFile;
  * instance than the submit, so beware of field-reuse issues.
  * XXX consider conversation scope?
  */
-@ManagedBean(name="mailMan") @SessionScoped
+@Named("mailMan") @SessionScoped
 public class MailMan implements Serializable {
 
 	private static final String HEADER_REPLY_TO = "Reply-To";
@@ -202,7 +202,7 @@ public class MailMan implements Serializable {
 	 */
 	int sendMessageToSome(Predicate<Member> ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
-		List<Member> all = lister.findAll();
+		List<Member> all = lister.findAll().toList();
 		List<String> emails = selectListMembers(all, ch);
 		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
 		if (mailHostProperty == null) {
@@ -278,7 +278,7 @@ public class MailMan implements Serializable {
 	}
 
 	/** 
-	 * Create the javax.mail.Message object to be sent.
+	 * Create the jakarta.mail.Message object to be sent.
 	 * 
 	 * @param fromAddress - the (typically fake) email
 	 * @param messageSubject The subject

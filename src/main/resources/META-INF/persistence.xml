@@ -14,13 +14,13 @@
 
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->
-			<property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+			<property name="jakarta.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
 
 			<!-- Properties for Dialect (brand of database) -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
 
 			<!-- Properties controlling database setup -->
-			<property name="javax.persistence.schema-generation.database.action" 
+			<property name="jakarta.persistence.schema-generation.database.action" 
 				value="update"/>
 
 			<!-- Properties for Hibernate provider logging -->

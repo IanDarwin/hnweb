@@ -1,17 +1,18 @@
 package infrastructure;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Disposes;
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Disposes;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 
 /**
  * "DeltaSpike Data requires an EntityManager exposed via a CDI producer -
  * which is common practice in Java EE6 applications...
  * This allows the EntityManager to be injected over CDI instead of 
  * only being used with a @PersistenceContext annotation."
+ * XXX Dunno if this is still needed with Jakarta Data.
  * @author Code from http://deltaspike.apache.org/documentation/data.html
  */
 @Dependent

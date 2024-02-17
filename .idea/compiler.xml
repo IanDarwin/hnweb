@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ucfn-club" />
         <module name="hn-clublist" />
-        <module name="hnweb" />
       </profile>
     </annotationProcessing>
   </component>

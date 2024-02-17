@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.darwinsys</groupId>
 	<artifactId>hn-clublist</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<inceptionYear>2015</inceptionYear>
 
 	<name>Headwaters Nature (formerly UCFN) Club Membership</name>
+	<url>https://onheadwatersnature.ca</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
-		<javase.version>17</javase.version>
-		<javaee.version>8.0.1</javaee.version>
+		<javase.version>21</javase.version>
+		<jakartaee.version>11.0.0-M1</jakartaee.version>
+		<jakartadata.version>1.0.0-M2</jakartadata.version>
+		<jakartamail.version>2.0.2</jakartamail.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
-		<hibernate.version>6.0.0.Alpha7</hibernate.version>
-		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
-		<junit5.version>5.9.0</junit5.version>
-		<mockito.version>3.12.4</mockito.version>
+		<hibernate.version>6.4.2.Final</hibernate.version>
+		<hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
+		<junit5.version>5.10.1</junit5.version>
+		<mockito.version>5.10.0</mockito.version>
+		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
+		<primefaces.version>13.0.5</primefaces.version>
+		<darwinsys-api.version>1.8.0</darwinsys-api.version>
+		<darwinsys-ee.version>0.3.9</darwinsys-ee.version>
+		<version.shrinkwrap.resolvers>3.3.0</version.shrinkwrap.resolvers>
 	</properties>
 
 	<dependencies>
@@ -35,16 +42,32 @@
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
-			<version>1.7.6</version>
-			<exclusions><exclusion>
-				<groupId>javax.persistence</groupId>
-				<artifactId>persistence-api</artifactId>
-			</exclusion></exclusions>
+			<version>${darwinsys-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-ee</artifactId>
-			<version>0.3.9</version>
+			<version>${darwinsys-ee.version}</version>
+		</dependency>
+
+		<!-- JAXB deleted from Java SE 9+, needs module or this: -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.4.0-b180830.0359</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>4.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.istack</groupId>
+			<artifactId>istack-commons-runtime</artifactId>
+			<version>4.2.0</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- BeanUtils, just for copyProperties -->
@@ -54,40 +77,41 @@
 			<version>1.8.3</version>
 		</dependency>
 	
-		<!-- Java EE API, Web Profile -->
+		<!-- Jakarta EE API -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-			<version>${javaee.version}</version>
+			<groupId>jakarta.platform</groupId>    
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>${jakartaee.version}</version>  
 			<scope>provided</scope>
 		</dependency> 
 
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.5.0-b01</version>
-			<scope>provided</scope>
+		<!-- Jakarta Mail impl -->
+		<dependency>    
+			<groupId>org.eclipse.angus</groupId>    
+			<artifactId>jakarta.mail</artifactId>    
+			<version>${jakartamail.version}</version>
+			<scope>test</scope>
 		</dependency>
 
-		<!-- DeltaSpike Data -->
+		<!-- Jakarta Data -->
 		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-data-module-api</artifactId>
-			<version>1.9.6</version>
-			<scope>compile</scope>
+			<groupId>jakarta.data</groupId>
+			<artifactId>jakarta.data-api</artifactId>
+			<version>${jakartadata.version}</version>
 		</dependency>
+
+		<!-- Jakarta JSON -->
 		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-data-module-impl</artifactId>
-			<version>1.9.6</version>
-			<scope>runtime</scope>
+			<groupId>org.eclipse</groupId>
+			<artifactId>yasson</artifactId>
+			<version>3.0.3</version>
 		</dependency>
 
 		<!-- javassist needed on classpath for dynamic code gen -->
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.29.2-GA</version>
+			<version>3.30.2-GA</version>
 			<scope>runtime</scope>
 		</dependency>		
 
@@ -95,7 +119,8 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>13.0.1</version>
+			<version>${primefaces.version}</version>
+			<classifier>jakarta</classifier>
 		</dependency>
 
 		<!-- File Upload -->
@@ -128,18 +153,6 @@
 		<!-- Hibernate and its JPA Provider: test scope -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>xml-apis</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-			</exclusions> 
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 			<scope>test</scope>
@@ -156,14 +169,14 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.6.0</version>
+			<version>42.7.1</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.16.1.1</version>
+			<version>10.17.1.0</version>
 			<scope>test</scope>
 		</dependency>
 

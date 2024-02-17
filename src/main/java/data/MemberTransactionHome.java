@@ -1,8 +1,8 @@
 package data;
 
-import javax.ejb.Stateful;
-import javax.enterprise.context.ConversationScoped;
-import javax.inject.Named;
+import jakarta.ejb.Stateful;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.inject.Named;
 
 import entity.EntityHome;
 import model.MemberTransaction;

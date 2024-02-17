@@ -1,16 +1,16 @@
 package data;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Default;
-import javax.inject.Named;
+import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Query;
+import jakarta.data.repository.Repository;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.inject.Named;
 
 import model.MemberTransaction;
-
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.Query;
-import org.apache.deltaspike.data.api.Repository;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -22,9 +22,9 @@ import org.apache.deltaspike.data.api.Repository;
 @Named("memberTransactionList") @Default
 @SessionScoped
 @Repository
-public interface MemberTransactionList extends EntityRepository<MemberTransaction, Long> {
+public interface MemberTransactionList extends CrudRepository<MemberTransaction, Long> {
 
 	/** Want to see the newest ones first, so descending, use limit in page */
 	@Query(value="select t from MemberTransaction t order by t.dateRenewed desc")
-	public List<MemberTransaction> findAll();
+	Stream<MemberTransaction> findAll();
 }

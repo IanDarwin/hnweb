@@ -12,7 +12,7 @@ public class LoginConstants {
 	public static final String WEB_TEMPLATE_DIR = "/template/";
 	public static final String WEB_CSS_DIR = "/css/";
 	public static final String WEB_JS_DIR = "/js/";
-	public static final String JSF_RESOURCE_DIR = "/javax.faces.resource";
+	public static final String JSF_RESOURCE_DIR = "/jakarta.faces.resource";
 	public static final String FAVICON = "/favicon.ico";
 
 	// Keys

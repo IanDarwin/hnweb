@@ -1,14 +1,14 @@
 package data;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Default;
-import javax.inject.Named;
-
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.Query;
-import org.apache.deltaspike.data.api.Repository;
+import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Query;
+import jakarta.data.repository.Repository;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.inject.Named;
 
 import model.Event;
 
@@ -22,8 +22,8 @@ import model.Event;
 @Named("eventList") @Default
 @SessionScoped
 @Repository
-public interface EventList extends EntityRepository<Event, Long> {
+public interface EventList extends CrudRepository<Event, Long> {
 
 	@Query(value="select e from Event e where e.date >= now() order by e.date asc")
-	List<Event> findAll();
+	Stream<Event> findAll();
 }

@@ -3,8 +3,8 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Named;
-import javax.persistence.*;
+import jakarta.inject.Named;
+import jakarta.persistence.*;
 
 import com.darwinsys.geo.CanadaProvince;
 import action.YearCalcs;

@@ -1,14 +1,14 @@
 package action;
 
 import java.io.Serializable;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.NoResultException;
-import javax.servlet.http.HttpSession;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.persistence.NoResultException;
+import jakarta.servlet.http.HttpSession;
 
 import com.darwinsys.security.DigestUtils;
 import data.MemberList;
@@ -20,7 +20,8 @@ import webtier.WebConstants;
 /**
  * Simple DIY login.
  */
-@ManagedBean(name="identity") @SessionScoped
+@Named("identity")
+@SessionScoped
 public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;

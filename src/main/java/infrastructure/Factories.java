@@ -3,8 +3,8 @@ package infrastructure;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.Singleton;
-import javax.inject.Named;
+import jakarta.ejb.Singleton;
+import jakarta.inject.Named;
 
 import com.darwinsys.geo.CanadaProvince;
 

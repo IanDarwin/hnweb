@@ -2,16 +2,16 @@ package data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Stream;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Default;
-import javax.inject.Named;
+import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Query;
+import jakarta.data.repository.Repository;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Default;
+import jakarta.inject.Named;
 
 import model.Member;
-
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.Query;
-import org.apache.deltaspike.data.api.Repository;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -21,19 +21,18 @@ import org.apache.deltaspike.data.api.Repository;
  */
 @Named("memberList") @Default
 @SessionScoped
-@Repository 
-public interface MemberList extends Serializable, EntityRepository<Member, Long>  {
+@Repository
+public interface MemberList extends Serializable, CrudRepository<Member, Long> {
 
-	public static final String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";
+	String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";
 
 	@Query(value=FIND_ALL_QUERY)
-	List<Member> findAll();
+	Stream<Member> findAll();
+
+	Member findBy(Long id);
 
 	@Query(value="select m from Member m where m.memberType != 'Secondary' order by lower(m.lastName) asc")
 	List<Member> findNonSecondaries();
-	
-	@Query(value="select m from Member m where m.expiryYear >= 2022 order by lower(m.lastName) asc")
-	List<Member> findCurrent();
 
 	/** Basic for login */
 	Member findByEmailAndPassword(String email, String passwordHash);

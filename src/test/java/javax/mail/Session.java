@@ -1,12 +1,12 @@
-package javax.mail;
+package jakarta.mail;
 
 /** 
  * Mock object for mail testing only
  */
-import javax.mail.Authenticator;
-import javax.mail.Provider;
-import javax.mail.Store;
-import javax.mail.Transport;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Provider;
+import jakarta.mail.Store;
+import jakarta.mail.Transport;
 import java.net.InetAddress;
 import java.util.*;
 import java.io.*;

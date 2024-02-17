@@ -23,7 +23,7 @@
 	<!-- JSF Servlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -56,7 +56,7 @@
 		<location>/errors/404.jsp</location>
 	</error-page>
 	<error-page>
-    	<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+    	<exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
     	<location>/errors/viewExpired.jsp</location>
 	</error-page>
 	<error-page>
