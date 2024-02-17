@@ -1,8 +1,12 @@
 = TODO
 
+Renewal - finds member, but crashes on submit with
+IllegalArgumentException: getAsString expects long arg,
+	not `#123 Fname Lname <usre@gmail.com>' of type class model.Member
+
 EventsView - multi-column with rowspan?
 
-MailingList - FIX CHARACTER MESS-UP quotes dquoates emdash
+MailingList - FIX CHARACTER MESS-UP quotes dquotes emdash
 
 FIX EXPIRY LOGIC
 
