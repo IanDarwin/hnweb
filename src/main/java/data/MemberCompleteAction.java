@@ -29,7 +29,7 @@ public class MemberCompleteAction {
 		}
         List<Member> filteredMembers = new ArrayList<Member>();
         for (Member m : allMembers) {
-        	if (m.getLastName().toLowerCase().contains(query)) {
+        	if (m.getLastName().toLowerCase().contains(query.toLowerCase())) {
         		filteredMembers.add(m);
         	}
         }
