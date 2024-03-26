@@ -1,17 +1,15 @@
 = clublist - Club Membership List
 
-STATUS:
-	3 persistence tests fail - goes beyond capabilities of Hibernate-Hsqld2/h2 combination?
-		The code works in production.
-	Just use _mwd -s_ or _mvn -DskipTests_ with your deploy target.
-	Member Mailing has serious charset issues - may be time to delete plain-text version?
-		And check the widget for charset options?
-
 Tracks members for a small non-profit club.
+
+STATUS:
+	Member Mailing has serious charset issues - 
+	Check the widget for charset options?
 
 Modified version for Orangeville "Headwaters Nature."
 
-This does show off some basic functionality of JPA and DeltaSpike Data in a JSF environment.
+This does show off some basic functionality of JakartaEE-Persistence
+and JakaraEE-Data in a JSF environment.
 
 == DB Design Issues
 
