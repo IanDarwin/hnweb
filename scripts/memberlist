@@ -7,4 +7,4 @@
 
 psql -d hn -c 'select id,firstname,lastname,membertype,email,expiryyear from member order by lower(lastname);' |
 		tr -s ' ' |
-			awk -F'|' '$1>0{printf "%4d %25s %-17s %-14s %-36s %4s\n", $1, $2, $3, $4, $5, $6}'
+			awk -F'|' '$1>0{printf "%-4d %23s %-16s %-14s %-34s %4s\n", $1, $2, $3, $4, $5, $6}'

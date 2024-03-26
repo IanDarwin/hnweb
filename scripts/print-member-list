@@ -1,1 +1,1 @@
-/usr/local/bin/lpr -H dalai-vpn -o media=letter -o orientation-requested=5 -o prettyprint
+/usr/local/bin/lpr -T 'HN List' -o media=letter -o orientation-requested=5 -o prettyprint
