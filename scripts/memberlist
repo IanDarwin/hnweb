@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# memberlist - print a hardcopy listing. Print with print-memberlist (which calls this script).
+# memberlist - print a hardcopy listing. Pipe into print-memberlist to actually print.
 
 # XXX Convert to Java or Python, option to include only current member year
 # fold secondaries into main, strip lastname if same
