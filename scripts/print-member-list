@@ -1,0 +1,1 @@
+memberlist | lpr -o media=letter -o orientation-requested=5 -o prettyprint
