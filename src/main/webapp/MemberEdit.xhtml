@@ -59,7 +59,8 @@
 		<h:message id='primoMessage' for='primoMenu'/>
 
 		Email:
-		<h:inputText id="emailTF" value="#{memberHome.instance.email}" required='true'
+		<h:inputText id="emailTF" value="#{memberHome.instance.email}" 
+			required='#{memberHome.instance.memberType != model.MemberType.Secondary}'
 			validator="#{memberHome.validateEmail}"
 			size="50">
 			<f:ajax event="blur" render='emailMessage'/>
