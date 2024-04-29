@@ -1,0 +1,6 @@
+#!/bin/ksh
+USAGE="$0 idNum"
+case $# in
+1) psql -d hn -c "select * from member where id='"$1"'";;
+*) echo $USAGE >&2;;
+esac

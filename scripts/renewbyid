@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# renew member by id
+
+YEAR=2025
+
+case $# in 
+0) echo usage: $0 idNum ...
+exit 1
+;;
+esac
+
+for id in $*
+do
+	echo psql -d hn -c "UPDATE member SET expiryyear = $YEAR WHERE id = $id"
+	     psql -d hn -c "UPDATE member SET expiryyear = $YEAR WHERE id = $id;
+						SELECT id,firstname,lastname,expiryyear FROM member WHERE id = $id";
+	
+done
