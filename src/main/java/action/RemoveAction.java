@@ -58,6 +58,9 @@ public class RemoveAction {
 	public String unDelete(long id) {
 		// The dead records don't (shouldn't) have transactions, so we can just restore
 		MemberArchived instance = em.find(MemberArchived.class, id);
+		if (instance == null) {
+			throw new IllegalArgumentException("MemberArchived " + id + " not found.");
+		}
 		System.out.println("Trying to ressurect " + instance + " with id " + id);
 		em.remove(instance);
 		em.flush();
