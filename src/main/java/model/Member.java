@@ -32,6 +32,8 @@ public class Member extends MemberBase {
 	/** Only if memberType is MemberType.Family */
 	@OneToMany(mappedBy="masterMember")
 	protected Set<Member> secondaryMembers;
+
+	protected String notes;
 	
 	/**
 	 * "A very public Person"
