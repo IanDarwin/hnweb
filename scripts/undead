@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Necromance a member from member_archived back into member.
+# Attempt with JPA did not survive live test.
+
+set -e # Do NOT delete if not found!!!!!
+
+for ID
+do
+
+psql -d hn -c "
+insert into member 
+(id,firstname,lastname,city,email,homephone,cellphone,workphone,membertype,yearjoined) (select
+ id,firstname,lastname,city,email,homephone,cellphone,workphone,membertype,yearjoined 
+from member_archived where id = $ID);"
+
+echo -n "DID THAT SUCCEED? VERY IMPORTANT? [no|yes]"
+read answer
+case $answer in
+	yes) psql -d hn -c "delete from member_archived where id = $ID";
+esac
+
+done
+
