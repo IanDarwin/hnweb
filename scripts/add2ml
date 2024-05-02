@@ -4,6 +4,6 @@ USAGE="$p firstname,lastname,email"
 
 # Add a person to the mailing list - firstname lastname email
 case $# in
-	3) psql -d hn -c "insert into member(firstname,lastname,email,membertype) values('$1','$2','$3','Individual');" ;;
+	3) psql -d hn -c "insert into member(firstname,lastname,email,membertype) values('$1','$2','$3','MailOnly');" ;;
 	*) echo "$USAGE" >&2; exit 1;;
 esac
