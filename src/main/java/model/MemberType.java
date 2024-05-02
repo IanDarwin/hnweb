@@ -4,8 +4,8 @@ public enum MemberType {
 
 	/** An individual member */
 	Individual("Ind"),
-	/** A student - full-time or similar */
-	Student("St"),
+	/** Not a member, just on mailing list */
+	MailOnly("ML"),
 	/** The main entry for a Family membership */
 	Family("FM"),
 	/** Any additional members on a Family membership */
