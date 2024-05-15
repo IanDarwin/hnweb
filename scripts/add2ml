@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="$p firstname,lastname,email"
+USAGE="Usage: $0 firstname lastname email"
 
 # Add a person to the mailing list - firstname lastname email
 case $# in
