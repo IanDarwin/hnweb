@@ -51,6 +51,8 @@ public class MailMan implements Serializable {
 
 	public static final String PROPNAME_MAIL_SUBJECT_PREFIX = "mail.subject.prefix";
 
+	public static final String PROPNAME_MAIL_UNSUBSCRIBE = "mail.unsubscribe";
+
 	@Serial
 	private static final long serialVersionUID = -1980670543127065573L;
 
@@ -334,6 +336,8 @@ public class MailMan implements Serializable {
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
 		// Will often have been pasted from some kinda WP software w/ smartquotes &c
+		htmlBody += "<p>Unsubscribe: " +
+			props.getProperty(PROPNAME_MAIL_UNSUBSCRIBE);
         htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);

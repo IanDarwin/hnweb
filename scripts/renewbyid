@@ -1,8 +1,11 @@
-#!/bin/sh
+#!/bin/ksh
 
 # renew member by id
 
-YEAR=2025
+DYEAR=$(date +%Y)
+MONTH=$(date +%m)
+YEAR=$((MONTH<6?DYEAR:DYEAR+1))
+echo "Today's date $DYEAR-$MONTH Renewal year $YEAR"
 
 case $# in 
 0) echo usage: $0 idNum ...
@@ -16,4 +19,6 @@ do
 	     psql -d hn -c "UPDATE member SET expiryyear = $YEAR WHERE id = $id;
 						SELECT id,firstname,lastname,expiryyear FROM member WHERE id = $id";
 	
+	email=$(psql -d hn -c "SELECT email FROM member WHERE id = $id;" | grep @)
+	echo $email
 done

@@ -14,14 +14,8 @@
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->
 			<property name="jakarta.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
-			<!--
-			<property name="jakarta.persistence.provider" value="org.eclipselink.jpa.provider"/>
-			-->
 
 			<!-- Properties for Dialect (brand of database) -->
-			<!--
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-			-->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 
 			<!-- A local h2 database, for dev/test -->

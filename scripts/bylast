@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# find users by lastname
-
-psql -d hn -c "select id, firstname, lastname, membertype, email, city, homephone, cellphone, expiryyear from member where lower(lastname) like lower('%$1%');"

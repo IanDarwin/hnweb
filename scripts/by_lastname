@@ -1,1 +1,5 @@
-psql -d hn -c "select * from member where lastname='"$1"'"
+#!/bin/sh
+
+llname=$(echo $1 | tr A-Z a-z)
+
+psql -d hn -c "select * from member where lower(lastname) like '%"$llname"%'"

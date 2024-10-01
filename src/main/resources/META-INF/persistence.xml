@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+<persistence
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
 		http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
@@ -7,6 +8,8 @@
 
 	<persistence-unit name="hnclublist" transaction-type="JTA">
 		<jta-data-source>java:jboss/datasources/HnClubDataSource</jta-data-source>
+
+		<!-- If you add a class here add it in src/test/resources.. too! -->
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
 		<class>model.MemberTransaction</class>
@@ -14,7 +17,8 @@
 
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->
-			<property name="jakarta.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+			<property name="jakarta.persistence.provider"
+				value="org.hibernate.ejb.HibernatePersistence"/>
 
 			<!-- Properties for Dialect (brand of database) -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
