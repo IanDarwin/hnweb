@@ -20,5 +20,11 @@ do
 						SELECT id,firstname,lastname,expiryyear FROM member WHERE id = $id";
 	
 	email=$(psql -d hn -c "SELECT email FROM member WHERE id = $id;" | grep @)
-	echo $email
+	echo Sending thanks to $email
+	echo "Thank you for your membership renewal for the $YEAR membership year.
+
+--Ian Darwin
+Membership Chair
+ian@darwinsys.com
+" | Mail -s "[hn] Thank you for renewing!" -r "no-reply@hn.darwinsys.com" $email
 done
