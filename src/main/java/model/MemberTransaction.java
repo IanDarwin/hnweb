@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
+import jakarta.enterprise.inject.Model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ import jakarta.persistence.TemporalType;
  * JPA is still out of sync with Java SE.
  */
 @Entity
+@Model
 @Table(name="transaction") // legacy + shorter in db
 public class MemberTransaction implements Serializable {
 

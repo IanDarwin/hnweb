@@ -11,6 +11,7 @@ import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
 import model.Event;
+import org.hibernate.annotations.processing.Find;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -22,8 +23,9 @@ import model.Event;
 @Named("eventList") @Default
 @SessionScoped
 @Repository
-public interface EventList extends CrudRepository<Event, Long> {
+public interface EventList {
 
-	@Query(value="select e from Event e where e.date >= now() order by e.date asc")
-	Stream<Event> findAll();
+	@Find
+	// @Query(value="select e from Event e where e.date >= now() order by e.date asc")
+	List<Event> findAll();
 }

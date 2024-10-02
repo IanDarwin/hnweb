@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.enterprise.inject.Model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import org.apache.commons.beanutils.BeanUtils;
 @SuppressWarnings("unused")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @Named("person")
+@Model
 public class Member {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)

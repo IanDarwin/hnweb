@@ -28,6 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import model.Member;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -103,6 +104,7 @@ public class PageFilter implements Filter {
 				throw new LoginFailureException("Not allowed");
 			}
 			
+			Member member = (Member)session.getAttribute(LoginConstants.LOGIN_MEMBER);
 			LoginAction identity = (LoginAction)session.getAttribute(LoginConstants.LOGIN_FLAG);
 
 			// These pages are available to anybody
