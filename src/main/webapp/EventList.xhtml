@@ -15,17 +15,13 @@
 
 	<!-- Display the main part of the whole page. -->
 	<p:dataTable border='1' 
-		rendered="#{!empty eventList.findAll()}"
-		var="_entity" value="#{eventList.findAll()}" 
+		rendered="#{!empty eventList.findUpcoming()}"
+		var="_entity" value="#{eventList.findUpcoming()}"
 		paginator="true" rows="#{pfTableConstants.rows}"
 		paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
 		rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
 		>
-		<p:column width="5%">
-			<f:facet name="header">Id</f:facet>
-			<h:outputText value="#{_entity.id}"/>
-		</p:column>
-		
+
 		<p:column>
 			<f:facet name="header">Date</f:facet>
 			<h:outputText value="#{_entity.date}"/>

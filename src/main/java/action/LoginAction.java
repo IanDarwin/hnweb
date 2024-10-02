@@ -79,7 +79,7 @@ public class LoginAction implements Serializable {
 				session.removeAttribute(LoginConstants.TARGET_URI_KEY);
 				return redirTarget + WebConstants.FORCE_REDIRECT;
 			}
-			return "/index.web";
+			return "/index.web" + WebConstants.FORCE_REDIRECT;
 
 		} catch (NoResultException nre) {
 			System.out.println("LoginAction.login():" + nre);
