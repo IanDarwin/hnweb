@@ -8,7 +8,7 @@ echo
 
 cat >/tmp/st <<!
 
-\echo #1 Counting total entries (includes indivs, family members, unpaid newbies, hangers-on, &c)
+\echo #1 Counting total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)
 SELECT COUNT(id) FROM member;
 
 \echo #2 Counting total PAID memberships of all types
