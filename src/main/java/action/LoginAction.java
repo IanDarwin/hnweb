@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import com.darwinsys.security.DigestUtils;
 import data.MemberList;
 import model.Member;
+import model.MemberRole;
 import webtier.LoginConstants;
 import webtier.PageFilter;
 import webtier.WebConstants;
@@ -50,6 +51,7 @@ public class LoginAction implements Serializable {
 			if (memberOptional.isEmpty()) {
 				FacesContext.getCurrentInstance().addMessage( null,
 						new FacesMessage("Failed to log in as " + email));
+				return "Login";
 
 			}
 			setLoggedInUser(memberOptional.get());
@@ -136,6 +138,18 @@ public class LoginAction implements Serializable {
 		return loggedInUser;
 	}
 
+	public void setLoggedInUser(Member loggedInUser) {
+		this.loggedInUser = loggedInUser;
+	}
+
+	/** Separate from setLoggedInUser for testing without JSF */
+	public void setUserInSession(Member loggedInUser) {
+		HttpSession session =
+				(HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
+		session.setAttribute(LoginConstants.LOGIN_FLAG, this);
+	}
+
 	/** Important for security */
 	public boolean hasRole(String role) {
 		if (role == null) {
@@ -144,8 +158,8 @@ public class LoginAction implements Serializable {
 		if (!isLoggedIn()) {
 			return false;
 		}
-		for (String r : getLoggedInUser().getRoles()) {
-			if (r.equals(role)) {
+		for (MemberRole r : getLoggedInUser().getRoles()) {
+			if (r.getName().equals(role)) {
 				return true;
 			}
 		}
@@ -159,16 +173,5 @@ public class LoginAction implements Serializable {
 				getLoggedInUser().getPosition().trim().length() > 0;
 		}
 		return false;
-	}
-
-	public void setLoggedInUser(Member loggedInUser) {
-		this.loggedInUser = loggedInUser;
-	}
-
-	public void setUserInSession(Member loggedInUser) {
-		HttpSession session =
-                (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
-		session.setAttribute(LoginConstants.LOGIN_FLAG, this);
 	}
 }
