@@ -23,6 +23,7 @@ import org.hibernate.annotations.processing.Find;
  */
 @Named("memberList")
 @Repository
+@SessionScoped
 public interface MemberList {
 
 	String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";

@@ -32,7 +32,10 @@ import org.apache.commons.beanutils.BeanUtils;
 @Named("person")
 @Model
 public class Member {
-	
+
+	/////////////////////////////////////////////
+	// Fields common to Member and ArchivedMember
+	/////////////////////////////////////////////
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	protected Long id; // Should be private but Archived copy-constructor needs it.
 	protected String email;
@@ -243,6 +246,44 @@ public class Member {
 		this.emailTrips = emailTrips;
 	}
 
+
+	// For app-managed security - only Members, not MemberArchived elements, can be in roles
+	@ElementCollection(fetch = FetchType.EAGER)
+	protected List<String> roles = new ArrayList<>();
+
+	////////////////////////////////////////////////
+	// Member-only fields
+	// i.e., not needed in MemberArchived.
+	////////////////////////////////////////////////
+
+	/** Only if memberType is MemberType.Secondary */
+	@ManyToOne(fetch=FetchType.EAGER)
+	protected Member masterMember;
+	/** Only if memberType is MemberType.Family */
+	@OneToMany(mappedBy="masterMember", fetch = FetchType.EAGER)
+	protected Set<Member> secondaryMembers;
+
+	protected String notes;
+
+	/** Copy Constructor: copies all fields but for ID and some relationships */
+	public Member(MemberArchived m) {
+		this();
+		try {
+			BeanUtils.copyProperties(this, m);		// (destination, src)
+		} catch (IllegalAccessException|InvocationTargetException ex) {
+			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
+		}
+		// Now have to clear some fields.
+		id = 0L;
+		transactions = new ArrayList<>();
+		secondaryMembers = new HashSet<>();
+		roles = new ArrayList<>();
+	}
+
+	///////////////////////////////////
+	// Methods for all types of members
+	///////////////////////////////////
+
 	public void acceptRenewal(MemberTransaction renewal) {
 		setExpiryYear(YearCalcs.getCurrentMembershipYear() + renewal.getNumYears());
 		renewal.setNewExpiryYear(getExpiryYear());
@@ -296,40 +337,6 @@ public class Member {
 		}
 		return getId() == other.getId();
 	}
-
-	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection
-	protected List<String> roles = new ArrayList<>();
-	
-	////////////////////////////////////////////////
-	// Member-only fields
-	// i.e., not needed in MemberArchived.
-	////////////////////////////////////////////////
-
-	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne(fetch=FetchType.EAGER)
-	protected Member masterMember;
-	/** Only if memberType is MemberType.Family */
-	@OneToMany(mappedBy="masterMember")
-	protected Set<Member> secondaryMembers;
-
-	protected String notes;
-	
-	/** Copy Constructor: copies all fields but for ID and some relationships */
-	public Member(MemberArchived m) {
-		this();
-		try {
-			BeanUtils.copyProperties(this, m);		// (destination, src)
-		} catch (IllegalAccessException|InvocationTargetException ex) {
-			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
-		}
-		// Now have to clear some fields.
-		id = 0L;
-		transactions = new ArrayList<>();
-		secondaryMembers = new HashSet<>();
-		roles = new ArrayList<>();
-	}
-	
 
 	/** 
 	 * If this Member is a MemberType.Secondary member, this
