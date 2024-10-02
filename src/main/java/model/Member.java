@@ -248,8 +248,8 @@ public class Member {
 
 
 	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection(fetch = FetchType.EAGER)
-	protected List<String> roles = new ArrayList<>();
+	@ElementCollection()
+	protected List<MemberRole> roles = new ArrayList<>();
 
 	////////////////////////////////////////////////
 	// Member-only fields
@@ -257,10 +257,10 @@ public class Member {
 	////////////////////////////////////////////////
 
 	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne()
 	protected Member masterMember;
 	/** Only if memberType is MemberType.Family */
-	@OneToMany(mappedBy="masterMember", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="masterMember")
 	protected Set<Member> secondaryMembers;
 
 	protected String notes;
@@ -397,15 +397,15 @@ public class Member {
 
 	// For app-managed security
 
-	public List<String> getRoles() {
+	public List<MemberRole> getRoles() {
 		return roles;
 	}
-	public void setRoles(List<String> roles) {
+	public void setRoles(List<MemberRole> roles) {
 		this.roles = roles;
 	}
 
-	public void addRole(String role) {
-		roles.add(role);
+	public void addRole(String roleName) {
+		roles.add(new MemberRole(roleName));
 	}
 
 }
