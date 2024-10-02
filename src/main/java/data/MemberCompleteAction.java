@@ -3,17 +3,22 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 
 import model.Member;
 
+/**
+ * Class to provide list of members matching a string query,
+ * for use in web tier, e.g., administrative Renew Member function.
+ */
 @Named
-@SessionScoped
+@RequestScoped
 public class MemberCompleteAction {
 
-	@Inject
+	@Inject@Default
 	MemberList service;
 	
 	List<Member> allMembers;

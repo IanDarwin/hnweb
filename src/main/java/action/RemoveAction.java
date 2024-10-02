@@ -10,7 +10,6 @@ import jakarta.persistence.PersistenceContext;
 
 import model.Member;
 import model.MemberArchived;
-import model.MemberBase;
 
 /**
  * Remove or delete a Member
@@ -33,7 +32,7 @@ public class RemoveAction {
 			// executeUpdate();
 
 		// Remove secondaries, if any, before primary
-		for (MemberBase sm : instance.getSecondaryMembers()) {
+		for (Member sm : instance.getSecondaryMembers()) {
 			em.remove(em.merge(sm));
 		}
 

@@ -6,12 +6,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.inject.Named;
+
+import com.darwinsys.geo.CanadaProvince;
+import action.YearCalcs;
 
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Represents one person in our database.
- * ALL data properties are in MemberBase, so we can use them both in
+ * ALL data properties are here, so we can use them both in
  * Member and in MemberArchived.
  * Equals and hashCode() based solely on ID, so we don't get new entries made
  * when editing other fields.
@@ -19,23 +26,44 @@ import org.apache.commons.beanutils.BeanUtils;
  */
 @Entity
 @SuppressWarnings("unused")
-public class Member extends MemberBase {
-
-	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection
-	protected List<String> roles = new ArrayList<>();
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Named("person")
+public class Member {
 	
-	// Member-only fields
-	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne(fetch=FetchType.EAGER)
-	protected Member masterMember;
-	/** Only if memberType is MemberType.Family */
-	@OneToMany(mappedBy="masterMember")
-	protected Set<Member> secondaryMembers;
-
-	protected String notes;
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
+	protected Long id; // Should be private but Archived copy-constructor needs it.
+	protected String email;
+	protected String password;
+	protected String firstName, middle, lastName;
+	protected String homePhone, cellPhone, workPhone;
+	protected String city;
+	@Enumerated(EnumType.STRING)
+	protected CanadaProvince province;
+	@Enumerated(EnumType.STRING)
+	protected Country country = Country.CA;
+	/** If they have an executive position */
+	protected String position;
+	/** 4-digit year */
+	protected int expiryYear;
+	@Basic(optional = false)
+	// This is an obvious fix, presumable a newer JPA will fix it
+	// @Temporal(TemporalType.DATE)
+	@Transient
+	protected LocalDate lastModified;
 	
-	/**
+	@Enumerated(EnumType.STRING)
+	protected MemberType memberType = MemberType.Individual;
+
+	protected Integer yearJoined = LocalDate.now().getYear();
+	@Column(name="email_trips",
+	         columnDefinition="boolean default false")
+	protected boolean emailTrips;
+	@Version // Field only used for optimistic locking
+	protected int version;
+	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
+	protected List<MemberTransaction> transactions = new ArrayList<>();
+	
+	/** 
 	 * "A very public Person"
 	 */
 	public Member() {
@@ -55,6 +83,235 @@ public class Member extends MemberBase {
 		this.email = email;
 	}
 
+	public long getId() {
+		return id;
+	}
+	// And no setId please.
+
+	/** Accessor for the password. May be hashed or not; the semantics
+	 * are provided by the external control implementation, not coded here.
+	 * @return The password string
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getMiddle() {
+		return middle;
+	}
+
+	public void setMiddle(String middle) {
+		this.middle = middle;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public MemberType getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(MemberType memberType) {
+		this.memberType = memberType;
+	}
+
+	public String getHomePhone() {
+		return homePhone;
+	}
+	public void setHomePhone(String homePhone) {
+		this.homePhone = homePhone;
+	}
+
+	public String getCellPhone() {
+		return cellPhone;
+	}
+	public void setCellPhone(String cellPhone) {
+		this.cellPhone = cellPhone;
+	}
+	
+	public String getWorkPhone() {
+		return workPhone;
+	}
+	public void setWorkPhone(String workPhone) {
+		this.workPhone = workPhone;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public CanadaProvince getProvince() {
+		return province;
+	}
+
+	public void setProvince(CanadaProvince province) {
+		this.province = province;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	
+	@Transient
+	public boolean isExecutive() {
+		return getPosition() != null && getPosition().length() > 0;
+	}
+
+	public int getExpiryYear() {
+		return expiryYear;
+	}
+
+	public void setExpiryYear(int expiryYear) {
+		this.expiryYear = expiryYear;
+	}
+	
+	public void setYearJoined(Integer yearJoined) {
+		this.yearJoined = yearJoined;
+	}
+	public Integer getYearJoined() {
+		return yearJoined;
+	}
+
+	public LocalDate getLastModified() {
+		return lastModified;
+	}
+	public void setLastModified(LocalDate lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+	public List<MemberTransaction> getMemberTransactions() {
+		return transactions;
+	}
+	public void setMemberTransactions(List<MemberTransaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public boolean isEmailTrips() {
+		return emailTrips;
+	}
+	public void setEmailTrips(boolean emailTrips) {
+		this.emailTrips = emailTrips;
+	}
+
+	public void acceptRenewal(MemberTransaction renewal) {
+		setExpiryYear(YearCalcs.getCurrentMembershipYear() + renewal.getNumYears());
+		renewal.setNewExpiryYear(getExpiryYear());
+	}
+
+	@PreUpdate @PrePersist
+	public void updateLastModified() {
+		lastModified = LocalDate.now();
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('#').append(getId()).append(' ');
+		sb.append(getFirstName())
+				.append(' ')
+				.append(getLastName());
+		if (getEmail() != null) {
+			sb.append(' ')
+			.append('<')
+			.append(getEmail())
+			.append('>');
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	/**
+	 * NOTE! This is non-standard:
+	 * Only compares on ID, AND
+	 * No Entity can be equal to 'no entity' (id 0).
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		// Compare two Members or two MemberArchived, etc.
+		if (getClass() != obj.getClass())
+			return false;
+		Member other = (Member) obj;
+		if (id == 0 || other.getId() == 0) {
+			return false;
+		}
+		return getId() == other.getId();
+	}
+
+	// For app-managed security - only Members, not MemberArchived elements, can be in roles
+	@ElementCollection
+	protected List<String> roles = new ArrayList<>();
+	
+	////////////////////////////////////////////////
+	// Member-only fields
+	// i.e., not needed in MemberArchived.
+	////////////////////////////////////////////////
+
+	/** Only if memberType is MemberType.Secondary */
+	@ManyToOne(fetch=FetchType.EAGER)
+	protected Member masterMember;
+	/** Only if memberType is MemberType.Family */
+	@OneToMany(mappedBy="masterMember")
+	protected Set<Member> secondaryMembers;
+
+	protected String notes;
+	
 	/** Copy Constructor: copies all fields but for ID and some relationships */
 	public Member(MemberArchived m) {
 		this();
@@ -64,7 +321,7 @@ public class Member extends MemberBase {
 			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
 		}
 		// Now have to clear some fields.
-		id = 0;
+		id = 0L;
 		transactions = new ArrayList<>();
 		secondaryMembers = new HashSet<>();
 		roles = new ArrayList<>();
@@ -126,11 +383,6 @@ public class Member extends MemberBase {
 	@Transient
 	public String getNames() {
 		return String.format("%s, %s", lastName, firstName);
-	}
-
-	@PrePersist @PreUpdate
-	public void preJpa() {
-		// Nothing to do at present
 	}
 
 	// For app-managed security
