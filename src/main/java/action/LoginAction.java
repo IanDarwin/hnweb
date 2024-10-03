@@ -16,6 +16,7 @@ import data.MemberList;
 import model.Member;
 import model.MemberRole;
 import webtier.LoginConstants;
+import webtier.PageFilter;
 import webtier.WebConstants;
 
 /**
@@ -40,13 +41,13 @@ public class LoginAction implements Serializable {
 	public LoginAction() {
 		// Just for debugging...
 		System.out.printf("LoginAction.LoginAction(): %d users\n",
-				memberList.findAll().count());
+				-1 /*userlist.findAll().count()*/);
 	}
 	
 	public String login() {
-		System.out.println("LoginAction: login attempt (" + email + ")");
+		System.out.println("Login.login(" + email + ")");
 		try {
-			final Optional<Member> memberOptional = lookupUser(email, password);
+			final Optional<Member> memberOptional = verifyUser(email, password);
 			if (memberOptional.isEmpty()) {
 				FacesContext.getCurrentInstance().addMessage( null,
 						new FacesMessage("Failed to log in as " + email));
@@ -55,8 +56,6 @@ public class LoginAction implements Serializable {
 			}
 			setLoggedInUser(memberOptional.get());
 			setUserInSession(loggedInUser);
-			System.out.printf("Logged in! Member = %s, #roles = %d\n",
-					loggedInUser, loggedInUser.getRoles().size());
 
 			// XXX Maybe now tell the Container about it for e.g., logging and session times...
 			// using request.login(email, password);
@@ -98,7 +97,7 @@ public class LoginAction implements Serializable {
 	}
 
 	/** Hook allows testing via mocking; do not inline! */
-	Optional<Member> lookupUser(String email, String password) {
+	Optional<Member> verifyUser(String email, String password) {
 		return Optional.ofNullable(memberList.findByEmailAndPassword(email, DigestUtils.md5(password)));
 	}
 
