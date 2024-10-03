@@ -28,7 +28,7 @@ public class MailManTest {
 	final String A_MESSAGE_SUBJECT = "About your night life";
 	private MailMan sender;
 	private Member member;
-	private LoginAction identity;
+	private LoginAction loginAction;
 	
 	@Before
 	public void init() {
@@ -37,8 +37,9 @@ public class MailManTest {
 		sender = new MailMan();
 		sender.lister = lister;
 		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
-		identity = new LoginAction();
-		identity.setLoggedInUser(member);
+		loginAction = new LoginAction();
+		loginAction.setMemberList(lister);
+		loginAction.setLoggedInUser(member);
 		MailMan.props.clear();
 	}
 	

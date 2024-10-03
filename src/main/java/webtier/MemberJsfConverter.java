@@ -47,11 +47,11 @@ public class MemberJsfConverter implements Converter {
 			return null;
 		} else {
 			if (Long.class == object.getClass()) {
-				return memberList.findBy((Long)object).getNames();
+				return memberList.findById((Long)object).getNames();
 			}
 			if (Integer.class == object.getClass()) {
 				long l = (Integer)object;
-				return memberList.findBy(l).getNames();
+				return memberList.findById(l).getNames();
 			}
 			throw new IllegalArgumentException(
 				String.format("getAsString expects long arg, not `%s' of type %s", object, object.getClass()));

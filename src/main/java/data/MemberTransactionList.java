@@ -11,6 +11,7 @@ import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
 import model.MemberTransaction;
+import org.hibernate.annotations.processing.Find;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -22,9 +23,10 @@ import model.MemberTransaction;
 @Named("memberTransactionList") @Default
 @SessionScoped
 @Repository
-public interface MemberTransactionList extends CrudRepository<MemberTransaction, Long> {
+public interface MemberTransactionList {
 
 	/** Want to see the newest ones first, so descending, use limit in page */
+	@Find
 	@Query(value="select t from MemberTransaction t order by t.dateRenewed desc")
 	Stream<MemberTransaction> findAll();
 }

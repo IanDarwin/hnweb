@@ -1,6 +1,7 @@
 package action;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -13,9 +14,10 @@ import jakarta.servlet.http.HttpSession;
 import com.darwinsys.security.DigestUtils;
 import data.MemberList;
 import model.Member;
+import model.MemberRole;
 import webtier.LoginConstants;
+import webtier.PageFilter;
 import webtier.WebConstants;
-
 
 /**
  * Simple DIY login.
@@ -26,7 +28,11 @@ public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
 
-	@Inject MemberList userlist;
+	@Inject MemberList memberList;
+
+	public void setMemberList(MemberList memberList) {
+		this.memberList = memberList;
+	}
 
 	String email, password;
 
@@ -34,20 +40,26 @@ public class LoginAction implements Serializable {
 	
 	public LoginAction() {
 		// Just for debugging...
-		System.out.println("LoginAction.LoginAction()");
+		System.out.printf("LoginAction.LoginAction(): %d users\n",
+				-1 /*userlist.findAll().count()*/);
 	}
 	
 	public String login() {
 		System.out.println("Login.login(" + email + ")");
 		try {
-			setLoggedInUser(verifyUser(email, password));
-			if (getLoggedInUser() == null) {
-				throw new IllegalStateException("findByEmailAndPassword should not return null!");
+			final Optional<Member> memberOptional = verifyUser(email, password);
+			if (memberOptional.isEmpty()) {
+				FacesContext.getCurrentInstance().addMessage( null,
+						new FacesMessage("Failed to log in as " + email));
+				return "Login";
+
 			}
+			setLoggedInUser(memberOptional.get());
+			setUserInSession(loggedInUser);
 
 			// XXX Maybe now tell the Container about it for e.g., logging and session times...
 			// using request.login(email, password);
-			// Except that they want a login and password to look up in a Realm, which we've already done.
+			// Except that EE wants a login and password to look up in a Realm, which we've already done.
 
 			FacesContext.getCurrentInstance().addMessage( null,
                     new FacesMessage("Logged in as " + getLoggedInUser().getName()));
@@ -67,7 +79,7 @@ public class LoginAction implements Serializable {
 				session.removeAttribute(LoginConstants.TARGET_URI_KEY);
 				return redirTarget + WebConstants.FORCE_REDIRECT;
 			}
-			return "/index.web";
+			return "/index.web" + WebConstants.FORCE_REDIRECT;
 
 		} catch (NoResultException nre) {
 			System.out.println("LoginAction.login():" + nre);
@@ -85,8 +97,8 @@ public class LoginAction implements Serializable {
 	}
 
 	/** Hook allows testing via mocking; do not inline! */
-	Member verifyUser(String email, String password) {
-		return userlist.findByEmailAndPassword(email, DigestUtils.md5(password));
+	Optional<Member> verifyUser(String email, String password) {
+		return Optional.ofNullable(memberList.findByEmailAndPassword(email, DigestUtils.md5(password)));
 	}
 
 	/** Does what it says on the tin. */
@@ -126,6 +138,18 @@ public class LoginAction implements Serializable {
 		return loggedInUser;
 	}
 
+	public void setLoggedInUser(Member loggedInUser) {
+		this.loggedInUser = loggedInUser;
+	}
+
+	/** Separate from setLoggedInUser for testing without JSF */
+	public void setUserInSession(Member loggedInUser) {
+		HttpSession session =
+				(HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
+		session.setAttribute(LoginConstants.LOGIN_FLAG, this);
+	}
+
 	/** Important for security */
 	public boolean hasRole(String role) {
 		if (role == null) {
@@ -134,8 +158,8 @@ public class LoginAction implements Serializable {
 		if (!isLoggedIn()) {
 			return false;
 		}
-		for (String r : getLoggedInUser().getRoles()) {
-			if (r.equals(role)) {
+		for (MemberRole r : getLoggedInUser().getRoles()) {
+			if (r.getName().equals(role)) {
 				return true;
 			}
 		}
@@ -149,9 +173,5 @@ public class LoginAction implements Serializable {
 				getLoggedInUser().getPosition().trim().length() > 0;
 		}
 		return false;
-	}
-
-	public void setLoggedInUser(Member loggedInUser) {
-		this.loggedInUser = loggedInUser;
 	}
 }

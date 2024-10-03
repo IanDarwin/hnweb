@@ -2,6 +2,7 @@ package data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import jakarta.data.repository.CrudRepository;
@@ -9,7 +10,6 @@ import jakarta.data.repository.Query;
 import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.Model;
 import jakarta.inject.Named;
 
 import model.Member;
@@ -22,11 +22,9 @@ import org.hibernate.annotations.processing.Find;
  * @author Ian Darwin
  */
 @Named("memberList")
-@SessionScoped
 @Repository
-@Default
-@Model
-public interface MemberList extends Serializable, CrudRepository<Member, Long> {
+@SessionScoped
+public interface MemberList {
 
 	String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";
 
@@ -34,12 +32,15 @@ public interface MemberList extends Serializable, CrudRepository<Member, Long> {
 	Stream<Member> findAll();
 
 	@Find
-	Member findBy(Long id);
+	Member findById(Long id);
 
 	@Find @Query(value="select m from Member m where m.memberType != 'Secondary' order by lower(m.lastName) asc")
 	List<Member> findNonSecondaries();
 
 	/** Basic for login */
+	@Find
+	Member findByEmail(String email);
+
 	@Find
 	Member findByEmailAndPassword(String email, String password);
 

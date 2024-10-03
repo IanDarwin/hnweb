@@ -12,6 +12,7 @@ import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
 import model.MemberArchived;
+import org.hibernate.annotations.processing.Find;
 
 /**
  * List of deleted members
@@ -20,13 +21,14 @@ import model.MemberArchived;
 @Named("deletedList") @Default
 @SessionScoped
 @Repository
-public interface DeletedList extends Serializable, CrudRepository<MemberArchived, Long> {
+public interface DeletedList {
 
 	public static final String FIND_ALL_QUERY = "select m from MemberArchived m order by lower(m.lastName) asc";
 
-	@Query(value=FIND_ALL_QUERY)
+	@Find @Query(value=FIND_ALL_QUERY)
 	Stream<MemberArchived> findAll();
 
 	/** Find one member by both names; used in JSF converter */
-	MemberArchived findByFirstNameAndLastName(String string, String string2);
+	@Find
+	MemberArchived findByFirstNameAndLastName(String firstName, String lastName);
 }

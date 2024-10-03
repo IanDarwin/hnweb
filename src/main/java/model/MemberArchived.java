@@ -3,6 +3,8 @@ package model;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import jakarta.enterprise.inject.Model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,6 +15,7 @@ import org.apache.commons.beanutils.BeanUtils;
  * Archived Member has all non-relationship fields of regular member, plus archived date and reason.
  */
 @Entity
+@Model
 @Table(name="member_archived")
 public class MemberArchived extends Member {
 	@Column(name="archive_reason")
