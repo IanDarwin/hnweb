@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for name
+do
+
+	llname=$(echo $name | tr A-Z a-z)
+
+	psql -d hn -c "select id,firstname,lastname,membertype,expiryyear from member where lower(lastname) like '%"$llname"%'"
+
+done
