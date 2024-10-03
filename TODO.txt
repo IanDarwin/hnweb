@@ -1,5 +1,7 @@
 = TODO
 
+New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
+
 Renewal - finds member, but crashes on submit with
 IllegalArgumentException: getAsString expects long arg,
 	not `#123 Fname Lname <usre@gmail.com>' of type class model.Member
@@ -16,13 +18,14 @@ Add DeletedView (already linked to from DeletedList).
 
 Change Resurrected to requires-admin
 
+Get Renew working; send thank-you email.
 New members should get a welcome email *automatically* with the latest Bluebird.
 
 Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
 
 UserEdit += password
 
-Get/Forgot Password
+Get/Forgot Password by email
 
 SELF_RENEW W/ PAYPAL
 
