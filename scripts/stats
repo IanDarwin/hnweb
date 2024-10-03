@@ -26,6 +26,9 @@ SELECT count(id) from member where membertype in ('Individual','Family') and exp
 \echo #3b Count of members who have not renewed for multiple years
 SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear < ${LASTYEAR};
 
+\echo #4 Count of mailing-list-only entries
+SELECT count(id) from member where membertype not in ('Individual','Family','Secondary')
+
 -- \echo #4 COUNTing Secondary Family memberships for ${CURYEAR}
 -- Sometimes SQL is a bit much...
 -- SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' and
