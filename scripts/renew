@@ -29,6 +29,9 @@ echo "Creating financial tx"
 psql -d hn -c "INSERT INTO transaction(member_id,newexpiryyear,paymenttype,reason,amount)
 				values($id, $YEAR, '"$PTYPE"', 'r', $AMT)"
 
+echo "Verifying update:"
+psql -d hn -c "SELECT firstname,lastname,email,expiryyear FROM member WHERE id = $id;"
+
 email=$(psql -d hn -c "SELECT email FROM member WHERE id = $id;" | grep @)
 echo Sending thanks to $email
 echo "Thank you for your membership renewal for the $YEAR membership year.
