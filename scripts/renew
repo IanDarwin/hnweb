@@ -2,14 +2,37 @@
 
 # renew member by id
 
-if [ $# != 3 ]; then
-	echo Usage: "$0 id ca|ch|et|pl amt"
+function usage {
+	echo "Usage: id ca|ch|et|pl amt" >&2
 	exit 1
+}
+
+if [[ $(hostname) != darwinsys.com ]]; then
+	echo "$0: Only on the one true machine!" >&2
+	usage
+fi
+
+if [ $# != 3 ]; then
+	usage
 fi
 
 id=$1
 PTYPE=$2
 AMT=$3
+
+case $PTYPE in
+	ca|ch|et|pl);;
+	*) echo "$0: $PTYPE looks half-baked!" >&2
+		usage
+		;;
+esac
+
+case $AMT in
+	[0-9][0-9]);;
+	*) echo "$0: $AMT looks fishy" >&2
+		usage
+		;;
+esac
 
 DYEAR=$(date +%Y)
 MONTH=$(date +%m)
