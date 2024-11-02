@@ -293,19 +293,17 @@ public class Member {
 	public void updateLastModified() {
 		lastModified = LocalDate.now();
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append('#').append(getId()).append(' ');
 		sb.append(getFirstName())
 				.append(' ')
 				.append(getLastName());
-		if (getEmail() != null) {
-			sb.append(' ')
-			.append('<')
-			.append(getEmail())
-			.append('>');
-		}
+		sb.append(' ')
+				.append('<')
+				.append(getEmail())
+				.append('>');
 		return sb.toString();
 	}
 
@@ -407,6 +405,8 @@ public class Member {
 	public void addRole(String roleName) {
 		roles.add(new MemberRole(roleName));
 	}
+
+	public void addRole(MemberRole role) { roles.add(role); }
 
 }
 

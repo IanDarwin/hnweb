@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import model.MemberRole;
 import org.junit.Test;
 
 import model.Member;
@@ -13,7 +14,7 @@ import model.Member;
 public class PersistenceTest extends AbstractPersistenceTest {
 
 	final static String FIRST = "Loodlie";
-	public static final String ROLE = "Dumpster Driver";
+	public static final MemberRole ROLE = new MemberRole("Dumpster Driver");
 
 	/** Live JPA (fake database): save a Member, then
 	 * assert that we find it in the list of Members from JPA
@@ -27,6 +28,7 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		tm.addRole(ROLE);
 
 		em.getTransaction().begin();
+		em.persist(ROLE);
 		em.persist(tm);
 		em.getTransaction().commit();
 
@@ -36,7 +38,7 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		for (Member m : ms) {
 			if (m.getFirstName().equals(FIRST) && m.isEmailTrips()) {
 				assertEquals(1, m.getRoles().size());
-				assertTrue(m.getRoles().contains("Dumpster Driver"));
+				assertTrue(m.getRoles().getFirst().getName().equals("Dumpster Driver"));
 				return;
 			}
 		}
