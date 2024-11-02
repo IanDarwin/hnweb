@@ -8,7 +8,7 @@ echo
 
 cat >/tmp/st <<!
 
-\echo #1 Counting total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)
+\echo #1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)
 SELECT COUNT(id) FROM member;
 
 \echo #2 Counting total PAID memberships of all types
@@ -20,6 +20,10 @@ SELECT COUNT(id) FROM member WHERE membertype = 'Individual' AND expiryyear >= $
 \echo #2b Of those, Family (master) paid-up memberships for ${CURYEAR}
 SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CURYEAR};
 
+\echo #2c Secondary Family memberships for ${CURYEAR}
+SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' AND
+	(SELECT count(mm) FROM member mm WHERE (id = m.mastermember_id AND mm.expiryyear >= 2025)) = 1;
+
 \echo #3 Count of last-year members who did NOT renew (yet)
 SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear = ${LASTYEAR};
 
@@ -27,11 +31,8 @@ SELECT count(id) from member where membertype in ('Individual','Family') and exp
 SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear < ${LASTYEAR};
 
 \echo #4 Count of mailing-list-only entries
-SELECT count(id) from member where membertype not in ('Individual','Family','Secondary')
+SELECT count(id) from member where membertype NOT IN ('Individual','Family','Secondary') OR
+	(membertype = 'Individual' AND expiryyear = 0);
 
--- \echo #4 COUNTing Secondary Family memberships for ${CURYEAR}
--- Sometimes SQL is a bit much...
--- SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' and
--- 	(SELECT ma FROM member WHERE id = m.mastermember_id AND ma.expiryyear >= ${CURYEAR});
 !
-psql -d hn < /tmp/st | rg -v '(rows?\))|^ count'
+psql -d hn < /tmp/st | rg -v '(rows?\))|-----|^ count'
