@@ -155,11 +155,13 @@
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>${hibernate.validator.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- DRIVERS... Only for testing (PROVIDED in prod'n) -->
