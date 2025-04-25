@@ -8,13 +8,7 @@ import java.util.Set;
 
 import jakarta.enterprise.inject.Model;
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import jakarta.inject.Named;
-
-import com.darwinsys.geo.CanadaProvince;
-import action.YearCalcs;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -26,28 +20,21 @@ import org.apache.commons.beanutils.BeanUtils;
  * @author Ian Darwin
  */
 @Entity
-@SuppressWarnings("unused")
 @Named("person")
 @Model
+@Access(AccessType.FIELD)
 public class Member extends MemberBase {
 
 	////////////////////////////////////////////////
 	// Member-only fields
 	// i.e., not needed in MemberArchived.
 	////////////////////////////////////////////////
-
-	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection()
-	protected List<MemberRole> roles = new ArrayList<>();
-
 	List<MemberTransaction> transactions;
 
-	public List<MemberTransaction> getMemberTransactions() {
-		return transactions;
-	}
-	public void setMemberTransactions(List<MemberTransaction> transactions) {
-		this.transactions = transactions;
-	}
+	// For app-managed security
+	@ManyToMany(fetch = FetchType.EAGER) // Or FetchType.EAGER
+	@JoinColumn(name = "role_id") // Assuming 'role_id' is the FK column
+	protected List<MemberRole> roles = new ArrayList<>();
 
 	/** Only if memberType is MemberType.Secondary */
 	@ManyToOne()
@@ -93,10 +80,10 @@ public class Member extends MemberBase {
 		roles = new ArrayList<>();
 	}
 
-	// For member relationships
 	/**
 	 * If this Member is a MemberType.Secondary member, this
 	 * Property will refer to the Master (e.g., paying!) member.
+	 * Else null (so could use Optional here?)
 	 * @return The master member
 	 */
 	public Member getMasterMember() {
@@ -108,6 +95,13 @@ public class Member extends MemberBase {
 		if (masterMember != null) {
 			masterMember.getSecondaryMembers().add(this);
 		}
+	}
+
+	public List<MemberTransaction> getMemberTransactions() {
+		return transactions;
+	}
+	public void setMemberTransactions(List<MemberTransaction> transactions) {
+		this.transactions = transactions;
 	}
 
 	/**
@@ -124,6 +118,10 @@ public class Member extends MemberBase {
 	 * @return The secondary members
 	 */
 	public Set<Member> getSecondaryMembers() {
+		if (memberType != MemberType.Family) {
+			// Consider throwing exception instead of just printing
+			System.out.println("ERROR: requested secondary members on non-family " + toString());
+		}
 		if (secondaryMembers == null) {
 			secondaryMembers = new HashSet<>();
 		}

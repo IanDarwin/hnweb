@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jakarta.enterprise.inject.Model;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -17,6 +15,7 @@ import org.apache.commons.beanutils.BeanUtils;
 @Entity
 @Model
 @Table(name="member_archived")
+@Access(AccessType.FIELD)
 public class MemberArchived extends MemberBase {
 	@Column(name="archive_reason")
 	private String archivedReason;

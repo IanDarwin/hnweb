@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @MappedSuperclass
-// @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Access(AccessType.FIELD)
 public abstract class MemberBase {
 
 	/////////////////////////////////////////////
