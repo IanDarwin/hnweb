@@ -6,6 +6,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,7 +105,7 @@ public class Member {
 
     // For app-managed security - only Members, not MemberArchived elements, can be in roles
     @ManyToOne()
-    protected MemberRole roles;
+    protected MemberRole roles = new MemberRole();
 
     public Member() {
         // empty, needed for JPA
@@ -233,6 +234,9 @@ public class Member {
 
     // XXX Sinister - there's only one role, but was previously a list, so map to/from single role
     public List<MemberRole> getRoles() {
+		if (roles == null) {
+			return List.of();
+		}
         return List.of(roles);
     }
     public void setRoles(List<MemberRole> roles) {
@@ -279,6 +283,7 @@ public class Member {
         this.email = email;
     }
 
+
     public String getFirstName() {
         return firstName;
     }
@@ -295,6 +300,14 @@ public class Member {
         this.lastName = lastName;
     }
 
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
     public String getPostcode() {
         return postcode;
     }
@@ -309,14 +322,6 @@ public class Member {
 
     public void setProvince(String province) {
         this.province = province;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public String getCellphone() {
@@ -374,6 +379,11 @@ public class Member {
     public void setEmailTrips(Boolean emailTrips) {
         this.emailTrips = emailTrips;
     }
+	
+	@Transient
+	public boolean isExecutive() {
+		return getPosition() != null && getPosition().length() > 0;
+	}
 
     public Integer getExpiryYear() {
         return expiryYear;
