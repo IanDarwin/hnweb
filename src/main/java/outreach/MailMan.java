@@ -313,6 +313,9 @@ public class MailMan implements Serializable {
 
 		// Additional list headers
 		mesg.addHeader("List-Id", "Headwaters Nature <hn.darwinsys.com>");
+		// Needed to get past Google, Yahoo/Rogers, etc.:
+		mesg.addHeader("List-Unsubscribe", "https://darwinsys.com/unsub/hn");
+		mesg.addHeader("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
 
 		// Send yourself a copy as the (only) 'To' address
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
