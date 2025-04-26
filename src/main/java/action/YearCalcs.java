@@ -11,7 +11,7 @@ import model.MemberType;
 /**
  * Membership year is from Sept 1 to Aug 31.
  */
-@Named // Named doesn't work, deprecated ManagedBean does.
+@Named
 public class YearCalcs {
 
 	/** Given a date (usually today's), find out what membership year it is in. */
