@@ -2,7 +2,7 @@ package model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -111,8 +111,8 @@ public class Member {
     private LocalDate lastModified;
 
 	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ManyToOne()
-	private List<MemberRole> roles;	
+	@ElementCollection
+	private List<MemberRole> roles = new ArrayList<>();
 
 	// CONSTRUCTORS
 

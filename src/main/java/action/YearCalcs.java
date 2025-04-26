@@ -28,7 +28,7 @@ public class YearCalcs {
 	/** If a member joins today, what membership year does their membership run to?*/
 	public static int getNewMemberExpiryYear(LocalDate now) {
 		if (now.getMonthValue()>=Config.RENEWAL_MONTH)
-			return getCurrentMembershipYear(now) + 1;
+			return now.getYear() + 1;
 		return getCurrentMembershipYear(now);
 	}
 
