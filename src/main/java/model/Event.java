@@ -1,6 +1,6 @@
 package model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -12,17 +12,17 @@ public class Event {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "eventabstract")
-    private String eventabstract;
+    @Column(name = "eventAbstract")
+    private String eventAbstract;
 
     @Column(name = "location")
     private String location;
 
     @Column(name = "speakerbio")
-    private String speakerbio;
+    private String speakerBio;
 
     @Column(name = "speakername")
-    private String speakername;
+    private String speakerName;
 
     @Column(name = "title")
     private String title;
@@ -33,11 +33,11 @@ public class Event {
     @Column(name = "times")
     private String times;
 
-    @Column(name = "endtime")
-    private String endtime;
+    @Column(name = "endTime")
+    private String endTime;
 
-    @Column(name = "starttime")
-    private String starttime;
+    @Column(name = "startTime")
+    private String startTime;
 
     public Long getId() {
         return id;
@@ -47,12 +47,12 @@ public class Event {
         this.id = id;
     }
 
-    public String getEventabstract() {
-        return eventabstract;
+    public String getEventAbstract() {
+        return eventAbstract;
     }
 
-    public void setEventabstract(String eventabstract) {
-        this.eventabstract = eventabstract;
+    public void setEventAbstract(String eventAbstract) {
+        this.eventAbstract = eventAbstract;
     }
 
     public String getLocation() {
@@ -63,20 +63,20 @@ public class Event {
         this.location = location;
     }
 
-    public String getSpeakerbio() {
-        return speakerbio;
+    public String getSpeakerBio() {
+        return speakerBio;
     }
 
-    public void setSpeakerbio(String speakerbio) {
-        this.speakerbio = speakerbio;
+    public void setSpeakerBio(String speakerBio) {
+        this.speakerBio = speakerBio;
     }
 
-    public String getSpeakername() {
-        return speakername;
+    public String getSpeakerName() {
+        return speakerName;
     }
 
-    public void setSpeakername(String speakername) {
-        this.speakername = speakername;
+    public void setSpeakerName(String speakerName) {
+        this.speakerName = speakerName;
     }
 
     public String getTitle() {
@@ -103,20 +103,19 @@ public class Event {
         this.times = times;
     }
 
-    public String getEndtime() {
-        return endtime;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEndtime(String endtime) {
-        this.endtime = endtime;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
-    public String getStarttime() {
-        return starttime;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStarttime(String starttime) {
-        this.starttime = starttime;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
-
 }

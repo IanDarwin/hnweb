@@ -1,6 +1,9 @@
 package model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 
 @Entity
@@ -26,13 +29,13 @@ public class MemberArchived {
     private String email;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname")
-    private String lastname;
+    private String lastName;
 
     @Column(name = "postcode")
-    private String postcode;
+    private String postCode;
 
     @Column(name = "province")
     private String province;
@@ -41,22 +44,22 @@ public class MemberArchived {
     private String position;
 
     @Column(name = "cellphone")
-    private String cellphone;
+    private String cellPhone;
 
     @Column(name = "homephone")
-    private String homephone;
+    private String homePhone;
 
-    @Column(name = "membertype")
-    private String membertype;
+    @Column(name = "memberType")
+    private String memberType;
 
     @Column(name = "newslettermode")
-    private Integer newslettermode;
+    private Integer newsletterMode;
 
-    @Column(name = "mastermember_id")
-    private Long mastermemberId;
+    @Column(name = "masterMember_id")
+    private Long masterMemberId;
 
     @Column(name = "yearjoined")
-    private Integer yearjoined;
+    private Integer yearJoined;
 
     @Column(name = "middle")
     private String middle;
@@ -64,11 +67,11 @@ public class MemberArchived {
     @Column(name = "email_trips")
     private Boolean emailTrips;
 
-    @Column(name = "expiryyear")
-    private Integer expiryyear;
+    @Column(name = "expiryYear")
+    private Integer expiryYear;
 
     @Column(name = "workphone")
-    private String workphone;
+    private String workPhone;
 
     @Column(name = "username", length = 20)
     private String username;
@@ -80,14 +83,37 @@ public class MemberArchived {
     private Integer version;
 
     @Column(name = "archive_date")
-    private LocalDate archiveDate;
+    private LocalDate archivedDate;
 
-    @Lob
     @Column(name = "archive_reason")
-    private String archiveReason;
+    private String archivedReason;
 
     @Column(name = "notes")
     private String notes;
+
+    public MemberArchived(String reason) {
+        archivedDate = LocalDate.now(); // Do this "now", avoid NPE later
+        archivedReason = reason;
+    }
+
+    public MemberArchived() {
+        this("Deleted");
+    }
+
+    /** Copy Constructor: copies all non-relationship fields but for ID */
+    public MemberArchived(Member m) {
+        this();
+        try {
+            BeanUtils.copyProperties(this, m);      // (dest, src)
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            Error t = new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
+            // t.setCause(ex);
+            throw t;
+        }
+        // Now have to clear the ID field
+        id = 0L;
+    }
+
 
     public Long getId() {
         return id;
@@ -137,28 +163,28 @@ public class MemberArchived {
         this.email = email;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getPostcode() {
-        return postcode;
+    public String getPostCode() {
+        return postCode;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     public String getProvince() {
@@ -177,52 +203,52 @@ public class MemberArchived {
         this.position = position;
     }
 
-    public String getCellphone() {
-        return cellphone;
+    public String getCellPhone() {
+        return cellPhone;
     }
 
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
     }
 
-    public String getHomephone() {
-        return homephone;
+    public String getHomePhone() {
+        return homePhone;
     }
 
-    public void setHomephone(String homephone) {
-        this.homephone = homephone;
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
     }
 
-    public String getMembertype() {
-        return membertype;
+    public String getMemberType() {
+        return memberType;
     }
 
-    public void setMembertype(String membertype) {
-        this.membertype = membertype;
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
     }
 
-    public Integer getNewslettermode() {
-        return newslettermode;
+    public Integer getNewsletterMode() {
+        return newsletterMode;
     }
 
-    public void setNewslettermode(Integer newslettermode) {
-        this.newslettermode = newslettermode;
+    public void setNewsletterMode(Integer newsletterMode) {
+        this.newsletterMode = newsletterMode;
     }
 
-    public Long getMastermemberId() {
-        return mastermemberId;
+    public Long getMasterMemberId() {
+        return masterMemberId;
     }
 
-    public void setMastermemberId(Long mastermemberId) {
-        this.mastermemberId = mastermemberId;
+    public void setMasterMemberId(Long masterMemberId) {
+        this.masterMemberId = masterMemberId;
     }
 
-    public Integer getYearjoined() {
-        return yearjoined;
+    public Integer getYearJoined() {
+        return yearJoined;
     }
 
-    public void setYearjoined(Integer yearjoined) {
-        this.yearjoined = yearjoined;
+    public void setYearJoined(Integer yearJoined) {
+        this.yearJoined = yearJoined;
     }
 
     public String getMiddle() {
@@ -241,20 +267,20 @@ public class MemberArchived {
         this.emailTrips = emailTrips;
     }
 
-    public Integer getExpiryyear() {
-        return expiryyear;
+    public Integer getExpiryYear() {
+        return expiryYear;
     }
 
-    public void setExpiryyear(Integer expiryyear) {
-        this.expiryyear = expiryyear;
+    public void setExpiryYear(Integer expiryYear) {
+        this.expiryYear = expiryYear;
     }
 
-    public String getWorkphone() {
-        return workphone;
+    public String getWorkPhone() {
+        return workPhone;
     }
 
-    public void setWorkphone(String workphone) {
-        this.workphone = workphone;
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
     }
 
     public String getUsername() {
@@ -281,20 +307,20 @@ public class MemberArchived {
         this.version = version;
     }
 
-    public LocalDate getArchiveDate() {
-        return archiveDate;
+    public LocalDate getArchivedDate() {
+        return archivedDate;
     }
 
-    public void setArchiveDate(LocalDate archiveDate) {
-        this.archiveDate = archiveDate;
+    public void setArchivedDate(LocalDate archivedDate) {
+        this.archivedDate = archivedDate;
     }
 
-    public String getArchiveReason() {
-        return archiveReason;
+    public String getArchivedReason() {
+        return archivedReason;
     }
 
-    public void setArchiveReason(String archiveReason) {
-        this.archiveReason = archiveReason;
+    public void setArchivedReason(String archivedReason) {
+        this.archivedReason = archivedReason;
     }
 
     public String getNotes() {

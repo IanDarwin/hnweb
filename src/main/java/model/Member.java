@@ -1,6 +1,14 @@
 package model;
 
-import javax.persistence.*;
+import action.YearCalcs;
+import jakarta.persistence.*;
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "member")
@@ -21,16 +29,17 @@ public class Member {
     private String city;
 
     @Column(name = "country")
-    private String country;
+    @Enumerated(EnumType.STRING)
+    private Country country;
 
     @Column(name = "email")
     private String email;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname")
-    private String lastname;
+    private String lastName;
 
     @Column(name = "postcode")
     private String postcode;
@@ -47,18 +56,24 @@ public class Member {
     @Column(name = "homephone")
     private String homephone;
 
-    @Column(name = "membertype")
-    private String membertype;
+    @Column(name = "memberType")
+    @Enumerated(EnumType.STRING)
+    private MemberType memberType;
 
     @Column(name = "newslettermode")
-    private Integer newslettermode;
+    private Integer newsletterMode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mastermember_id")
-    private Member mastermember;
+    /** Only if memberType is MemberType.Secondary */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "masterMember_id")
+    private Member masterMember;
+
+    /** Only if memberType is MemberType.Family */
+    @OneToMany(mappedBy="masterMember")
+    protected Set<Member> secondaryMembers;
 
     @Column(name = "yearjoined")
-    private Integer yearjoined;
+    private Integer yearJoined;
 
     @Column(name = "middle")
     private String middle;
@@ -66,11 +81,11 @@ public class Member {
     @Column(name = "email_trips")
     private Boolean emailTrips;
 
-    @Column(name = "expiryyear")
-    private Integer expiryyear;
+    @Column(name = "expiryYear")
+    private Integer expiryYear;
 
     @Column(name = "workphone")
-    private String workphone;
+    private String workPhone;
 
     @Column(name = "password")
     private String password;
@@ -81,12 +96,147 @@ public class Member {
     @Column(name = "notes")
     private String notes;
 
+    @Temporal(TemporalType.DATE)
+    protected LocalDate creation;
+
+    @Temporal(TemporalType.DATE)
+    protected LocalDate lastModified;
+
+    // For app-managed security - only Members, not MemberArchived elements, can be in roles
+    @ManyToOne()
+    protected MemberRole roles;
+
+    public Member() {
+        // empty, needed for JPA
+    }
+
+    /**
+     * This constructor is likely only useful in testing
+     * @param firstName First Name
+     * @param lastName Last Name
+     * @param email Email address
+     */
+    public Member(String firstName, String middle, String lastName, String email) {
+        this.firstName = firstName;
+        this.middle = middle;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    /** Necromantic Copy Constructor: copies all fields but for ID and some relationships */
+    public Member(MemberArchived m) {
+        this();
+        try {
+            BeanUtils.copyProperties(this, m);      // (destination, src)
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
+        }
+        // Now have to clear some fields.
+        id = 0L;
+        // XXX transactions = new ArrayList<>();
+        secondaryMembers = new HashSet<>();
+        roles = null;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('#').append(getId()).append(' ');
+        sb.append(getFirstName())
+                .append(' ')
+                .append(getLastName());
+        sb.append(' ')
+                .append('<')
+                .append(getEmail())
+                .append('>');
+        return sb.toString();
+    }
+
+    @Transient
+    public String getName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getFirstName());
+        String mi = getMiddle();
+        if (mi != null && !mi.isEmpty()) {
+            sb.append(' ').append(mi);
+        }
+        sb.append(' ').append(getLastName());
+        return sb.toString();
+    }
+
+    @Transient
+    public String getNames() {
+        return String.format("%s, %s", lastName, firstName);
+    }
+
+    // For member relationships
+    /**
+     * If this Member is a MemberType.Secondary member, this
+     * Property will refer to the Master (e.g., paying!) member.
+     * @return The master member
+     */
+    public Member getMasterMember() {
+        return masterMember;
+    }
+
+    public void setMasterMember(Member masterMember) {
+        this.masterMember = masterMember;
+        if (masterMember != null) {
+            masterMember.getSecondaryMembers().add(this);
+        }
+    }
+
+    public void acceptRenewal(MemberTransaction renewal) {
+        setExpiryYear(YearCalcs.getCurrentMembershipYear() + renewal.getNumYears());
+        renewal.setNewExpiryYear(getExpiryYear());
+    }
+
+    @PreUpdate @PrePersist
+    public void updateLastModified() {
+        lastModified = LocalDate.now();
+    }
+
+    /**
+     * If this Member is a MemberType.Family member, then
+     * allow secondary members
+     */
+    public boolean allowSecondaries() {
+        return memberType == MemberType.Family;
+    }
+
+    /**
+     * If this Member is a MemberType.Family member, this
+     * Property will refer to the Secondary member(s).
+     * @return The secondary members
+     */
+    public Set<Member> getSecondaryMembers() {
+        if (secondaryMembers == null) {
+            secondaryMembers = new HashSet<>();
+        }
+        return secondaryMembers;
+    }
+
+    public void setSecondaryMembers(Set<Member> secondaryMembers) {
+        this.secondaryMembers = secondaryMembers;
+    }
+
+    public List<MemberTransaction> getMemberTransactions() {
+        return List.of();
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    // XXX Sinister - there's only one role, but was previously a list, so map to/from single role
+    public List<MemberRole> getRoles() {
+        return List.of(roles);
+    }
+    public void setRoles(List<MemberRole> roles) {
+        this.roles = roles.get(0);
     }
 
     public String getAddress() {
@@ -113,11 +263,11 @@ public class Member {
         this.city = city;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
@@ -129,20 +279,20 @@ public class Member {
         this.email = email;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPostcode() {
@@ -185,36 +335,28 @@ public class Member {
         this.homephone = homephone;
     }
 
-    public String getMembertype() {
-        return membertype;
+    public MemberType getMemberType() {
+        return memberType;
     }
 
-    public void setMembertype(String membertype) {
-        this.membertype = membertype;
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
     }
 
-    public Integer getNewslettermode() {
-        return newslettermode;
+    public Integer getNewsletterMode() {
+        return newsletterMode;
     }
 
-    public void setNewslettermode(Integer newslettermode) {
-        this.newslettermode = newslettermode;
+    public void setNewsletterMode(Integer newsletterMode) {
+        this.newsletterMode = newsletterMode;
     }
 
-    public Member getMastermember() {
-        return mastermember;
+    public Integer getYearJoined() {
+        return yearJoined;
     }
 
-    public void setMastermember(Member mastermember) {
-        this.mastermember = mastermember;
-    }
-
-    public Integer getYearjoined() {
-        return yearjoined;
-    }
-
-    public void setYearjoined(Integer yearjoined) {
-        this.yearjoined = yearjoined;
+    public void setYearJoined(Integer yearJoined) {
+        this.yearJoined = yearJoined;
     }
 
     public String getMiddle() {
@@ -225,7 +367,7 @@ public class Member {
         this.middle = middle;
     }
 
-    public Boolean getEmailTrips() {
+    public Boolean isEmailTrips() {
         return emailTrips;
     }
 
@@ -233,20 +375,20 @@ public class Member {
         this.emailTrips = emailTrips;
     }
 
-    public Integer getExpiryyear() {
-        return expiryyear;
+    public Integer getExpiryYear() {
+        return expiryYear;
     }
 
-    public void setExpiryyear(Integer expiryyear) {
-        this.expiryyear = expiryyear;
+    public void setExpiryYear(Integer expiryYear) {
+        this.expiryYear = expiryYear;
     }
 
-    public String getWorkphone() {
-        return workphone;
+    public String getWorkPhone() {
+        return workPhone;
     }
 
-    public void setWorkphone(String workphone) {
-        this.workphone = workphone;
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
     }
 
     public String getPassword() {

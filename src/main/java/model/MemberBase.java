@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@MappedSuperclass
-@Access(AccessType.FIELD)
+// @MappedSuperclass
+// @Access(AccessType.FIELD)
 public abstract class MemberBase {
 
 	/////////////////////////////////////////////
