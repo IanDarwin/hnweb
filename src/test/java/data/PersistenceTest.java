@@ -19,16 +19,16 @@ public class PersistenceTest extends AbstractPersistenceTest {
 	/** Live JPA (fake database): save a Member, then
 	 * assert that we find it in the list of Members from JPA
 	 */
-	// @Test
+	@Test
 	public void testLoadStore() {
 		Member tm = new Member();
 		tm.setFirstName(FIRST);
 		tm.setLastName("Lolz");
 		tm.setEmailTrips(true);
-		// tm.addRole(ROLE);
+		tm.addRole(ROLE);
 
 		em.getTransaction().begin();
-		// em.persist(ROLE);
+		em.persist(ROLE);
 		em.persist(tm);
 		em.getTransaction().commit();
 
@@ -37,8 +37,8 @@ public class PersistenceTest extends AbstractPersistenceTest {
 
 		for (Member m : ms) {
 			if (m.getFirstName().equals(FIRST) && m.isEmailTrips()) {
-				// assertEquals(1, m.getRoles().size());
-				// assertTrue(m.getRoles().getFirst().getName().equals("Dumpster Driver"));
+				assertEquals(1, m.getRoles().size());
+				assertTrue(m.getRoles().getFirst().getName().equals("Dumpster Driver"));
 				return;
 			}
 		}

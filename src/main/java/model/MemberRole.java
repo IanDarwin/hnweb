@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="member_roles")
 public class MemberRole {
 
     @Id

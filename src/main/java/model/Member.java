@@ -1,16 +1,24 @@
 package model;
 
-import action.YearCalcs;
-import jakarta.persistence.*;
-import org.apache.commons.beanutils.BeanUtils;
-
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.inject.Named;
+import jakarta.persistence.*;
+import org.apache.commons.beanutils.BeanUtils;
+
+import action.YearCalcs;
+
+/**
+ * Represents one person in the club's database.
+ * Still has too much hand-coded logic, alas.
+ */
 @Entity
+@Named("person")
 @Table(name = "member")
 public class Member {
     @Id
@@ -97,14 +105,16 @@ public class Member {
     private String notes;
 
     @Temporal(TemporalType.DATE)
-    protected LocalDate creation;
+    private LocalDate creation;
 
     @Temporal(TemporalType.DATE)
-    protected LocalDate lastModified;
+    private LocalDate lastModified;
 
-    // For app-managed security - only Members, not MemberArchived elements, can be in roles
-    @ManyToOne()
-    protected MemberRole roles;
+	// For app-managed security - only Members, not MemberArchived elements, can be in roles
+	@ManyToOne()
+	private List<MemberRole> roles;	
+
+	// CONSTRUCTORS
 
     public Member() {
         // empty, needed for JPA
@@ -135,8 +145,10 @@ public class Member {
         id = 0L;
         // XXX transactions = new ArrayList<>();
         secondaryMembers = new HashSet<>();
-        roles = null;
+        position = null;
     }
+
+	// COMMON METHODS
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -150,6 +162,8 @@ public class Member {
                 .append('>');
         return sb.toString();
     }
+
+	// OTHER METHODS
 
     @Transient
     public String getName() {
@@ -231,13 +245,16 @@ public class Member {
         this.id = id;
     }
 
-    // XXX Sinister - there's only one role, but was previously a list, so map to/from single role
     public List<MemberRole> getRoles() {
-        return List.of(roles);
+        return roles;
     }
     public void setRoles(List<MemberRole> roles) {
-        this.roles = roles.get(0);
+        this.roles = roles;
     }
+
+	public void addRole(MemberRole role) {
+		roles.add(role);
+	}
 
     public String getAddress() {
         return address;
@@ -279,6 +296,7 @@ public class Member {
         this.email = email;
     }
 
+
     public String getFirstName() {
         return firstName;
     }
@@ -295,6 +313,14 @@ public class Member {
         this.lastName = lastName;
     }
 
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
     public String getPostcode() {
         return postcode;
     }
@@ -309,14 +335,6 @@ public class Member {
 
     public void setProvince(String province) {
         this.province = province;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public String getCellphone() {
@@ -374,8 +392,16 @@ public class Member {
     public void setEmailTrips(Boolean emailTrips) {
         this.emailTrips = emailTrips;
     }
+	
+	@Transient
+	public boolean isExecutive() {
+		return getPosition() != null && getPosition().length() > 0;
+	}
 
     public Integer getExpiryYear() {
+		if (expiryYear == null) {
+			return 0;
+		}
         return expiryYear;
     }
 
