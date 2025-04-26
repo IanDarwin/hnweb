@@ -1,113 +1,122 @@
 package model;
 
-import java.io.Serializable;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
-
-import jakarta.enterprise.inject.Model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 
 @Entity
-@Model
-public class Event implements Serializable {
+@Table(name = "event")
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_gen")
+    @SequenceGenerator(name = "event_id_gen", sequenceName = "event_id_seq", allocationSize = 1)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-	private static final long serialVersionUID = 1L;
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	long id;
-	LocalDate date;
-	String startTime, endTime;
-	String title;
-	String location;
-	String eventAbstract;
-	String speakerName;
-	String speakerBio;
+    @Column(name = "eventabstract")
+    private String eventabstract;
 
-	public long getId() {
-		return id;
-	}
-	// And no setId() please.
+    @Column(name = "location")
+    private String location;
 
-	public LocalDate getDate() {
-		return date;
-	}
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
+    @Column(name = "speakerbio")
+    private String speakerbio;
 
-	public String getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(String startTime) {
-		if (startTime.length() == 4) {
-			this.startTime=startTime.substring(0,1) + ':' + startTime.substring(2);
-		}
-		else if (startTime.length()==5) {
-			this.startTime = startTime;
-		}
-		else {
-			throw new IllegalArgumentException("Please enter the start time in 24h clock, like 15:30");
-		}
-	}
-	public String getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(String endTime) {
-		if (endTime.length() == 4) {
-			this.endTime=endTime.substring(0,1) + ':' + endTime.substring(2);
-		}
-		else if (endTime.length()==5) {
-			this.endTime = endTime;
-		}
-		else {
-			throw new IllegalArgumentException("Please enter the end time in 24h clock, like 15:30");
-		}
-	}
+    @Column(name = "speakername")
+    private String speakername;
 
-	@Transient
-	public String getTimesString() {
-		return String.format("%s - %s", LocalTime.parse(startTime), LocalTime.parse(endTime));
-	}
+    @Column(name = "title")
+    private String title;
 
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    @Column(name = "date")
+    private LocalDate date;
 
-	public String getLocation() {
-		return location;
-	}
+    @Column(name = "times")
+    private String times;
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    @Column(name = "endtime")
+    private String endtime;
 
-	public String getEventAbstract() {
-		return eventAbstract;
-	}
+    @Column(name = "starttime")
+    private String starttime;
 
-	public void setEventAbstract(String eventAbstract) {
-		this.eventAbstract = eventAbstract;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getSpeakerName() {
-		return speakerName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setSpeakerName(String speakerName) {
-		this.speakerName = speakerName;
-	}
+    public String getEventabstract() {
+        return eventabstract;
+    }
 
-	public String getSpeakerBio() {
-		return speakerBio;
-	}
+    public void setEventabstract(String eventabstract) {
+        this.eventabstract = eventabstract;
+    }
 
-	public void setSpeakerBio(String speakerBio) {
-		this.speakerBio = speakerBio;
-	}
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSpeakerbio() {
+        return speakerbio;
+    }
+
+    public void setSpeakerbio(String speakerbio) {
+        this.speakerbio = speakerbio;
+    }
+
+    public String getSpeakername() {
+        return speakername;
+    }
+
+    public void setSpeakername(String speakername) {
+        this.speakername = speakername;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getTimes() {
+        return times;
+    }
+
+    public void setTimes(String times) {
+        this.times = times;
+    }
+
+    public String getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
+    }
+
+    public String getStarttime() {
+        return starttime;
+    }
+
+    public void setStarttime(String starttime) {
+        this.starttime = starttime;
+    }
+
 }

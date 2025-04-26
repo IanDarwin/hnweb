@@ -1,151 +1,276 @@
 package model;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.*;
 
-import jakarta.enterprise.inject.Model;
-import jakarta.persistence.*;
-import jakarta.inject.Named;
-
-import org.apache.commons.beanutils.BeanUtils;
-
-/**
- * Represents one person in our database.
- * Both Member and MemberArchived "include" (@Embedded) MemberFields.
- * Equals and hashCode() based solely on ID, so we don't get new entries made
- * when editing other fields.
- * @author Ian Darwin
- */
 @Entity
-@Named("person")
-@Model
-@Access(AccessType.FIELD)
-public class Member extends MemberBase {
+@Table(name = "member")
+public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
+    @SequenceGenerator(name = "member_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-	////////////////////////////////////////////////
-	// Member-only fields
-	// i.e., not needed in MemberArchived.
-	////////////////////////////////////////////////
-	List<MemberTransaction> transactions;
+    @Column(name = "address")
+    private String address;
 
-	// For app-managed security
-	@ManyToMany(fetch = FetchType.EAGER) // Or FetchType.EAGER
-	@JoinColumn(name = "role_id") // Assuming 'role_id' is the FK column
-	protected List<MemberRole> roles = new ArrayList<>();
+    @Column(name = "address2")
+    private String address2;
 
-	/** Only if memberType is MemberType.Secondary */
-	@ManyToOne()
-	protected Member masterMember;
-	/** Only if memberType is MemberType.Family */
-	@OneToMany(mappedBy="masterMember")
-	protected Set<Member> secondaryMembers;
+    @Column(name = "city")
+    private String city;
 
-	protected String notes;
+    @Column(name = "country")
+    private String country;
 
-	/*
-	 * "A very public Person"
-	 */
-	public Member() {
-		// Everybody loves an empty constructor
-	}
+    @Column(name = "email")
+    private String email;
 
-	/**
-	 * This constructor is likely only useful in testing
-	 * @param firstName First Name
-	 * @param lastName Last Name
-	 * @param email Email address
-	 */
-	public Member(String firstName, String middle, String lastName, String email) {
-		this.firstName = firstName;
-		this.middle = middle;
-		this.lastName = lastName;
-		this.email = email;
-	}
+    @Column(name = "firstname")
+    private String firstname;
 
-	/** Copy Constructor: copies all fields but for ID and some relationships */
-	public Member(MemberBase m) {
-		this();
-		try {
-			BeanUtils.copyProperties(this, m);		// (destination, src)
-		} catch (IllegalAccessException|InvocationTargetException ex) {
-			throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
-		}
-		// Now have to clear some fields.
-		id = 0L;
-		transactions = new ArrayList<>();
-		secondaryMembers = new HashSet<>();
-		roles = new ArrayList<>();
-	}
+    @Column(name = "lastname")
+    private String lastname;
 
-	/**
-	 * If this Member is a MemberType.Secondary member, this
-	 * Property will refer to the Master (e.g., paying!) member.
-	 * Else null (so could use Optional here?)
-	 * @return The master member
-	 */
-	public Member getMasterMember() {
-		return masterMember;
-	}
+    @Column(name = "postcode")
+    private String postcode;
 
-	public void setMasterMember(Member masterMember) {
-		this.masterMember = masterMember;
-		if (masterMember != null) {
-			masterMember.getSecondaryMembers().add(this);
-		}
-	}
+    @Column(name = "province")
+    private String province;
 
-	public List<MemberTransaction> getMemberTransactions() {
-		return transactions;
-	}
-	public void setMemberTransactions(List<MemberTransaction> transactions) {
-		this.transactions = transactions;
-	}
+    @Column(name = "\"position\"", length = 100)
+    private String position;
 
-	/**
-	 * If this Member is a MemberType.Family member, then
-	 * allow secondary members
-	 */
-	public boolean allowSecondaries() {
-		return memberType == MemberType.Family;
-	}
+    @Column(name = "cellphone")
+    private String cellphone;
 
-	/**
-	 * If this Member is a MemberType.Family member, this
-	 * Property will refer to the Secondary member(s).
-	 * @return The secondary members
-	 */
-	public Set<Member> getSecondaryMembers() {
-		if (memberType != MemberType.Family) {
-			// Consider throwing exception instead of just printing
-			System.out.println("ERROR: requested secondary members on non-family " + toString());
-		}
-		if (secondaryMembers == null) {
-			secondaryMembers = new HashSet<>();
-		}
-		return secondaryMembers;
-	}
+    @Column(name = "homephone")
+    private String homephone;
 
-	public void setSecondaryMembers(Set<Member> secondaryMembers) {
-		this.secondaryMembers = secondaryMembers;
-	}
+    @Column(name = "membertype")
+    private String membertype;
 
-	// For app-managed security
+    @Column(name = "newslettermode")
+    private Integer newslettermode;
 
-	public List<MemberRole> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<MemberRole> roles) {
-		this.roles = roles;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mastermember_id")
+    private Member mastermember;
 
-	public void addRole(String roleName) {
-		roles.add(new MemberRole(roleName));
-	}
+    @Column(name = "yearjoined")
+    private Integer yearjoined;
 
-	public void addRole(MemberRole role) { roles.add(role); }
+    @Column(name = "middle")
+    private String middle;
+
+    @Column(name = "email_trips")
+    private Boolean emailTrips;
+
+    @Column(name = "expiryyear")
+    private Integer expiryyear;
+
+    @Column(name = "workphone")
+    private String workphone;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "version")
+    private Integer version;
+
+    @Column(name = "notes")
+    private String notes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getCellphone() {
+        return cellphone;
+    }
+
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
+    }
+
+    public String getHomephone() {
+        return homephone;
+    }
+
+    public void setHomephone(String homephone) {
+        this.homephone = homephone;
+    }
+
+    public String getMembertype() {
+        return membertype;
+    }
+
+    public void setMembertype(String membertype) {
+        this.membertype = membertype;
+    }
+
+    public Integer getNewslettermode() {
+        return newslettermode;
+    }
+
+    public void setNewslettermode(Integer newslettermode) {
+        this.newslettermode = newslettermode;
+    }
+
+    public Member getMastermember() {
+        return mastermember;
+    }
+
+    public void setMastermember(Member mastermember) {
+        this.mastermember = mastermember;
+    }
+
+    public Integer getYearjoined() {
+        return yearjoined;
+    }
+
+    public void setYearjoined(Integer yearjoined) {
+        this.yearjoined = yearjoined;
+    }
+
+    public String getMiddle() {
+        return middle;
+    }
+
+    public void setMiddle(String middle) {
+        this.middle = middle;
+    }
+
+    public Boolean getEmailTrips() {
+        return emailTrips;
+    }
+
+    public void setEmailTrips(Boolean emailTrips) {
+        this.emailTrips = emailTrips;
+    }
+
+    public Integer getExpiryyear() {
+        return expiryyear;
+    }
+
+    public void setExpiryyear(Integer expiryyear) {
+        this.expiryyear = expiryyear;
+    }
+
+    public String getWorkphone() {
+        return workphone;
+    }
+
+    public void setWorkphone(String workphone) {
+        this.workphone = workphone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
 }
-

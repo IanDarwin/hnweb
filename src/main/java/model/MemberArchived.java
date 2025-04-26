@@ -1,55 +1,308 @@
 package model;
 
-import java.lang.reflect.InvocationTargetException;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
-import jakarta.enterprise.inject.Model;
-import jakarta.persistence.*;
-
-import org.apache.commons.beanutils.BeanUtils;
-
-/**
- * Archived Member has all non-relationship fields of regular member, plus archived date and reason.
- */
 @Entity
-@Model
-@Table(name="member_archived")
-@Access(AccessType.FIELD)
-public class MemberArchived extends MemberBase {
-	@Column(name="archive_reason")
-	private String archivedReason;
-	@Column(name="archive_date")
-	private LocalDate archivedDate;
-	
-	public MemberArchived(String reason) {
-		archivedDate = LocalDate.now(); // Do this "now", avoid NPE later
-		archivedReason = reason;
-	}
+@Table(name = "member_archived")
+public class MemberArchived {
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-	public MemberArchived() {
-		this("Deleted");
-	}
+    @Column(name = "address")
+    private String address;
 
-	/** Copy Constructor: copies all non-relationship fields but for ID */
-	public MemberArchived(Member m) {
-		this();
-		try {
-			BeanUtils.copyProperties(this, m);		// (dest, src)
-		} catch (IllegalAccessException|InvocationTargetException ex) {
-			Error t = new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
-			// t.setCause(ex);
-			throw t;
-		}
-		// Now have to clear the ID field
-		id = 0L;
-	}
+    @Column(name = "address2")
+    private String address2;
 
-	public String getArchivedReason() {
-		return archivedReason;
-	}
+    @Column(name = "city")
+    private String city;
 
-	public LocalDate getArchivedDate() {
-		return archivedDate;
-	}
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "firstname")
+    private String firstname;
+
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "postcode")
+    private String postcode;
+
+    @Column(name = "province")
+    private String province;
+
+    @Column(name = "\"position\"", length = 100)
+    private String position;
+
+    @Column(name = "cellphone")
+    private String cellphone;
+
+    @Column(name = "homephone")
+    private String homephone;
+
+    @Column(name = "membertype")
+    private String membertype;
+
+    @Column(name = "newslettermode")
+    private Integer newslettermode;
+
+    @Column(name = "mastermember_id")
+    private Long mastermemberId;
+
+    @Column(name = "yearjoined")
+    private Integer yearjoined;
+
+    @Column(name = "middle")
+    private String middle;
+
+    @Column(name = "email_trips")
+    private Boolean emailTrips;
+
+    @Column(name = "expiryyear")
+    private Integer expiryyear;
+
+    @Column(name = "workphone")
+    private String workphone;
+
+    @Column(name = "username", length = 20)
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "version")
+    private Integer version;
+
+    @Column(name = "archive_date")
+    private LocalDate archiveDate;
+
+    @Lob
+    @Column(name = "archive_reason")
+    private String archiveReason;
+
+    @Column(name = "notes")
+    private String notes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getCellphone() {
+        return cellphone;
+    }
+
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
+    }
+
+    public String getHomephone() {
+        return homephone;
+    }
+
+    public void setHomephone(String homephone) {
+        this.homephone = homephone;
+    }
+
+    public String getMembertype() {
+        return membertype;
+    }
+
+    public void setMembertype(String membertype) {
+        this.membertype = membertype;
+    }
+
+    public Integer getNewslettermode() {
+        return newslettermode;
+    }
+
+    public void setNewslettermode(Integer newslettermode) {
+        this.newslettermode = newslettermode;
+    }
+
+    public Long getMastermemberId() {
+        return mastermemberId;
+    }
+
+    public void setMastermemberId(Long mastermemberId) {
+        this.mastermemberId = mastermemberId;
+    }
+
+    public Integer getYearjoined() {
+        return yearjoined;
+    }
+
+    public void setYearjoined(Integer yearjoined) {
+        this.yearjoined = yearjoined;
+    }
+
+    public String getMiddle() {
+        return middle;
+    }
+
+    public void setMiddle(String middle) {
+        this.middle = middle;
+    }
+
+    public Boolean getEmailTrips() {
+        return emailTrips;
+    }
+
+    public void setEmailTrips(Boolean emailTrips) {
+        this.emailTrips = emailTrips;
+    }
+
+    public Integer getExpiryyear() {
+        return expiryyear;
+    }
+
+    public void setExpiryyear(Integer expiryyear) {
+        this.expiryyear = expiryyear;
+    }
+
+    public String getWorkphone() {
+        return workphone;
+    }
+
+    public void setWorkphone(String workphone) {
+        this.workphone = workphone;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public LocalDate getArchiveDate() {
+        return archiveDate;
+    }
+
+    public void setArchiveDate(LocalDate archiveDate) {
+        this.archiveDate = archiveDate;
+    }
+
+    public String getArchiveReason() {
+        return archiveReason;
+    }
+
+    public void setArchiveReason(String archiveReason) {
+        this.archiveReason = archiveReason;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
 }
