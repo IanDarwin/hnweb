@@ -13,6 +13,10 @@ and JakaraEE-Data in a JSF environment.
 
 == DB Design Issues
 
+One thing to beware of is that there is both a "Role" membership and an executive "position".
+The former is the traditional EE security role, established in the MemberRole class (member_roles table).
+The latter is club-specific, and controlled by the "position" field in the Member table.
+
 One of the issues is how to handle family memberships. In our club, some of the families are
 sufficiently internet-savvy that they have 3 or 4 email accounts (two parents, one or two kids)
 whereas some actually have one for all. The way I handle families is to arbitrarily designate one
