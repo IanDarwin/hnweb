@@ -2,6 +2,7 @@ package action;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -34,14 +35,22 @@ public class LoginAction implements Serializable {
 		this.memberList = memberList;
 	}
 
+	// XXX Extract JSF crap outta here, have a pluggable message(String) method.
+	Consumer<String> jsfTalker = s ->
+		FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(s));
+
+	Consumer<String> printer = jsfTalker;
+	public void setPrinter(Consumer<String> printer) {
+		this.printer = printer;
+	}
+
 	String email, password;
 
 	private Member loggedInUser = null;
 	
 	public LoginAction() {
 		// Just for debugging...
-		System.out.printf("LoginAction.LoginAction(): %d users\n",
-				-1 /*userlist.findAll().count()*/);
+		System.out.println("LoginAction.LoginAction()");
 	}
 	
 	public String login() {
@@ -49,8 +58,7 @@ public class LoginAction implements Serializable {
 		try {
 			final Optional<Member> memberOptional = verifyUser(email, password);
 			if (memberOptional.isEmpty()) {
-				FacesContext.getCurrentInstance().addMessage( null,
-						new FacesMessage("Failed to log in as " + email));
+				printer.accept("Failed to log in as " + email);
 				return "Login";
 
 			}
@@ -61,8 +69,7 @@ public class LoginAction implements Serializable {
 			// using request.login(email, password);
 			// Except that EE wants a login and password to look up in a Realm, which we've already done.
 
-			FacesContext.getCurrentInstance().addMessage( null,
-                    new FacesMessage("Logged in as " + getLoggedInUser().getName()));
+			printer.accept("Logged in as " + getLoggedInUser().getName());
 			final HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 					.getExternalContext()
 					.getSession(true);
@@ -83,15 +90,13 @@ public class LoginAction implements Serializable {
 
 		} catch (NoResultException nre) {
 			System.out.println("LoginAction.login():" + nre);
-			FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Login Failed for user " + email + "; user and/or password invalid."));
+			printer.accept("Login Failed for user " + email + "; user and/or password invalid.");
             return "Login";
 		} catch (RuntimeException ex) {
 			System.out.println("LoginAction.login():" + ex);
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Login Failed for user " + email + " due to " + ex));
+			printer.accept("Login Failed for user " + email + " due to " + ex);
 			return "Login";
 		}
 	}

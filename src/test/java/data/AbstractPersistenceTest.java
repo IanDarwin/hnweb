@@ -4,15 +4,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public class AbstractPersistenceTest {
 
 	protected static EntityManagerFactory emf;
 	protected EntityManager em;
 
-	@BeforeClass
+	@BeforeAll
 	public static void preClass() {
 		System.out.println("AbstractPersistenceTest.preClass()");
 		emf = Persistence.createEntityManagerFactory("test");
@@ -25,7 +26,7 @@ public class AbstractPersistenceTest {
 		return em;
 	}
 
-	@Before
+	@BeforeEach
 	public void preTest() {
 		System.out.println("AbstractPersistenceTest.preTest()");
 		em = emf.createEntityManager();
