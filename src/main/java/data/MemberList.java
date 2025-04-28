@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Find;
+import jakarta.data.repository.OrderBy;
 import jakarta.data.repository.Query;
 import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
@@ -13,7 +15,6 @@ import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
 import model.Member;
-import org.hibernate.annotations.processing.Find;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -26,15 +27,14 @@ import org.hibernate.annotations.processing.Find;
 @SessionScoped
 public interface MemberList {
 
-	String FIND_ALL_QUERY = "select m from Member m order by lower(m.lastName) asc";
-
-	@Query(value=FIND_ALL_QUERY)
+	@Find @OrderBy(value="lastName", ignoreCase=true)
 	Stream<Member> findAll();
 
 	@Find
 	Member findById(Long id);
 
-	@Find @Query(value="select m from Member m where m.memberType != 'Secondary' order by lower(m.lastName) asc")
+	@Find @OrderBy(value="lastName", ignoreCase=true)
+	@Query(value="select m from Member m JOIN FETCH m.roles JOIN FETCH m.masterMember JOIN FETCH m.secondaryMembers where m.memberType != 'Secondary'")
 	List<Member> findNonSecondaries();
 
 	/** Basic for login */
