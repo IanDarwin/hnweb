@@ -77,7 +77,7 @@ public class Member {
     private Member masterMember;
 
     /** Only if memberType is MemberType.Family */
-    @OneToMany(mappedBy="masterMember")
+    @OneToMany(mappedBy="masterMember", fetch = FetchType.EAGER)
     protected Set<Member> secondaryMembers;
 
     @Column(name = "yearjoined")
@@ -111,7 +111,7 @@ public class Member {
     private LocalDate lastModified;
 
 	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	private List<MemberRole> roles = new ArrayList<>();
 
 	// CONSTRUCTORS

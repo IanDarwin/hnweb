@@ -36,7 +36,7 @@ public class MemberTransaction implements Serializable {
 	private TransactionReason reason = TransactionReason.R;
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="member_id")
 	private Member member;
 	@Temporal(TemporalType.DATE)
