@@ -35,7 +35,7 @@ public class LoginAction implements Serializable {
 	@Inject MemberList memberList;
 	private HttpSession httpSession;
 	private String email, password;
-	public Member loggedInUser; // public only for use in tests
+	private Member loggedInUser; // public only for use in tests
 
 	public void setMemberList(MemberList memberList) {
 		this.memberList = memberList;
@@ -139,6 +139,11 @@ public class LoginAction implements Serializable {
 
 	public Member getLoggedInUser() {
 		return loggedInUser;
+	}
+
+	/** Settable from tests, has to be method since can't have public fields */
+	public void setLoggedInUser(Member m) {
+		this.loggedInUser = m;
 	}
 
 	/** Settable from test, to avoid JSF dependency */
