@@ -1,12 +1,11 @@
 package action;
 
 import jakarta.ejb.Stateful;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 import model.Member;
 import model.MemberArchived;
@@ -17,12 +16,11 @@ import model.MemberArchived;
 @Stateful @Named @RequestScoped
 public class RemoveAction {
 	
-	@PersistenceContext
-	public EntityManager em;
+	@PersistenceContext public EntityManager em;
 
 	public long id;	// only used in undelete case
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public String remove(Member instance) {
 
 		// Use raw sql to archive, via JPA Native Query mechanism
@@ -53,9 +51,9 @@ public class RemoveAction {
 	 * Restore, undelete, unarchive - whatever, it partly reverses the above.
 	 * Transactions, Secondaries, etc. all get lost in the shuffle.
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public String unDelete(long id) {
-		// The dead records don't (shouldn't) have transactions, so we can just restore
+		// The dead records don't (shouldn't) have MemberTransactions, so we can just restore
 		MemberArchived instance = em.find(MemberArchived.class, id);
 		if (instance == null) {
 			throw new IllegalArgumentException("MemberArchived " + id + " not found.");
