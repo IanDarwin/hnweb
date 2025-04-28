@@ -30,13 +30,10 @@ public interface MemberList {
 	Member findById(Long id);
 
 	@Find @OrderBy(value="lastName", ignoreCase=true)
-	@Query(value="select m from Member m JOIN FETCH m.roles JOIN FETCH m.masterMember JOIN FETCH m.secondaryMembers where m.memberType != 'Secondary'")
+	@Query(value="select m from Member m LEFT JOIN FETCH m.roles LEFT JOIN FETCH m.masterMember LEFT JOIN FETCH m.secondaryMembers where m.memberType != 'Secondary'")
 	List<Member> findNonSecondaries();
 
 	/** Basic for login */
-	@Find
-	Member findByEmail(String email);
-
 	@Find
 	@Query("SELECT m FROM Member m LEFT JOIN FETCH m.roles LEFT JOIN FETCH m.masterMember LEFT JOIN FETCH m.secondaryMembers WHERE m.email = :email AND m.password = :password")
 	Member findByEmailAndPassword(String email, String password);

@@ -39,7 +39,7 @@ public class MailManTest {
 		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
 		loginAction = new LoginAction();
 		loginAction.setMemberList(lister);
-		loginAction.setLoggedInUser(member);
+		loginAction.loggedInUser = member;
 		MailMan.props.clear();
 	}
 	

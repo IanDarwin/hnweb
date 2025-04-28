@@ -1,6 +1,7 @@
 package action;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -14,14 +15,16 @@ import jakarta.servlet.http.HttpSession;
 
 import com.darwinsys.security.DigestUtils;
 import data.MemberList;
+import jakarta.transaction.Transactional;
 import model.Member;
 import model.MemberRole;
 import webtier.LoginConstants;
-import webtier.PageFilter;
 import webtier.WebConstants;
 
 /**
- * Simple DIY login.
+ * Simple DIY login. Can't use vanilla CMS because we need to
+ * get the login info from our database. Could we use a Realm?
+ * Maybe, but the code in login() here wouldn't be much different.
  */
 @Named("identity")
 @SessionScoped
@@ -30,12 +33,15 @@ public class LoginAction implements Serializable {
 	private static final long serialVersionUID = -1899830327382597511L;
 
 	@Inject MemberList memberList;
+	private HttpSession httpSession;
+	private String email, password;
+	public Member loggedInUser; // public only for use in tests
 
 	public void setMemberList(MemberList memberList) {
 		this.memberList = memberList;
 	}
 
-	// XXX Extract JSF crap outta here, have a pluggable message(String) method.
+	// XXX Extract JSF deps outta here, have a pluggable message(String) method.
 	Consumer<String> jsfTalker = s ->
 		FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(s));
 
@@ -43,40 +49,38 @@ public class LoginAction implements Serializable {
 	public void setPrinter(Consumer<String> printer) {
 		this.printer = printer;
 	}
-
-	String email, password;
-
-	private Member loggedInUser = null;
 	
 	public LoginAction() {
 		// Just for debugging...
 		System.out.println("LoginAction.LoginAction()");
 	}
-	
+
+	/** =================== The main login method =================== */
+	@Transactional
 	public String login() {
 		System.out.println("Login.login(" + email + ")");
 		try {
-			final Optional<Member> memberOptional = verifyUser(email, password);
+			final Optional<Member> memberOptional =
+					Optional.ofNullable(memberList.findByEmailAndPassword(email, DigestUtils.md5(password)));
 			if (memberOptional.isEmpty()) {
 				printer.accept("Failed to log in as " + email);
 				return "Login";
 
 			}
-			setLoggedInUser(memberOptional.get());
-			setUserInSession(loggedInUser);
+			this.loggedInUser = memberOptional.get();
+			HttpSession session = getHttpSession();
+			session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
+			session.setAttribute(LoginConstants.LOGIN_FLAG, this);
 
 			// XXX Maybe now tell the Container about it for e.g., logging and session times...
 			// using request.login(email, password);
 			// Except that EE wants a login and password to look up in a Realm, which we've already done.
 
 			printer.accept("Logged in as " + getLoggedInUser().getName());
-			final HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-					.getExternalContext()
-					.getSession(true);
 
 			// Give logged-in user a bit of time
-			final int timeout = 2 * 60 * 60;
-			session.setMaxInactiveInterval(timeout);
+			final Duration timeout = Duration.parse("P2H");;
+			session.setMaxInactiveInterval((int) timeout.getSeconds());
 
 			// See if they got here by redirect from protected page
 			String redirTarget = (String) session
@@ -101,19 +105,13 @@ public class LoginAction implements Serializable {
 		}
 	}
 
-	/** Hook allows testing via mocking; do not inline! */
-	Optional<Member> verifyUser(String email, String password) {
-		return Optional.ofNullable(memberList.findByEmailAndPassword(email, DigestUtils.md5(password)));
-	}
-
 	/** Does what it says on the tin. */
 	public String logout() {
 		System.out.println("Logout " + getLoggedInUser());
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		FacesContext.getCurrentInstance().addMessage( null,
-                new FacesMessage("You are being logged out  as " + getLoggedInUser().getName()));
-		setLoggedInUser(null);
-		return LoginConstants.HOME_PAGE + "?faces-redirect=true";
+		getHttpSession().invalidate();
+		printer.accept("You are being logged out  as " + getLoggedInUser().getName());
+		this.loggedInUser = null;
+		return LoginConstants.HOME_PAGE + WebConstants.FORCE_REDIRECT;
 	}
 
 	/** Called by JSF */
@@ -143,16 +141,18 @@ public class LoginAction implements Serializable {
 		return loggedInUser;
 	}
 
-	public void setLoggedInUser(Member loggedInUser) {
-		this.loggedInUser = loggedInUser;
+	/** Settable from test, to avoid JSF dependency */
+	public HttpSession getHttpSession() {
+		if (httpSession == null) {
+			httpSession =
+                    (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		}
+		return httpSession;
 	}
 
-	/** Separate from setLoggedInUser for testing without JSF */
-	public void setUserInSession(Member loggedInUser) {
-		HttpSession session =
-				(HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
-		session.setAttribute(LoginConstants.LOGIN_FLAG, this);
+	/** Used in testing, do not inline! */
+	public void setHttpSession(HttpSession session) {
+		this.httpSession = session;
 	}
 
 	/** Important for security */
@@ -169,13 +169,14 @@ public class LoginAction implements Serializable {
 			}
 		}
 		// "Synthetic" exec "role" based on "position" property of member
+		// e.g., anything in member.position allows the "exec" role.
 		// Needs to be here for JSF hasRole() in xxx.pages.xml; can't hack
 		// it into roles in login() because it might get persisted, then
 		// you'd have a maintenance problem (it would persist after you
 		// removed their position when they relinquish it).
 		if ("exec".equals(role)) {
 			return getLoggedInUser().getPosition()!=null &&
-				getLoggedInUser().getPosition().trim().length() > 0;
+                    !getLoggedInUser().getPosition().trim().isEmpty();
 		}
 		return false;
 	}
