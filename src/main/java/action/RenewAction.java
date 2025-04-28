@@ -5,12 +5,11 @@ import java.util.logging.Logger;
 
 import jakarta.ejb.Stateful;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 import model.Member;
 import model.MemberTransaction;
@@ -37,7 +36,7 @@ public class RenewAction implements Serializable {
 		logger.info("RenewAction.RenewAction()");
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public String renew() {
 		String message = "RenewAction.renew() for " + member + " for " + numYears + " years.";
 		logger.info(message);
