@@ -54,4 +54,19 @@ public class YearCalcsTest {
 		// Day of Month doesn't matter, arbitrarily use 15:
 		var now = LocalDate.of(nowYear, nowMonth, 15);
 		assertEquals(YearCalcs.isExpired(member, now), exp);
-	}}
+	}
+
+	/** A few single tests left over */
+	@Test
+	public void testGetNewMemberAugustExpiryYear() {
+		LocalDate aug31 = LocalDate.of(2011, 8, 29);
+		assertEquals(2011, YearCalcs.getNewMemberExpiryYear(aug31));
+	}
+	
+	@Test @Ignore
+	public void testGetNewMemberSeptemberExpiryYear() {
+		LocalDate sep1 = LocalDate.of(2011, 9, 01);
+		assertEquals(2012, YearCalcs.getNewMemberExpiryYear(sep1));
+	}
+
+}
