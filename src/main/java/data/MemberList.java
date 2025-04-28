@@ -1,8 +1,6 @@
 package data;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import jakarta.data.repository.CrudRepository;
@@ -11,7 +9,6 @@ import jakarta.data.repository.OrderBy;
 import jakarta.data.repository.Query;
 import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
 import model.Member;
@@ -20,7 +17,6 @@ import model.Member;
  * This is a basic DAO-like interface for use by JSF or EJB.
  * Methods are implemented for us by Jakarta Data.
  * The methods in the inherited interface suffice for many apps!
- * @author Ian Darwin
  */
 @Named("memberList")
 @Repository
@@ -42,6 +38,7 @@ public interface MemberList {
 	Member findByEmail(String email);
 
 	@Find
+	@Query("SELECT m FROM Member m LEFT JOIN FETCH m.roles LEFT JOIN FETCH m.masterMember LEFT JOIN FETCH m.secondaryMembers WHERE m.email = :email AND m.password = :password")
 	Member findByEmailAndPassword(String email, String password);
 
 	/** Find one member by firstname lastname; used in JSF converter */
