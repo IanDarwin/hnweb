@@ -3,6 +3,7 @@ package action;
 import java.time.LocalDate;
 
 import model.Member;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -63,7 +64,7 @@ public class YearCalcsTest {
 		assertEquals(2011, YearCalcs.getNewMemberExpiryYear(aug31));
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testGetNewMemberSeptemberExpiryYear() {
 		LocalDate sep1 = LocalDate.of(2011, 9, 01);
 		assertEquals(2012, YearCalcs.getNewMemberExpiryYear(sep1));
