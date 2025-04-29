@@ -9,7 +9,9 @@ public enum MemberType {
 	/** The main entry for a Family membership */
 	Family("FM"),
 	/** Any additional members on a Family membership */
-	Secondary("FS");
+	Secondary("FS"),
+	/** Not sure if this is valid but we have some listed */
+	Student("ST");
 	
 	private final String shortName;
 
