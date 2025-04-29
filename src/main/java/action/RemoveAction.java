@@ -34,10 +34,6 @@ public class RemoveAction {
 			em.remove(em.merge(sm));
 		}
 
-		// Do we also have to remove any roles?
-		// jakarta.persistence.PersistenceException: org.hibernate.HibernateException: 
-		// Illegal attempt to associate a collection with two open sessions. Collection : [model.Member.roles#233]
-
 		// Finally remove the member instance
 		em.remove(em.merge(instance));
 		em.flush();
