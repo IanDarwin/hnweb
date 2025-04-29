@@ -24,10 +24,17 @@ public class EventList implements Serializable {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	public List<Event> findAll() {
+		return entityManager.createQuery("SELECT e FROM Event e").getResultList();
+	}
+
 	public List<Event> findUpcoming(LocalDate date) {
 		return entityManager.createQuery(
-				"FROM Event e WHERE e.date >= :date order by e.date asc", Event.class)
+				"SELECT e FROM Event e WHERE e.date >= :date order by e.date asc", Event.class)
 				.setParameter("date", date)
 				.getResultList();
+	}
+	public List<Event> findUpcoming() {
+		return findUpcoming(LocalDate.now());
 	}
 }

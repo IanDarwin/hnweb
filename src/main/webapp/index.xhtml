@@ -18,7 +18,7 @@
 		you can either fasten them on magnetically, clip them on, or wear on a loop around your neck!" escape="false"/>
 	</p:panel>
 
-	<p:dataTable var="evt" value="#{eventList.findAll()}">
+	<p:dataTable var="evt" value="#{eventList.findUpcoming()}">
 		<f:facet name="header">Upcoming Events</f:facet>
 		<p:column width="12%">
 			<f:facet name="header">Date</f:facet>
@@ -26,7 +26,7 @@
 		</p:column>
 		<p:column width="12%">
 			<f:facet name="header">Time</f:facet>
-			<h:outputText value="#{evt.timesString}"/>
+			<h:outputText value="#{evt.times}"/>
 		</p:column>
 		<p:column>
 			<f:facet name="header">Event</f:facet>

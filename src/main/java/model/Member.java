@@ -384,7 +384,8 @@ public class Member {
         this.middle = middle;
     }
 
-    public Boolean isEmailTrips() {
+	// WF/Hib won't accept isEmailTrips here, wtf?
+    public Boolean getEmailTrips() {
         return emailTrips;
     }
 

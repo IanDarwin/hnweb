@@ -36,7 +36,7 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		assertTrue("found any", ms.size() > 0);
 
 		for (Member m : ms) {
-			if (m.getFirstName().equals(FIRST) && m.isEmailTrips()) {
+			if (m.getFirstName().equals(FIRST) && m.getEmailTrips()) {
 				assertEquals(1, m.getRoles().size());
 				assertTrue(m.getRoles().get(0).getName().equals("Dumpster Driver"));
 				return;
