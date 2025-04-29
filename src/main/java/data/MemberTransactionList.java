@@ -1,15 +1,15 @@
 package data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Stream;
 
-import jakarta.data.repository.CrudRepository;
-import jakarta.data.repository.Query;
-import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.inject.Named;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import model.MemberTransaction;
 import org.hibernate.annotations.processing.Find;
 
@@ -22,11 +22,14 @@ import org.hibernate.annotations.processing.Find;
  */
 @Named("memberTransactionList") @Default
 @SessionScoped
-@Repository
-public interface MemberTransactionList {
+public class MemberTransactionList implements Serializable {
+
+	@PersistenceContext
+	EntityManager entityManager;
 
 	/** Want to see the newest ones first, so descending, use limit in page */
-	@Find
-	@Query(value="select t from MemberTransaction t order by t.dateRenewed desc")
-	Stream<MemberTransaction> findAll();
+	final String QUERY = "select t from MemberTransaction t order by t.dateRenewed desc";
+	List<MemberTransaction> findAll() {
+		return entityManager.createQuery(QUERY, MemberTransaction.class).getResultList();
+	}
 }

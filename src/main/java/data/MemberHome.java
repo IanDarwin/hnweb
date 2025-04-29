@@ -87,7 +87,7 @@ public class MemberHome implements Serializable {
 		if (members == null) {
 			members = new ArrayList<>();
 			members.add(noMember);
-			members.addAll(lister.findAll().toList());
+			members.addAll(lister.findAll());
 		}
 		return members;
 	}

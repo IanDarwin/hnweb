@@ -19,7 +19,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<javase.version>17</javase.version>
 		<jakartaee.version>11.0.0-M1</jakartaee.version>
-		<jakartadata.version>1.0.1</jakartadata.version>
 		<jakartamail.version>2.0.2</jakartamail.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
@@ -93,13 +92,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Jakarta Data -->
-		<dependency>
-			<groupId>jakarta.data</groupId>
-			<artifactId>jakarta.data-api</artifactId>
-			<version>${jakartadata.version}</version>
-		</dependency>
-
 		<!-- Jakarta JSON -->
 		<dependency>
 			<groupId>org.eclipse</groupId>
@@ -129,26 +121,6 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.5</version>
 		</dependency>
-
-		<!-- Here are TWO JPA providers. The uncommenting here MUST match
-		 *** the selection made in META-INF/persistence.xml
-		 -->
-
-		<!-- EclipseLink and its JPA Provider - test scope -->
-		<!--
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>org.eclipse.persistence.core</artifactId>
-			<version>4.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>org.eclipse.persistence.jpa</artifactId>
-			<version>4.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		-->
 
 		<!-- Hibernate and its JPA Provider: test scope -->
 		<dependency>
@@ -214,21 +186,6 @@
 	<build>
         <defaultGoal>wildfly:deploy</defaultGoal>
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.hibernate.orm</groupId>
-							<artifactId>hibernate-jpamodelgen</artifactId>
-							<version>${hibernate.version}</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
 
 			<!-- Ensure that JUnit5 test runner is used -->
 			<plugin>

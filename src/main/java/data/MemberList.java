@@ -5,11 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import jakarta.data.repository.CrudRepository;
-import jakarta.data.repository.Find;
-import jakarta.data.repository.OrderBy;
-import jakarta.data.repository.Query;
-import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 

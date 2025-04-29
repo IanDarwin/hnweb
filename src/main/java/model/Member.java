@@ -19,7 +19,6 @@ import action.YearCalcs;
  */
 @Entity
 @Named("person")
-@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
