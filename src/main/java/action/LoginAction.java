@@ -61,7 +61,7 @@ public class LoginAction implements Serializable {
 		System.out.println("Login.login(" + email + ")");
 		try {
 			final Optional<Member> memberOptional =
-					Optional.ofNullable(memberList.findByEmailAndPassword(email, DigestUtils.md5(password)));
+					memberList.findByEmailAndPassword(email, DigestUtils.md5(password));
 			if (memberOptional.isEmpty()) {
 				printer.accept("Failed to log in as " + email);
 				return "Login";

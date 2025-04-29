@@ -1,6 +1,7 @@
 package data;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import jakarta.data.repository.CrudRepository;
@@ -11,7 +12,10 @@ import jakarta.data.repository.Repository;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import model.Member;
+import model.MemberType;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -19,26 +23,41 @@ import model.Member;
  * The methods in the inherited interface suffice for many apps!
  */
 @Named("memberList")
-@Repository
 @SessionScoped
-public interface MemberList {
+public class MemberList {
 
-	@Find @OrderBy(value="lastName", ignoreCase=true)
-	Stream<Member> findAll();
+	@PersistenceContext
+	private EntityManager entityManager;
 
-	@Find
-	Member findById(Long id);
+	public Member findById(Long id) {
+		return entityManager.find(Member.class, id);
+	}
 
-	@Find @OrderBy(value="lastName", ignoreCase=true)
-	@Query(value="select m from Member m LEFT JOIN FETCH m.roles LEFT JOIN FETCH m.masterMember LEFT JOIN FETCH m.secondaryMembers where m.memberType != 'Secondary'")
-	List<Member> findNonSecondaries();
+	public List<Member> findAll() {
+		return entityManager.createQuery("SELECT m FROM Member m", Member.class)
+				.getResultList();
+	}
 
-	/** Basic for login */
-	@Find
-	@Query("SELECT m FROM Member m LEFT JOIN FETCH m.roles LEFT JOIN FETCH m.masterMember LEFT JOIN FETCH m.secondaryMembers WHERE m.email = :email AND m.password = :password")
-	Member findByEmailAndPassword(String email, String password);
+	public Optional<Member> findByEmailAndPassword(String email, String password) {
+		return Optional.of(entityManager.createQuery(
+						"SELECT m FROM Member m WHERE m.email = :name AND m.password = :password", Member.class)
+				.setParameter("email", email)
+				.setParameter("password", password)
+				.getSingleResult());
+	}
 
-	/** Find one member by firstname lastname; used in JSF converter */
-	@Find
-	Member findByFirstNameAndLastName(String firstName, String lastName);
+	public Optional<Member> findByFirstNameAndLastName(String firstName, String lastName) {
+		return Optional.of(entityManager.createQuery(
+						"SELECT m FROM Member m WHERE m.firstName = :firstName AND m.lastName = :lastName", Member.class)
+				.setParameter("firstName", firstName)
+				.setParameter("lastName", lastName)
+				.getSingleResult());
+	}
+
+	public List<Member> findNonSecondaries() {
+		return entityManager.createQuery(
+				"SELECT m FROM member m where m.memberType != " + MemberType.Secondary.name())
+				.getResultList();
+	}
 }
+

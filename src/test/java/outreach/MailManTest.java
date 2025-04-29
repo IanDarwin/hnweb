@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class MailManTest {
 
 	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
-	Stream<Member> fakeList = Stream.of(
+	List<Member> fakeList = List.of(
 			new Member("Tom", null, "Jones", "devnull@ojwkjsflkjew.com")
 	);
 	final String A_MESSAGE_SUBJECT = "About your night life";

@@ -204,7 +204,7 @@ public class MailMan implements Serializable {
 	 */
 	int sendMessageToSome(Predicate<Member> ch) throws MessagingException {
 		System.out.println("MailMan.sendMessageToSome()");
-		List<Member> all = lister.findAll().toList();
+		List<Member> all = lister.findAll();
 		List<String> emails = selectListMembers(all, ch);
 		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
 		if (mailHostProperty == null) {
