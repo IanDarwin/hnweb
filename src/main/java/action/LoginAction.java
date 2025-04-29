@@ -79,7 +79,7 @@ public class LoginAction implements Serializable {
 			printer.accept("Logged in as " + getLoggedInUser().getName());
 
 			// Give logged-in user a bit of time
-			final Duration timeout = Duration.parse("P2H");;
+			final Duration timeout = Duration.parse("PT2H");;
 			session.setMaxInactiveInterval((int) timeout.getSeconds());
 
 			// See if they got here by redirect from protected page
