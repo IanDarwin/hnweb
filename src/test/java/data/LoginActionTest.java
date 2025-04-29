@@ -15,8 +15,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * A failsome test of login action. Tries to use the actual generated MemberList
- * (class "MemberList_") but have to mock up too much of Hibernate for this to work.
+ * A failsome test of login action. Tries to use the actual MemberList
+ * class but have to mock up too much of Hibernate for this to work.
  * This is a dead-end development, but left here in case a way's found to salvage it.
  */
 public class LoginActionTest extends AbstractPersistenceTest {
@@ -38,7 +38,7 @@ public class LoginActionTest extends AbstractPersistenceTest {
         when(mockSession.getFactory()).thenReturn(mockSessFactory);
         final HibernateCriteriaBuilder mockCriteriaBuilder = mock(HibernateCriteriaBuilder.class);
         when(mockSessFactory.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
-        target.setMemberList(new MemberList_(mockSession));
+        target.setMemberList(new MemberList(em));
     }
 
     // @Test
