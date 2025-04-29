@@ -11,7 +11,7 @@ public class Config implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Membersship year runs from Sept 1 to Aug 31. All memberships
+	 * Membership year runs from Sept 1 to Aug 31. All memberships
 	 * are due to renew starting in this month.
 	 */
 	public final static int RENEWAL_MONTH = 9;
