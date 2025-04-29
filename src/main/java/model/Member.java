@@ -59,10 +59,10 @@ public class Member {
     private String position;
 
     @Column(name = "cellphone")
-    private String cellphone;
+    private String cellPhone;
 
     @Column(name = "homephone")
-    private String homephone;
+    private String homePhone;
 
     @Column(name = "memberType")
     @Enumerated(EnumType.STRING)
@@ -337,20 +337,20 @@ public class Member {
         this.province = province;
     }
 
-    public String getCellphone() {
-        return cellphone;
+    public String getCellPhone() {
+        return cellPhone;
     }
 
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
     }
 
-    public String getHomephone() {
-        return homephone;
+    public String getHomePhone() {
+        return homePhone;
     }
 
-    public void setHomephone(String homephone) {
-        this.homephone = homephone;
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
     }
 
     public MemberType getMemberType() {
