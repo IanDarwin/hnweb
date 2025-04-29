@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ import model.MemberType;
  */
 @Named("memberList")
 @SessionScoped
-public class MemberList {
+public class MemberList implements Serializable {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -34,13 +35,13 @@ public class MemberList {
 	}
 
 	public List<Member> findAll() {
-		return entityManager.createQuery("SELECT m FROM Member m", Member.class)
+		return entityManager.createQuery("SELECT m FROM Member m order by m.lastName", Member.class)
 				.getResultList();
 	}
 
 	public Optional<Member> findByEmailAndPassword(String email, String password) {
 		return Optional.of(entityManager.createQuery(
-						"SELECT m FROM Member m WHERE m.email = :name AND m.password = :password", Member.class)
+						"SELECT m FROM Member m WHERE m.email = :email AND m.password = :password", Member.class)
 				.setParameter("email", email)
 				.setParameter("password", password)
 				.getSingleResult());
