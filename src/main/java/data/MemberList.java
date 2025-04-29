@@ -30,6 +30,13 @@ public class MemberList implements Serializable {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	public MemberList() {
+		// empty
+	}
+	public MemberList(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
 	public Member findById(Long id) {
 		return entityManager.find(Member.class, id);
 	}
