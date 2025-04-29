@@ -19,7 +19,7 @@
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->
 			<property name="jakarta.persistence.provider"
-				value="org.hibernate.ejb.HibernatePersistence"/>
+				value="org.hibernate.jpa.HibernatePersistenceProvider"/>
 
 			<!-- Properties for Dialect (brand of database) -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
