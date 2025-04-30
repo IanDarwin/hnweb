@@ -21,7 +21,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 
 import action.LoginAction;
-import data.MemberList;
+import data.MemberDAO;
 import model.Member;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
@@ -56,7 +56,7 @@ public class MailMan implements Serializable {
 	private static final long serialVersionUID = -1980670543127065573L;
 
 	@Inject
-	MemberList lister;
+	MemberDAO lister;
 
 	@Inject @Named("identity")
 	LoginAction identity;

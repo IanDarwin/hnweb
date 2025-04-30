@@ -8,6 +8,6 @@
 # These will appear on their own lines in "View Source" or "File->SaveAs".
 # There is one line per person. 
 firstName lastName email
-<ui:repeat var="m" value="#{memberList.findCurrent()}">
+<ui:repeat var="m" value="#{memberDAO.findCurrent()}">
 #{m.firstName} #{m.lastName} &lt;#{m.email}&gt;</ui:repeat>
 </csv>

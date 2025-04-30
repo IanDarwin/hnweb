@@ -14,7 +14,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpSession;
 
 import com.darwinsys.security.DigestUtils;
-import data.MemberList;
+import data.MemberDAO;
 import jakarta.transaction.Transactional;
 import model.Member;
 import model.MemberRole;
@@ -32,13 +32,13 @@ public class LoginAction implements Serializable {
 
 	private static final long serialVersionUID = -1899830327382597511L;
 
-	@Inject MemberList memberList;
+	@Inject MemberDAO memberDAO;
 	private HttpSession httpSession;
 	private String email, password;
 	private Member loggedInUser; // public only for use in tests
 
-	public void setMemberList(MemberList memberList) {
-		this.memberList = memberList;
+	public void setMemberDAO(MemberDAO memberDAO) {
+		this.memberDAO = memberDAO;
 	}
 
 	// XXX Extract JSF deps outta here, have a pluggable message(String) method.
@@ -61,7 +61,7 @@ public class LoginAction implements Serializable {
 		System.out.println("Login.login(" + email + ")");
 		try {
 			final Optional<Member> memberOptional =
-					memberList.findByEmailAndPassword(email, DigestUtils.md5(password));
+					memberDAO.findByEmailAndPassword(email, DigestUtils.md5(password));
 			if (memberOptional.isEmpty()) {
 				printer.accept("Failed to log in as " + email);
 				return "Login";

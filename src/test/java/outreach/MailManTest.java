@@ -9,7 +9,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import action.LoginAction;
-import data.MemberList;
+import data.MemberDAO;
 import model.Member;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,13 +32,13 @@ public class MailManTest {
 	
 	@Before
 	public void init() {
-		MemberList lister = mock(MemberList.class);
+		MemberDAO lister = mock(MemberDAO.class);
 		when(lister.findAll()).thenReturn(fakeList);
 		sender = new MailMan();
 		sender.lister = lister;
 		member = new Member("Test", "T.", "Test", "noreply@nobody.home");
 		loginAction = new LoginAction();
-		loginAction.setMemberList(lister);
+		loginAction.setMemberDAO(lister);
 		loginAction.setLoggedInUser(member);
 		MailMan.props.clear();
 	}

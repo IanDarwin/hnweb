@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * A failsome test of login action. Tries to use the actual MemberList
+ * A failsome test of login action. Tries to use the actual MemberDAO
  * class but have to mock up too much of Hibernate for this to work.
  * This is a dead-end development, but left here in case a way's found to salvage it.
  */
@@ -38,7 +38,7 @@ public class LoginActionTest extends AbstractPersistenceTest {
         when(mockSession.getFactory()).thenReturn(mockSessFactory);
         final HibernateCriteriaBuilder mockCriteriaBuilder = mock(HibernateCriteriaBuilder.class);
         when(mockSessFactory.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
-        target.setMemberList(new MemberList(em));
+        target.setMemberDAO(new MemberDAO(em));
     }
 
     // @Test

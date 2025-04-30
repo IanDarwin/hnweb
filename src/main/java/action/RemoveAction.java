@@ -45,7 +45,7 @@ public class RemoveAction {
 		em.persist(new MemberArchived(instance));
 		em.flush();
 		System.out.printf("Moved %s to archive!\n", instance);
-		return "MemberList";
+		return "MemberDAO";
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class RemoveAction {
 		em.persist(new Member(instance));
 		em.flush();	// Ensure prints with updated id
 		System.out.printf("Restored %s from archive!\n", instance);
-		return "MemberList";
+		return "MemberDAO";
 	}
 
 	public void setId(long id) {

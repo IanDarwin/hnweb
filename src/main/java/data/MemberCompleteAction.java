@@ -19,7 +19,7 @@ import model.Member;
 public class MemberCompleteAction {
 
 	@Inject@Default
-	MemberList service;
+	MemberDAO service;
 	
 	List<Member> allMembers;
 

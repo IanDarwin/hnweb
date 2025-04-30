@@ -18,17 +18,17 @@ import model.MemberType;
  * Methods are implemented for us by Jakarta Data.
  * The methods in the inherited interface suffice for many apps!
  */
-@Named("memberList")
+@Named("memberDAO")
 @SessionScoped
-public class MemberList implements Serializable {
+public class MemberDAO implements Serializable {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public MemberList() {
+	public MemberDAO() {
 		// empty
 	}
-	public MemberList(EntityManager entityManager) {
+	public MemberDAO(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 

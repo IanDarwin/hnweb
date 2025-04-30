@@ -13,7 +13,7 @@
 		<h:outputLink value="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook Group</h:outputLink>
 		&#xA0;
 		<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
-		<h:outputLink value="MemberList.web">Member List</h:outputLink>
+		<h:outputLink value="MemberDAO.web">Member List</h:outputLink>
 		&#xA0;
 		<h:outputLink value="MemberEdit.web">Add Member</h:outputLink>
 		&#xA0;

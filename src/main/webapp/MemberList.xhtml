@@ -15,8 +15,8 @@
 
 	<!-- Print the table, or, an error -->
 	<p:dataTable border='1' 
-		rendered="#{!empty memberList.findAll()}"
-		var="member" value="#{memberList.findAll()}" 
+		rendered="#{!empty memberDAO.findAll()}"
+		var="member" value="#{memberDAO.findAll()}" 
 		>
 		<p:column>
 			<a name="#p#{member.id}"/><!-- So post-editing can return to this row -->

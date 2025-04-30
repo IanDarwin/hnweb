@@ -2,6 +2,10 @@
 
 New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
 
+new class EHandler based on pluggable messager used in a place or two already.
+
+Actions should delegate ALL db access to MemberDAO (recently renamed from MemberList).
+
 Renewal - finds member, but crashes on submit with
 IllegalArgumentException: getAsString expects long arg,
 	not `#123 Fname Lname <usre@gmail.com>' of type class model.Member
@@ -12,8 +16,6 @@ MailingList - FIX CHARACTER MESS-UP quotes dquotes emdash
 
 FIX EXPIRY LOGIC
 
-MAKE TESTS PASS - Mockito, JPA
-
 Add DeletedView (already linked to from DeletedList).
 
 Change Resurrected to requires-admin
@@ -21,7 +23,7 @@ Change Resurrected to requires-admin
 Get Renew working; send thank-you email.
 New members should get a welcome email *automatically* with the latest Bluebird.
 
-Test: create a non-priv user and test their inability to do various things. Arquillian, or pageunit?
+Test: create a non-priv user and test their inability to do various things. Arquillian?
 
 UserEdit += password
 

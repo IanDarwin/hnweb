@@ -46,14 +46,14 @@ public class MemberHome implements Serializable {
 
 	@Inject Conversation conv;
 
-	private static final String LIST_PAGE = "/MemberList";
+	private static final String LIST_PAGE = "/MemberDAO";
 
 	/**
 	 * This should be externalized as it depends on our club's policies:
 	 * NEW MEMBERS sign up on or after September 1 you get next year's membership
 	 */
 	public final static int RENEWAL_MONTH = 9;
-	@Inject private MemberList lister;
+	@Inject private MemberDAO lister;
 	List<Member> members;
 
 	// Must be Long (not long) so we can check for null
@@ -82,7 +82,7 @@ public class MemberHome implements Serializable {
 	 * Cache this list to avoid too many re-creations.
 	 * @return The list of Members
 	 */
-	public List<Member> getMemberList() {
+	public List<Member> getMemberDAO() {
 		if (members == null) {
 			members = new ArrayList<>();
 			members.add(noMember); //stupid UI hack
@@ -95,7 +95,7 @@ public class MemberHome implements Serializable {
 	 * But not too many! Has to be re-created after we update,
 	 * as it is disconnected copies and is now out of sync.
 	 */
-	private void invalidateMemberList() {
+	private void invalidateMemberDAO() {
 		members = null;
 	}
 	
@@ -151,7 +151,7 @@ public class MemberHome implements Serializable {
 		em.persist(tx);
 		instance.getMemberTransactions().add(tx);
 		conv.end();
-		invalidateMemberList();
+		invalidateMemberDAO();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
@@ -162,7 +162,7 @@ public class MemberHome implements Serializable {
 		em.merge(instance); // in case detached - shouldn't be!
 		// We don't do a Transaction here since RenewAction will do so if needed.
 		conv.end();
-		invalidateMemberList();
+		invalidateMemberDAO();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
