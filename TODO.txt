@@ -6,15 +6,16 @@ new class EHandler based on pluggable messager used in a place or two already.
 
 Actions should delegate ALL db access to MemberDAO (recently renamed from MemberList).
 
-Renewal - finds member, but crashes on submit with
-IllegalArgumentException: getAsString expects long arg,
-	not `#123 Fname Lname <usre@gmail.com>' of type class model.Member
+Renewal - doesn't actually find member, but crashes on submit with
+	UI:
+	Conversion Error
+	j_idt47:j_idt56: 'PaymentType.CASH' must be convertible to an enum
+	Back-end:
+	Conversion error: java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
 
 EventsView - multi-column with rowspan?
 
-MailingList - FIX CHARACTER MESS-UP quotes dquotes emdash
-
-FIX EXPIRY LOGIC
+Member Mailing Page - FIX CHARACTER MESS-UP quotes dquotes emdash
 
 Add DeletedView (already linked to from DeletedList).
 

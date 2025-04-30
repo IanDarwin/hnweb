@@ -142,7 +142,9 @@ public class MemberHome implements Serializable {
 	 */
 	@Transactional
 	public String save() {
-		instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
+		if (instance.getExpiryYear() == 0) {
+			instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
+		}
 		if (instance.getMemberType() != MemberType.Secondary) {
 			instance.setMasterMember(null);
 		}
