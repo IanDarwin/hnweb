@@ -58,7 +58,7 @@ public class MailMan implements Serializable {
 	@Inject
 	MemberList lister;
 
-	@Inject @Named("person")
+	@Inject @Named("identity")
 	LoginAction identity;
 	
 	@Resource(mappedName="java:jboss/mail/Default")
