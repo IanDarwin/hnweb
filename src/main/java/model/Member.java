@@ -109,6 +109,9 @@ public class Member {
     @Temporal(TemporalType.DATE)
     private LocalDate lastModified;
 
+	@OneToMany
+	private List<MemberTransaction> memberTransactions = new ArrayList<>();
+
 	// For app-managed security - only Members, not MemberArchived elements, can be in roles
 	@ElementCollection(fetch=FetchType.EAGER)
 	private List<MemberRole> roles = new ArrayList<>();
@@ -233,7 +236,7 @@ public class Member {
     }
 
     public List<MemberTransaction> getMemberTransactions() {
-        return List.of();
+        return memberTransactions;
     }
 
     public Long getId() {

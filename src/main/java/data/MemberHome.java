@@ -138,13 +138,17 @@ public class MemberHome implements Serializable {
 	}
 
 	/** The C of CRUD - create a new Member in the database
+	 * @return Like all JSF actions, the page to go to
 	 */
 	@Transactional
 	public String save() {
 		instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
+		if (instance.getMemberType() != MemberType.Secondary) {
+			instance.setMasterMember(null);
+		}
 		em.persist(instance);
 		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
-		em.flush();
+		em.persist(tx);
 		instance.getMemberTransactions().add(tx);
 		conv.end();
 		invalidateMemberList();
