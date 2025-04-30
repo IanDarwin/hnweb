@@ -82,8 +82,8 @@ public class MemberDAO implements Serializable {
 	//////////////// UPDATE METHODS /////////////////
 
 	public void update(Member instance) {
-		em.merge(instance); // in case detached - shouldn't be!
-		em.flush();
+		entityManager.merge(instance); // in case detached - shouldn't be!
+		entityManager.flush();
 	}
 
 	//////////////// DELETE METHODS /////////////////
