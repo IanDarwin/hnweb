@@ -9,7 +9,6 @@ import java.time.Month;
 import java.util.*;
 import java.util.function.Predicate;
 import jakarta.annotation.Resource;
-import jakarta.faces.annotation.ManagedProperty;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
@@ -59,7 +58,7 @@ public class MailMan implements Serializable {
 	@Inject
 	MemberList lister;
 
-	@ManagedProperty("#{identity}")
+	@Inject @Named("person")
 	LoginAction identity;
 	
 	@Resource(mappedName="java:jboss/mail/Default")

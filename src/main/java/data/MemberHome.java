@@ -9,8 +9,6 @@ import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.Stateful;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.faces.application.FacesMessage;
@@ -26,6 +24,7 @@ import jakarta.persistence.PersistenceContextType;
 import action.YearCalcs;
 import com.darwinsys.lang.StringHolder;
 
+import jakarta.transaction.Transactional;
 import model.Country;
 import model.Member;
 import model.MemberTransaction;
@@ -38,7 +37,7 @@ import webtier.WebConstants;
  * Implements Gateway, an Adam Bien pattern whose purpose is to expose
  * an Entity (and its relations) to the Client/Web tier, rather like a Seam2 "Home Object"
  */
-@Stateful @Named @ConversationScoped
+@Stateful @Named("memberHome") @ConversationScoped
 public class MemberHome implements Serializable {
 	
 	private static final long serialVersionUID = -2284578724132631798L;
@@ -81,12 +80,12 @@ public class MemberHome implements Serializable {
 	
 	/**
 	 * Cache this list to avoid too many re-creations.
-	 * @return
+	 * @return The list of Members
 	 */
 	public List<Member> getMemberList() {
 		if (members == null) {
 			members = new ArrayList<>();
-			members.add(noMember);
+			members.add(noMember); //stupid UI hack
 			members.addAll(lister.findAll());
 		}
 		return members;
@@ -104,8 +103,9 @@ public class MemberHome implements Serializable {
 		// Nothing to do, instance is pre-created
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void wire() {
+		System.out.println("MemberHome::wire()");
 		if (conv.isTransient()) {
 			conv.begin();
 		}
@@ -139,7 +139,7 @@ public class MemberHome implements Serializable {
 
 	/** The C of CRUD - create a new Member in the database
 	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public String save() {
 		instance.setExpiryYear(YearCalcs.getNewMemberExpiryYear(LocalDate.now()));
 		em.persist(instance);
@@ -152,7 +152,7 @@ public class MemberHome implements Serializable {
 	}
 	
 	/** Update an existing member */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public String update() {
 		em.flush();
 		em.merge(instance); // in case detached - shouldn't be!
@@ -203,7 +203,6 @@ public class MemberHome implements Serializable {
 	}
 
 	@PreDestroy
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public void bfn() {
 		System.out.println("MemberHome.bfn()");
 	}
