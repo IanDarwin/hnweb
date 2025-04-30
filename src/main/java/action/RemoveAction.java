@@ -9,9 +9,10 @@ import jakarta.transaction.Transactional;
 
 import model.Member;
 import model.MemberArchived;
+import model.MemberTransaction;
 
 /**
- * Remove or delete a Member
+ * Remove or delete, or undelete, a Member
  */
 @Stateful @Named @RequestScoped
 public class RemoveAction {
@@ -34,17 +35,21 @@ public class RemoveAction {
 			em.remove(em.merge(sm));
 		}
 
+		// Remove transactions for this user
+		for (MemberTransaction tx : instance.getMemberTransactions()) {
+			em.remove(em.merge(tx));
+		}
+
 		// Finally remove the member instance
 		em.remove(em.merge(instance));
-		em.flush();
-		// This is all one transaction despite the flush (hopes).
 		em.persist(new MemberArchived(instance));
+		em.flush();
 		System.out.printf("Moved %s to archive!\n", instance);
 		return "MemberList";
 	}
 
 	/**
-	 * Restore, undelete, unarchive - whatever, it partly reverses the above.
+	 * Restore, undelete, unarchive, necromance: whatever, it partly reverses the above.
 	 * Transactions, Secondaries, etc. all get lost in the shuffle.
 	 */
 	@Transactional
@@ -54,10 +59,9 @@ public class RemoveAction {
 		if (instance == null) {
 			throw new IllegalArgumentException("MemberArchived " + id + " not found.");
 		}
-		System.out.println("Trying to ressurect " + instance + " with id " + id);
+		System.out.println("Trying to necromance " + instance + " with id " + id);
 		em.remove(instance);
 		em.flush();
-		// This is all one transaction despite the flush (hopes).
 		em.persist(new Member(instance));
 		em.flush();	// Ensure prints with updated id
 		System.out.printf("Restored %s from archive!\n", instance);
