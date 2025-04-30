@@ -7,11 +7,13 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import model.Member;
 import model.MemberType;
+import model.MemberTransaction;
+import model.TransactionReason;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
@@ -31,6 +33,20 @@ public class MemberDAO implements Serializable {
 	public MemberDAO(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
+
+	//////////////// CREATE METHODS /////////////////
+	
+	/**
+	 * Save a new member into the database.
+	 */
+	public void save(Member instance) {
+		entityManager.persist(instance);
+		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
+		entityManager.persist(tx);
+		instance.getMemberTransactions().add(tx);
+	}
+
+	//////////////// READ (FIND) METHODS /////////////////
 
 	public Member findById(Long id) {
 		return entityManager.find(Member.class, id);
@@ -62,5 +78,16 @@ public class MemberDAO implements Serializable {
 				"SELECT m FROM member m where m.memberType != " + MemberType.Secondary.name())
 				.getResultList();
 	}
+
+	//////////////// UPDATE METHODS /////////////////
+
+	public void update(Member instance) {
+		em.merge(instance); // in case detached - shouldn't be!
+		em.flush();
+	}
+
+	//////////////// DELETE METHODS /////////////////
+
+	// XXX split out from RemoveAction
 }
 

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.Stateful;
@@ -17,19 +16,15 @@ import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceContextType;
+import jakarta.transaction.Transactional;
 
 import action.YearCalcs;
 import com.darwinsys.lang.StringHolder;
 
-import jakarta.transaction.Transactional;
 import model.Country;
 import model.Member;
 import model.MemberTransaction;
 import model.MemberType;
-import model.TransactionReason;
 import webtier.WebConstants;
 
 /**
@@ -42,18 +37,18 @@ public class MemberHome implements Serializable {
 	
 	private static final long serialVersionUID = -2284578724132631798L;
 
-	@PersistenceContext(type=PersistenceContextType.EXTENDED) protected EntityManager em;
-
 	@Inject Conversation conv;
 
 	private static final String LIST_PAGE = "/MemberDAO";
 
 	/**
 	 * This should be externalized as it depends on our club's policies:
-	 * NEW MEMBERS sign up on or after September 1 you get next year's membership
+	 * NEW MEMBERS who sign up on or after September 1 you get next year's membership
 	 */
 	public final static int RENEWAL_MONTH = 9;
-	@Inject private MemberDAO lister;
+
+	@Inject private MemberDAO memberDAO;
+
 	List<Member> members;
 
 	// Must be Long (not long) so we can check for null
@@ -82,11 +77,11 @@ public class MemberHome implements Serializable {
 	 * Cache this list to avoid too many re-creations.
 	 * @return The list of Members
 	 */
-	public List<Member> getMemberDAO() {
+	public List<Member> getMemberList() {
 		if (members == null) {
 			members = new ArrayList<>();
 			members.add(noMember); //stupid UI hack
-			members.addAll(lister.findAll());
+			members.addAll(memberDAO.findAll());
 		}
 		return members;
 	}
@@ -95,7 +90,7 @@ public class MemberHome implements Serializable {
 	 * But not too many! Has to be re-created after we update,
 	 * as it is disconnected copies and is now out of sync.
 	 */
-	private void invalidateMemberDAO() {
+	private void invalidateMemberListCache() {
 		members = null;
 	}
 	
@@ -113,7 +108,7 @@ public class MemberHome implements Serializable {
 			instance = new Member();
 			return;
 		}
-		instance = em.find(Member.class, id);
+		instance = memberDAO.findById(id);
 		if (instance == null) {
 			String message = "Member not found by id! " + id;
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -137,7 +132,7 @@ public class MemberHome implements Serializable {
 		}
 	}
 
-	/** The C of CRUD - create a new Member in the database
+	/** Final steps to create a new Member in the database
 	 * @return Like all JSF actions, the page to go to
 	 */
 	@Transactional
@@ -148,23 +143,18 @@ public class MemberHome implements Serializable {
 		if (instance.getMemberType() != MemberType.Secondary) {
 			instance.setMasterMember(null);
 		}
-		em.persist(instance);
-		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
-		em.persist(tx);
-		instance.getMemberTransactions().add(tx);
+		memberDAO.save(instance);
 		conv.end();
-		invalidateMemberDAO();
+		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
 	/** Update an existing member */
 	@Transactional
 	public String update() {
-		em.flush();
-		em.merge(instance); // in case detached - shouldn't be!
-		// We don't do a Transaction here since RenewAction will do so if needed.
+		memberDAO.update(instance);
 		conv.end();
-		invalidateMemberDAO();
+		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
@@ -206,11 +196,6 @@ public class MemberHome implements Serializable {
 	 */
 	public String done() {
 		return getListPage() + WebConstants.FORCE_REDIRECT;
-	}
-
-	@PreDestroy
-	public void bfn() {
-		System.out.println("MemberHome.bfn()");
 	}
 
 	/**
