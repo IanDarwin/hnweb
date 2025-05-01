@@ -11,8 +11,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import model.Member;
-import model.MemberType;
+import model.MemberArchived;
 import model.MemberTransaction;
+import model.MemberType;
 import model.TransactionReason;
 
 /**
@@ -88,6 +89,38 @@ public class MemberDAO implements Serializable {
 
 	//////////////// DELETE METHODS /////////////////
 
-	// XXX split out from RemoveAction
+	public void delete(Member instance) {
+		// Remove secondaries, if any, before primary
+		for (Member sm : instance.getSecondaryMembers()) {
+			entityManager.remove(entityManager.merge(sm));
+		}
+
+		// Remove transactions for this user
+		for (MemberTransaction tx : instance.getMemberTransactions()) {
+			entityManager.remove(entityManager.merge(tx));
+		}
+
+		// Finally remove the member instance
+		entityManager.remove(entityManager.merge(instance));
+		entityManager.persist(new MemberArchived(instance));
+		entityManager.flush();
+	}
+
+	public void undelete(long id) {
+		if (id < 1) {
+			throw new IllegalArgumentException("Can't undelete id " + id);
+		}
+		// Dead records don't have MemberTransactions, so we can just restore
+		MemberArchived instance = entityManager.find(MemberArchived.class, id);
+		if (instance == null) {
+			throw new IllegalArgumentException("MemberArchived " + id + " not found.");
+		}
+		System.out.println("Trying to necromance " + instance + " with id " + id);
+		entityManager.remove(instance);
+		entityManager.flush();
+		entityManager.persist(new Member(instance));
+		entityManager.flush();	// Ensure prints with updated id
+		System.out.printf("Restored %s from archive!\n", instance);
+	}
 }
 

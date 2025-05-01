@@ -2,9 +2,9 @@
 
 New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
 
-new class EHandler based on pluggable messager used in a place or two already.
+new class EHandler from on pluggable messager used in LoginAction
 
-Actions should delegate ALL db access to MemberDAO (recently renamed from MemberList).
+Save-url-for-login feature doesn't capture parameters, so useless half the time.
 
 Renewal - doesn't actually find member, but crashes on submit with
 	UI:
@@ -19,9 +19,9 @@ Member Mailing Page - FIX CHARACTER MESS-UP quotes dquotes emdash
 
 Add DeletedView (already linked to from DeletedList).
 
-Change Resurrected to requires-admin
+Ensure Resurrected (and all data-changing) requires admin
 
-Get Renew working; send thank-you email.
+Get Renew working; auto-send thank-you email.
 New members should get a welcome email *automatically* with the latest Bluebird.
 
 Test: create a non-priv user and test their inability to do various things. Arquillian?

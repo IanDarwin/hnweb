@@ -18,7 +18,7 @@ public class RemoveActionTest extends AbstractPersistenceTest {
 
 		Member m2 = em.find(Member.class, id);
 		final RemoveAction removeAction = new RemoveAction();
-		removeAction.em = em;
+		removeAction.memberDAO = new MemberDAO(em);
 		em.getTransaction().begin();
 		removeAction.remove(m2);
 		em.getTransaction().commit();

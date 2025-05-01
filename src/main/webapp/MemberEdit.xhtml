@@ -50,8 +50,9 @@
 				converter="entityConverter"
 				disabled="#{memberHome.instance.getMemberType() != model.MemberType.Secondary}"
 				>
-	            <f:selectItems var="_member" value="#{memberHome.memberDAO}"
-	            	noSelectionValue="#{memberHome.memberDAO[0]}"
+				<!-- XXX here is where to kill the putrid '... SELECT ...' in bus tier code -->
+	            <f:selectItems var="_member" value="#{memberHome.memberList}"
+	            	noSelectionValue="#{memberHome.memberList[0]}"
 	            	itemLabel="#{_member.name}"
 	                itemValue="#{_member}"/>
 	        </h:selectOneMenu>
