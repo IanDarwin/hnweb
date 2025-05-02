@@ -137,13 +137,14 @@ public class PageFilter implements Filter {
 				InputStream inputStrm = servletContext.getResourceAsStream(pagePath);
 				if (inputStrm == null) {
 					// No page.xml, no restrictions, so the request is allowed
-					System.err.println("No page.xml " + pagePath + " for " + requestURI + " --> allow");
+					// System.err.println("No page.xml " + pagePath + " for " + requestURI + " --> allow");
 					chain.doFilter(req, resp);
 					return;
 				}
-				System.out.println("FOUND .page.xml " + pagePath + " for " + requestURI);
-
 				PageInfo pageInfo = parsePageFile(inputStrm);
+				System.out.println("Page.xml " + pagePath + " for " +
+					requestURI + ": login req'd: " + pageInfo.loginRequired +
+					"; restriction: " + pageInfo.restriction);
 				if (pageInfo.loginRequired && identity == null) {
 					// User not logged in and trying unauthorized access
 					// Save where the user was trying to get to:
@@ -186,7 +187,6 @@ public class PageFilter implements Filter {
 		if (restrictNode != null) {
 			info.restriction = restrictNode.getTextContent().trim();
 		}
-		System.out.println("Results: login req'd: " + info.loginRequired + "; restriction: " + info.restriction);
 		// parser.close(); // Doesn't have any cleanup method.
 		return info;
 		} catch (IOException | ParserConfigurationException | SAXException ex) {
