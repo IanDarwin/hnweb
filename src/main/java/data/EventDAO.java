@@ -16,26 +16,30 @@ import model.Event;
  * @author Ian Darwin
  */
 @Named("eventList")
-public class EventDAO implements Serializable {
+public class EventDAO extends GenericDAO<Event> implements Serializable {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public List<Event> findAll() {
-		return entityManager.createQuery("SELECT e FROM Event e").getResultList();
+	EventDAO() {
+		super(Event.class);
 	}
 
+	/** Find upcoming events from a given date forward
+	 * @param date The date to start
+	 * @return List of Events
+	 */
 	public List<Event> findUpcoming(LocalDate date) {
 		return entityManager.createQuery(
 				"SELECT e FROM Event e WHERE e.date >= :date order by e.date asc", Event.class)
 				.setParameter("date", date)
 				.getResultList();
 	}
+
+	/** Find upcoming events from today forward.
+	 * @return List of Events
+	 */
 	public List<Event> findUpcoming() {
 		return findUpcoming(LocalDate.now());
-	}
-
-	public void remove(Event evt) {
-		entityManager.remove(entityManager.merge(evt));
 	}
 }

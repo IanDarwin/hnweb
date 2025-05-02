@@ -43,7 +43,7 @@ public class EventHome extends EntityHome<Event,Long> {
 	@Transactional
 	public String remove(Event evt) {
 		System.out.println("EventHome: Remove " + evt);
-		eventDAO.remove(evt);
+		eventDAO.delete(evt);
 		return "EventList";
 	}
 }
