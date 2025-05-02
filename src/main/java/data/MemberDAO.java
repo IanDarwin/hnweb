@@ -3,12 +3,10 @@ package data;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 import model.Member;
 import model.MemberArchived;
@@ -18,8 +16,6 @@ import model.TransactionReason;
 
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
- * Methods are implemented for us by Jakarta Data.
- * The methods in the inherited interface suffice for many apps!
  */
 @Named("memberDAO")
 @SessionScoped
@@ -28,6 +24,10 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 	@Override
 	protected String getFindAllQueryString() {
 		return "SELECT m FROM Member m order by m.lastName";
+	}
+
+	public MemberDAO() {
+		super(Member.class);
 	}
 
 	public MemberDAO(EntityManager entityManager) {
@@ -99,6 +99,8 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		entityManager.persist(new MemberArchived(instance));
 	}
 
+	// Home of the necromancer:
+
 	/** For members only, we keep an "archived" version of some fields;
 	 * this method lets us undelete, given the archivedMember's pkey.
 	 * @param id The primary key of the archived member
@@ -116,7 +118,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		entityManager.remove(instance);
 		entityManager.flush();
 		entityManager.persist(new Member(instance));
-		entityManager.flush();	// Ensure prints with updated id
+		entityManager.flush();	// So it prints with updated id
 		System.out.printf("Restored %s from archive!\n", instance);
 	}
 }

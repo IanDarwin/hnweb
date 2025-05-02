@@ -12,18 +12,17 @@ import java.util.List;
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
  * MUST be called from an @Transactional business method,
- * or for testing only, use the constructor with an EntityManager
- * and manage JPA transactions yourself.
+ * or, for testing only, use the constructor with an EntityManager
+ * and manage JPA transactions (carefully!) yourself.
  *
  * To use:
  * * Subclass with a type parameter
  * * Provide a constructor that passes the same type as a Class ref
+ * * Provide a no-argument constructor which calls the above.
  * * Override getFindAllQueryString() if any params/options needed
  * * Implement any of the pre- and post- methods needed.
  * * Ensure called from a @Transactional-annotate method!
  */
-@Named("memberDAO")
-@SessionScoped
 public abstract class GenericDAO<T> implements Serializable {
 
 	private final Class<?> targetClass; // Both as T and as constr arg0
