@@ -7,12 +7,13 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Default;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import model.Event;
-import org.hibernate.annotations.processing.Find;
 
 /**
  * This is a basic DAO-like interface for scheduled club Events.
@@ -36,5 +37,9 @@ public class EventList implements Serializable {
 	}
 	public List<Event> findUpcoming() {
 		return findUpcoming(LocalDate.now());
+	}
+
+	public void remove(Event evt) {
+		entityManager.remove(entityManager.merge(evt));
 	}
 }

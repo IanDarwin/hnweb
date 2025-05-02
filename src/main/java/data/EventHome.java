@@ -2,13 +2,18 @@ package data;
 
 import jakarta.ejb.Stateful;
 import jakarta.enterprise.context.ConversationScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
 
 import entity.EntityHome;
+import data.EventList;
 import model.Event;
 
 @Stateful @Named @ConversationScoped
 public class EventHome extends EntityHome<Event,Long> {
+
+	@Inject public EventList eventDAO;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -34,5 +39,12 @@ public class EventHome extends EntityHome<Event,Long> {
 			return;
 		}
 		wire(Long.parseLong(s));
+	}
+
+	@Transactional
+	public String remove(Event evt) {
+		System.out.println("EventHome: Remove " + evt);
+		eventDAO.remove(evt);
+		return "EventList";
 	}
 }
