@@ -7,13 +7,12 @@ import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
 import entity.EntityHome;
-import data.EventList;
 import model.Event;
 
 @Stateful @Named @ConversationScoped
 public class EventHome extends EntityHome<Event,Long> {
 
-	@Inject public EventList eventDAO;
+	@Inject public EventDAO eventDAO;
 	
 	private static final long serialVersionUID = 1L;
 

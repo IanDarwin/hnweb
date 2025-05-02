@@ -3,11 +3,7 @@ package data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Stream;
 
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.enterprise.inject.Default;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import jakarta.persistence.EntityManager;
@@ -20,7 +16,7 @@ import model.Event;
  * @author Ian Darwin
  */
 @Named("eventList")
-public class EventList implements Serializable {
+public class EventDAO implements Serializable {
 
 	@PersistenceContext
 	private EntityManager entityManager;
