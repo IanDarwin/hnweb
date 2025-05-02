@@ -23,25 +23,23 @@ import model.TransactionReason;
  */
 @Named("memberDAO")
 @SessionScoped
-public class MemberDAO implements Serializable {
+public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	public MemberDAO() {
-		// empty
+	@Override
+	protected String getFindAllQueryString() {
+		return "SELECT m FROM Member m order by m.lastName";
 	}
+
 	public MemberDAO(EntityManager entityManager) {
-		this.entityManager = entityManager;
+		super(Member.class, entityManager);
 	}
 
 	//////////////// CREATE METHODS /////////////////
 	
-	/**
-	 * Save a new member into the database.
-	 */
-	public void save(Member instance) {
-		entityManager.persist(instance);
+	// create() is inherited
+
+	@Override
+	void postCreate(Member instance) {
 		MemberTransaction tx = new MemberTransaction(instance, 1, TransactionReason.N);
 		entityManager.persist(tx);
 		instance.getMemberTransactions().add(tx);
@@ -51,11 +49,6 @@ public class MemberDAO implements Serializable {
 
 	public Member findById(Long id) {
 		return entityManager.find(Member.class, id);
-	}
-
-	public List<Member> findAll() {
-		return entityManager.createQuery("SELECT m FROM Member m order by m.lastName", Member.class)
-				.getResultList();
 	}
 
 	public Optional<Member> findByEmailAndPassword(String email, String password) {
@@ -82,14 +75,14 @@ public class MemberDAO implements Serializable {
 
 	//////////////// UPDATE METHODS /////////////////
 
-	public void update(Member instance) {
-		entityManager.merge(instance); // in case detached - shouldn't be!
-		entityManager.flush();
-	}
+	// update() is inherited
 
 	//////////////// DELETE METHODS /////////////////
 
-	public void delete(Member instance) {
+	// delete() is inherited, but uses these:
+
+	@Override
+	public void preDelete(Member instance) {
 		// Remove secondaries, if any, before primary
 		for (Member sm : instance.getSecondaryMembers()) {
 			entityManager.remove(entityManager.merge(sm));
@@ -99,13 +92,17 @@ public class MemberDAO implements Serializable {
 		for (MemberTransaction tx : instance.getMemberTransactions()) {
 			entityManager.remove(entityManager.merge(tx));
 		}
-
-		// Finally remove the member instance
-		entityManager.remove(entityManager.merge(instance));
-		entityManager.persist(new MemberArchived(instance));
-		entityManager.flush();
 	}
 
+	@Override
+	protected void postDelete(Member instance) {
+		entityManager.persist(new MemberArchived(instance));
+	}
+
+	/** For members only, we keep an "archived" version of some fields;
+	 * this method lets us undelete, given the archivedMember's pkey.
+	 * @param id The primary key of the archived member
+	 */
 	public void undelete(long id) {
 		if (id < 1) {
 			throw new IllegalArgumentException("Can't undelete id " + id);

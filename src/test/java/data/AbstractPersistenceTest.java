@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 public class AbstractPersistenceTest {
 
 	protected static EntityManagerFactory emf;
-	protected EntityManager em;
+	protected EntityManager entityManager;
 
 	@BeforeAll
 	public static void preClass() {
@@ -19,16 +19,16 @@ public class AbstractPersistenceTest {
 	}
 
 	public EntityManager getEntityManager() {
-		if (em == null) {
+		if (entityManager == null) {
 			throw new IllegalStateException("getEntityManager() called before @Before method, how?");
 		}
-		return em;
+		return entityManager;
 	}
 
 	@BeforeEach
 	public void preTest() {
 		System.out.println("AbstractPersistenceTest.preTest()");
-		em = emf.createEntityManager();
+		entityManager = emf.createEntityManager();
 	}
 
 }

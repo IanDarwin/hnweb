@@ -27,12 +27,12 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		tm.setEmailTrips(true);
 		tm.addRole(ROLE);
 
-		em.getTransaction().begin();
-		em.persist(ROLE);
-		em.persist(tm);
-		em.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		entityManager.persist(ROLE);
+		entityManager.persist(tm);
+		entityManager.getTransaction().commit();
 
-		List<Member> ms = em.createQuery("select m from Member m", Member.class).getResultList();
+		List<Member> ms = entityManager.createQuery("select m from Member m", Member.class).getResultList();
 		assertTrue("found any", ms.size() > 0);
 
 		for (Member m : ms) {

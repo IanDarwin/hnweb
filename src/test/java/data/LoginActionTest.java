@@ -6,9 +6,6 @@ import model.Member;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -32,13 +29,13 @@ public class LoginActionTest extends AbstractPersistenceTest {
     // @BeforeEach
     void setupLoginAction() {
         Member m = createAndSaveMember();
-        saveMember(em, m);
+        saveMember(entityManager, m);
         final StatelessSession mockSession = mock(StatelessSession.class);
         final SessionFactory mockSessFactory = mock(SessionFactory.class);
         when(mockSession.getFactory()).thenReturn(mockSessFactory);
         final HibernateCriteriaBuilder mockCriteriaBuilder = mock(HibernateCriteriaBuilder.class);
         when(mockSessFactory.getCriteriaBuilder()).thenReturn(mockCriteriaBuilder);
-        target.setMemberDAO(new MemberDAO(em));
+        target.setMemberDAO(new MemberDAO(entityManager));
     }
 
     // @Test

@@ -10,18 +10,18 @@ public class RemoveActionTest extends AbstractPersistenceTest {
 
 	@Test
 	public void testRemoveAction() {
-		em.getTransaction().begin();
+		entityManager.getTransaction().begin();
 		Member member = new Member("A", "B", "C", "d@e.fg");
-		em.persist(member);
+		entityManager.persist(member);
 		long id = member.getId();
-		em.getTransaction().commit();
+		entityManager.getTransaction().commit();
 
-		Member m2 = em.find(Member.class, id);
+		Member m2 = entityManager.find(Member.class, id);
 		final RemoveAction removeAction = new RemoveAction();
-		removeAction.memberDAO = new MemberDAO(em);
-		em.getTransaction().begin();
+		removeAction.memberDAO = new MemberDAO(entityManager);
+		entityManager.getTransaction().begin();
 		removeAction.remove(m2);
-		em.getTransaction().commit();
-		assertNull(em.find(Member.class, id));
+		entityManager.getTransaction().commit();
+		assertNull(entityManager.find(Member.class, id));
 	}
 }

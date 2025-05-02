@@ -143,7 +143,7 @@ public class MemberHome implements Serializable {
 		if (instance.getMemberType() != MemberType.Secondary) {
 			instance.setMasterMember(null);
 		}
-		memberDAO.save(instance);
+		memberDAO.create(instance);
 		conv.end();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
