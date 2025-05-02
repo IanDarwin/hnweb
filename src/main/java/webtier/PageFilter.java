@@ -168,7 +168,7 @@ public class PageFilter implements Filter {
 	
 	/** Read the XML document */
 	static PageInfo parsePageFile(InputStream is) {
-		System.out.println("PageFilter.parsePageFile()");
+		// System.out.println("PageFilter.parsePageFile()");
 
 		try {
 		// Need to do the PageInfo get first, for testing
