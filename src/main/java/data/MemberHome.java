@@ -157,13 +157,29 @@ public class MemberHome implements Serializable {
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
+
+	@Transactional
+	public String remove() {
+		memberDAO.delete(instance);
+		conv.end();
+		invalidateMemberListCache();
+		return getListPage() + WebConstants.FORCE_REDIRECT;
+	}
+	
+	@Transactional
+	public String undelete() {
+		memberDAO.undelete(id);
+		conv.end();
+		invalidateMemberListCache();
+		return getListPage() + WebConstants.FORCE_REDIRECT;
+	}
 	
 	public Member getInstance() {
 		return instance;
 	}
 	public void setInstance(Member instance) {
 		this.instance = instance;
-		// this.id = instance.getId();
+		this.id = instance.getId();
 	}
 
 	public void notifySetMemberType() {

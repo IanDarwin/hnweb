@@ -16,10 +16,7 @@
 	<p:panel>
 		<f:facet name="header">Site status/info</f:facet>
 		<ul>
-		<li>2022-11-24 Solved a bug that caused deleted members to still appear active.</li>
-		<li>2022-11-23 Introduced a bug in deciding which members are expired - do not use "expired nagger" until fixed!</li>
-		<li>2022-11-01 Some tests are failing with 'interesting' failure modes, but I think the problem is the tests themselves
-		(uses a different brand of database in tests).</li>
+		<li>T.B.A.</li>
 		</ul>
 	</p:panel>
 	<p:panel>
@@ -30,9 +27,9 @@
 		<p:panel>
 			<f:facet name="header">Executive Functions</f:facet>
 			
-			<h:inputText id="idTF" value="#{removeAction.id}"/>
+			<h:inputText id="idTF" value="#{memberHome.id}"/>
 			#{' '}
-			<p:commandButton value="Resurrect Deleted Member" action="#{removeAction.unDelete(memberHome.id)}" ajax='false'/>
+			<p:commandButton value="Resurrect Deleted Member" action="#{memberHome.unDelete(memberHome.id)}" ajax='false'/>
 			#{' '}
 			<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
 		</p:panel>
