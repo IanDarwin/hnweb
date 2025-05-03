@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -16,6 +16,7 @@ import model.Event;
  * @author Ian Darwin
  */
 @Named("eventList")
+@RequestScoped
 public class EventDAO extends GenericDAO<Event> implements Serializable {
 
 	@PersistenceContext
