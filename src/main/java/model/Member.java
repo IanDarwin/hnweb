@@ -109,7 +109,7 @@ public class Member {
     @Temporal(TemporalType.DATE)
     private LocalDate lastModified;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<MemberTransaction> memberTransactions = new ArrayList<>();
 
 	// For app-managed security - only Members, not MemberArchived elements, can be in roles
