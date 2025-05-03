@@ -15,6 +15,7 @@ import model.Member;
 import model.MemberTransaction;
 import model.PaymentType;
 import model.TransactionReason;
+import webtier.WebConstants;
 
 @Stateless @Named //@RequestScoped
 public class RenewAction implements Serializable {
@@ -24,7 +25,6 @@ public class RenewAction implements Serializable {
 	Logger logger = Logger.getLogger(getClass().getName());
 
 	private static final String VIEW_PAGE = "MemberView";
-	private static final String FORCE_REDIRECT = "?faces-redirect=true";
 
 	private Member member;
 	private int numYears;
@@ -57,7 +57,7 @@ public class RenewAction implements Serializable {
 //			}
 //		}
 		
-		return VIEW_PAGE + FORCE_REDIRECT + "&memberId=" + member.getId();
+		return VIEW_PAGE + WebConstants.FORCE_REDIRECT + "&memberId=" + member.getId();
 	}
 
 	public Member getMember() {

@@ -23,7 +23,7 @@ public class ScheduleBean {
 
 	private ScheduleModel eventModel;
 	private ScheduleEvent event = new DefaultScheduleEvent();
-	@Inject public EventDAO eventDAO;
+	@Inject EventDAO eventDAO;
 
 	public ScheduleBean() {
 		eventModel = new DefaultScheduleModel();

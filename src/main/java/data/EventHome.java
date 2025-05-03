@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 
 import entity.EntityHome;
 import model.Event;
+import webtier.WebConstants;
 
 @Stateful @Named @ConversationScoped
 public class EventHome extends EntityHome<Event,Long> {
@@ -44,6 +45,6 @@ public class EventHome extends EntityHome<Event,Long> {
 	public String remove(Event evt) {
 		System.out.println("EventHome: Remove " + evt);
 		eventDAO.delete(evt);
-		return "EventList";
+		return "EventList" + WebConstants.FORCE_REDIRECT;
 	}
 }
