@@ -2,6 +2,8 @@ package model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "event")
@@ -117,5 +119,31 @@ public class Event {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    @Transient
+    public LocalDateTime getStartDateTime() {
+        String[] hhmm = getStartTime().split(":");
+        if (hhmm.length != 2) {
+            System.out.printf("Warning: Event %s getStartDateTime failed parse");
+            hhmm = new String[] { "12", "00"};
+        }
+        return LocalDateTime.of(getDate(),
+                LocalTime.of(
+                        Integer.parseInt(hhmm[0]),
+                        Integer.parseInt(hhmm[1])));
+    }
+
+    @Transient
+    public LocalDateTime getEndDateTime() {
+        String[] hhmm = getEndTime().split(":");
+        if (hhmm.length != 2) {
+            System.out.printf("Warning: Event %s getEndDateTime failed parse");
+            hhmm = new String[] { "12", "00"};
+        }
+        return LocalDateTime.of(getDate(),
+                LocalTime.of(
+                        Integer.parseInt(hhmm[0]),
+                        Integer.parseInt(hhmm[1])));
     }
 }

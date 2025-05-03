@@ -1,9 +1,13 @@
 package webtier;
 
 import java.time.LocalDateTime;
+
+import data.EventDAO;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.RequestScoped;
 
+import model.Event;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -19,15 +23,19 @@ public class ScheduleBean {
 
 	private ScheduleModel eventModel;
 	private ScheduleEvent event = new DefaultScheduleEvent();
+	@Inject public EventDAO eventDAO;
 
 	public ScheduleBean() {
 		eventModel = new DefaultScheduleModel();
-		DefaultScheduleEvent event = DefaultScheduleEvent.builder()
-				.title("Monthly Meeting")
-				.startDate(LocalDateTime.of(2023, 11, 28, 17, 00))
-				.endDate(LocalDateTime.of(2023, 11, 28, 19, 00))
-				.build();
-		eventModel.addEvent(event);
+
+		for (Event evt : eventDAO.findUpcoming()) {
+			DefaultScheduleEvent event = DefaultScheduleEvent.builder()
+					.title("Monthly Meeting")
+					.startDate(evt.getStartDateTime())
+					.endDate(evt.getEndDateTime())
+					.build();
+			eventModel.addEvent(event);
+		}
 	}
 
 	public ScheduleModel getModel() {
