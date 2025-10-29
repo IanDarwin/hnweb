@@ -19,36 +19,43 @@
 	<h:form id="entityForm">
 	<p:panel>
 		<f:facet name="header">Event Detail</f:facet>
-		<p:panelGrid columns='2'>
-		
-		<h:outputText value="Date:"/>
-		<h:outputText id="dateTF" value="#{eventHome.instance.date}"/>
-
-		<h:outputText value="Start and End Times:"/>
-		<h:outputText id="timesTF" value="#{eventHome.instance.startTime} - #{eventHome.instance.endTime}"/>
+		<p:panel>
 
 		<h:outputText value="Title:"/>
 		<h:outputText id="titleTF" value="#{eventHome.instance.title}"/>
 
+		<br/>
+		
+		<h:outputText value="Date:"/>
+		<h:outputText id="dateTF" value="#{eventHome.instance.date}"/>
+
+		<h:outputText value="Time:"/>
+		<h:outputText id="timesTF" value="#{eventHome.instance.startTime} - #{eventHome.instance.endTime}"/>
+
+		<br/>
+
 		<h:outputText value="Location:"/>
 		<h:outputText id="locationTF" value="#{eventHome.instance.location}"/>
 
-		<h:outputText value="EventAbstract:"/>
+		<h:outputText value="Event Details:"/>
 		<h:outputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}"/>
 
-		<h:outputText value="SpeakerName:"/>
+		<br/>
+
+		<h:outputText value="Speaker:"/>
 		<h:outputText id="speakerNameTF" value="#{eventHome.instance.speakerName}"/>
 
-		<h:outputText value="SpeakerBio:"/>
+		<h:outputText value="Speaker's Bio:"/>
 		<h:outputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}"/>
 
-		</p:panelGrid>
+		</p:panel>
 	</p:panel>
 
 	<p:commandButton value="Edit" action="/EventEdit.web?faces-redirect='true'" ajax='false'
 		rendered="#{identity.loggedIn and identity.hasRole('admin')}">
 		<f:param name="eventId" value="#{eventHome.instance.id}"/>
 	</p:commandButton>
+
 	<p:commandButton value="Done" action="#{eventHome.done}" ajax='false'/>
 	</h:form>
 	

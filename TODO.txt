@@ -1,5 +1,7 @@
 = TODO
 
+MAKE ME A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
+
 New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
 
 new class EHandler from on pluggable messager used in LoginAction
