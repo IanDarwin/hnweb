@@ -12,6 +12,14 @@ if [[ $(hostname) != darwinsys.com ]]; then
 	usage
 fi
 
+SOYLENT=false
+# -s is for silent, eg. no email
+# usually when it's long delayed :-)
+if [ $1 = "-s" ]; then
+	SOYLENT=true
+	shift
+fi
+
 if [ $# != 3 ]; then
 	usage
 fi
@@ -55,11 +63,16 @@ psql -d hn -c "INSERT INTO transaction(member_id,newexpiryyear,paymenttype,reaso
 echo "Verifying update:"
 psql -d hn -c "SELECT firstname,lastname,email,expiryyear FROM member WHERE id = $id;"
 
+if [ true != $SOYLENT ]; then
+
 email=$(psql -d hn -c "SELECT email FROM member WHERE id = $id;" | grep @)
-echo Sending thanks to $email
-echo "Thank you for your membership renewal for the $YEAR membership year.
+	echo Sending thanks to $email
+	echo "Thank you for your membership renewal for the $YEAR membership year.
+Your renewal has now been posted into our membership database.
 
 --Ian Darwin
 Membership Chair
 ian@darwinsys.com
-" | Mail -s "[hn] Thank you for renewing!" -r "no-reply@hn.darwinsys.com" $email
+	" | Mail -s "[hn] Thank you for renewing!" -r "no-reply@hn.darwinsys.com" $email
+
+fi
