@@ -31,7 +31,7 @@
 		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
 		<primefaces.version>13.0.5</primefaces.version>
 		<darwinsys-api.version>1.9.0-SNAPSHOT</darwinsys-api.version>
-		<darwinsys-ee.version>0.3.10-SNAPSHOT</darwinsys-ee.version>
+		<darwinsys-ee.version>0.3.11-SNAPSHOT</darwinsys-ee.version>
 		<version.shrinkwrap.resolvers>3.3.0</version.shrinkwrap.resolvers>
 	</properties>
 
