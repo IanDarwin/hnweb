@@ -13,7 +13,7 @@ public class AbstractPersistenceTest {
 	protected EntityManager entityManager;
 
 	@BeforeAll
-	public static void preClass() {
+	static void preClass() {
 		System.out.println("AbstractPersistenceTest.preClass()");
 		emf = Persistence.createEntityManagerFactory("test");
 	}
@@ -26,7 +26,7 @@ public class AbstractPersistenceTest {
 	}
 
 	@BeforeEach
-	public void preTest() {
+	void preTest() {
 		System.out.println("AbstractPersistenceTest.preTest()");
 		entityManager = emf.createEntityManager();
 	}

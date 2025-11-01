@@ -12,9 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class ChooserTest {
+class ChooserTest {
 
 	final static List<Member> data = new ArrayList<>();
 	final static Member m1 = new Member("Foo", "", "Bar", "ipwn@bar.com");
@@ -23,7 +24,7 @@ public class ChooserTest {
 	final static Member m4 = new Member();
 
 	@BeforeAll
-	public static void setup() {
+	static void setup() {
 		data.clear();
 		m1.setEmail("foo@bar.com");
 		data.add(m1);
@@ -59,7 +60,7 @@ public class ChooserTest {
 			"2019, 0",
 			"2018, 0",
 	})
-	public void testPaidMemberChooser(int expiryYear, int expectedMatches) {
+	void paidMemberChooser(int expiryYear, int expectedMatches) {
 		MailMan.now = LocalDate.of(2020, 8, 15);
 		Member m = data.get(0);
 		m.setExpiryYear(expiryYear);
@@ -67,7 +68,7 @@ public class ChooserTest {
 	}
 
 	@Test
-	public void testSelectListMembers() {
+	void testSelectListMembers() {
 		List<Member> chosenEmails = selectListMembers(data, m->m.getEmail().equals("foo@bar.com"));
 		assertEquals(1, chosenEmails.size());
 		assertSame(data.get(0).getEmail(), chosenEmails.get(0).getEmail());

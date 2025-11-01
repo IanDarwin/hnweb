@@ -11,17 +11,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class MemberTest {
+class MemberTest {
 
 	Member member;
-	
+
 	@BeforeEach
-	public void test() {
+	void test() {
 		member = new Member();
 	}
 
 	@Test
-	public void testCopyConstructor() {
+	void copyConstructor() {
 		MemberArchived memberArchived = new MemberArchived();
 		memberArchived.setFirstName("Thelmius");
 		memberArchived.setLastName("Aquaddapodox");
@@ -29,16 +29,16 @@ public class MemberTest {
 		assertEquals("Thelmius", member.getFirstName());
 		assertEquals("Aquaddapodox", member.getLastName());
 	}
-	
+
 	@Test
-	public void testGetName2() {
+	void getName2() {
 		member.setFirstName("Thelmius");
 		member.setLastName("Aquaddapodox");
 		assertEquals("Thelmius Aquaddapodox", member.getName());
 	}
-	
+
 	@Test
-	public void testGetName3() {
+	void getName3() {
 		member.setFirstName("Thelmius");
 		member.setMiddle("T.");
 		member.setLastName("Aquaddapodox");
@@ -46,7 +46,7 @@ public class MemberTest {
 	}
 
 	@Test
-	public void testIsExpiredFalse() {
+	void isExpiredFalse() {
 		final int curYear = LocalDate.now().getYear();
 		member.setExpiryYear(curYear);
 		var d = LocalDate.of(curYear, Config.RENEWAL_MONTH - 1, 1);
@@ -58,7 +58,7 @@ public class MemberTest {
 	}
 
 	@Test
-	public void testIsExpiredTrue() {
+	void isExpiredTrue() {
 		member.setExpiryYear(LocalDate.now().getYear() - 1);
 		assertTrue(YearCalcs.isExpired(member));
 	}

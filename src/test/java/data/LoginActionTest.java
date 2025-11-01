@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,7 +53,7 @@ public class LoginActionTest extends AbstractPersistenceTest {
         target.setEmail("pierre@snubba.dub");
         target.setPassword("fuddle duddle");
         String ret = target.login();
-        assertTrue(!ret.startsWith("/index.web"));
+		assertFalse(ret.startsWith("/index.web"));
         System.out.println("WE DIDN'T LOG IN!");
     }
 

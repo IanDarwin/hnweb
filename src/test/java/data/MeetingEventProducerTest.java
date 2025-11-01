@@ -1,37 +1,37 @@
 package data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import model.Event;
 
-public class MeetingEventProducerTest {
+class MeetingEventProducerTest {
 	
 	private MeetingEventProducer meetingEventProducer;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		meetingEventProducer = new MeetingEventProducer();
 	}
 
 	@Test
-	public void testGetRightNumberEvents() {
+	void getRightNumberEvents() {
 		final List<Event> events = meetingEventProducer.getEvents();
 		// No meetings May Jun Jul Aug Dec:
-		assertEquals("number of meetings", 12 - 5, events.size());
+		assertEquals(12 - 5, events.size(), "number of meetings");
 	}
 
 	@Test
-	public void testGetFirstMeetingInFuture() {
+	void getFirstMeetingInFuture() {
 		final List<Event> events = meetingEventProducer.getEvents();
 		Event e = events.get(events.size() - 1);
 		LocalDate when = e.getDate();
-		assertTrue("first meeting in future", when.isAfter(LocalDate.now()));
+		assertTrue(when.isAfter(LocalDate.now()), "first meeting in future");
 	}
 }

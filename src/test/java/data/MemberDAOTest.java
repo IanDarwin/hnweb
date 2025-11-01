@@ -3,24 +3,25 @@ package data;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Member;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MemberDAOTest extends AbstractPersistenceTest {
+class MemberDAOTest extends AbstractPersistenceTest {
 
     static MemberDAO memberDAO;
     protected Member member;
 
-    @BeforeEach
-    public void setup() {
+	@BeforeEach
+	void setup() {
         entityManager = emf.createEntityManager();
         memberDAO = new MemberDAO(entityManager);
         member = new Member("Ronald", "J", "Thumper", "user@host.com");
     }
 
-    @Test
-    public void testCreateAndFind() {
+	@Test
+	void createAndFind() {
         EntityTransaction tx = getEntityManager().getTransaction();
         tx.begin();
         memberDAO.create(member);
@@ -30,8 +31,8 @@ public class MemberDAOTest extends AbstractPersistenceTest {
         assertEquals(member, m2);
     }
 
-    @Test
-    public void testCreateAndDelete() {
+	@Test
+	void createAndDelete() {
         EntityTransaction tx = getEntityManager().getTransaction();
         tx.begin();
         memberDAO.create(member);

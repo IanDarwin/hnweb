@@ -11,15 +11,14 @@ import jakarta.mail.internet.MimeMessage;
 import action.LoginAction;
 import data.MemberDAO;
 import model.Member;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MailManTest {
+class MailManTest {
 
 	private static final String HTML_HELLO_WORLD = "<html><p>Hello";
 	List<Member> fakeList = List.of(
@@ -29,9 +28,9 @@ public class MailManTest {
 	private MailMan sender;
 	private Member member;
 	private LoginAction loginAction;
-	
-	@Before
-	public void init() {
+
+	@BeforeEach
+	void init() {
 		MemberDAO lister = mock(MemberDAO.class);
 		when(lister.findAll()).thenReturn(fakeList);
 		sender = new MailMan();
@@ -42,9 +41,9 @@ public class MailManTest {
 		loginAction.setLoggedInUser(member);
 		MailMan.props.clear();
 	}
-	
+
 	@Test
-	public void testCreateMessageGetBody() throws Exception {
+	void createMessageGetBody() throws Exception {
 		List<String> recipients = Arrays.asList("a@b.c");
 		final MimeMessage actual = sender.createMessage("from@dom.ain",
 				A_MESSAGE_SUBJECT,
@@ -62,9 +61,9 @@ public class MailManTest {
 		// fail("get content matching " + HTML_HELLO_WORLD);
 		System.err.println("WARNING: testCreateMessageGetBody needs work!");
 	}
-	
+
 	@Test
-	public void testCreateMessage() throws Exception {
+	void createMessage() throws Exception {
 		List<String> recipients = Arrays.asList("a@b.c");
 		final String messageSender = "from@dom.ain";
 		final MimeMessage actual = sender.createMessage(messageSender,
@@ -73,12 +72,12 @@ public class MailManTest {
 				recipients,
 				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
-		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
-		assertEquals("From", new InternetAddress(messageSender), actual.getFrom()[0]);
+		assertEquals(A_MESSAGE_SUBJECT, actual.getSubject(), "Subject");
+		assertEquals(new InternetAddress(messageSender), actual.getFrom()[0], "From");
 	}
 
 	@Test
-	public void testCreateMessageWithNoReply() throws Exception {
+	void createMessageWithNoReply() throws Exception {
 		List<String> recipients = Arrays.asList("a@b.c");
 		final String NO_REPLY_ADDR = "slugs@junglegarden.moc";
 		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, NO_REPLY_ADDR);
@@ -88,8 +87,8 @@ public class MailManTest {
 				recipients,
 				null, null);
 		// XXX how to get the body parts?? assertEquals("Hello", actual.getXXX.getText()));
-		assertEquals("Subject", A_MESSAGE_SUBJECT, actual.getSubject());
-		assertEquals("From", new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0]);
-		assertEquals("Reply-to", new InternetAddress("from@dom.ain"), actual.getReplyTo()[0]);
+		assertEquals(A_MESSAGE_SUBJECT, actual.getSubject(), "Subject");
+		assertEquals(new InternetAddress(NO_REPLY_ADDR), actual.getFrom()[0], "From");
+		assertEquals(new InternetAddress("from@dom.ain"), actual.getReplyTo()[0], "Reply-to");
 	}
 }

@@ -1,41 +1,38 @@
 package webtier;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileInputStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class PageViewFilterTest {
-	
-	@Before
-	public void setUp() throws Exception {
+class PageViewFilterTest {
+
+	@BeforeEach
+	void setUp() throws Exception {
 	}
 
 	// These tests only test the XML parsing and the PageInfo returned from it!
 
 	@Test
-	public void testGoodParseLoginReqdRestriction() throws Exception {
+	void goodParseLoginReqdRestriction() throws Exception {
 		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginreqd-restriction.xml"));
 		assertTrue(pi.loginRequired);
 		assertNotNull(pi.restriction);
 	}
-	
+
 	@Test
-	public void testGoodParseLoginNotReqdRestriction() throws Exception {
+	void goodParseLoginNotReqdRestriction() throws Exception {
 		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginNotreqd-restriction.xml"));
 		assertFalse(pi.loginRequired);
 		assertNotNull(pi.restriction);
 	}
-	
+
 	@Test
-	public void testGoodParseLoginUnspecNoRestriction() throws Exception {
+	void goodParseLoginUnspecNoRestriction() throws Exception {
 		PageFilter.PageInfo pi = PageFilter.parsePageFile(new FileInputStream(
 				"src/test/resources/page-loginunspec-norestriction.xml"));
 		assertFalse(pi.loginRequired);

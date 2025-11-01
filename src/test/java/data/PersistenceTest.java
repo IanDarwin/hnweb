@@ -1,8 +1,6 @@
 package data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class PersistenceTest extends AbstractPersistenceTest {
 	 * assert that we find it in the list of Members from JPA
 	 */
 	@Test
-	public void testLoadStore() {
+	void loadStore() {
 		Member tm = new Member();
 		tm.setFirstName(FIRST);
 		tm.setLastName("Lolz");
@@ -33,12 +31,12 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		entityManager.getTransaction().commit();
 
 		List<Member> ms = entityManager.createQuery("select m from Member m", Member.class).getResultList();
-		assertTrue("found any", ms.size() > 0);
+		assertTrue(ms.size() > 0, "found any");
 
 		for (Member m : ms) {
 			if (m.getFirstName().equals(FIRST) && m.getEmailTrips()) {
 				assertEquals(1, m.getRoles().size());
-				assertTrue(m.getRoles().get(0).getName().equals("Dumpster Driver"));
+				assertEquals("Dumpster Driver", m.getRoles().get(0).getName());
 				return;
 			}
 		}

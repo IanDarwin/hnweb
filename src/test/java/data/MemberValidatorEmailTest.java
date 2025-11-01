@@ -1,30 +1,26 @@
 package data;
 
-import static org.junit.Assert.assertSame;
-
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
 import com.darwinsys.lang.StringHolder;
 
-@RunWith(Parameterized.class)
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 public class MemberValidatorEmailTest {
 	
 	String email;
 	boolean expected;
 	StringHolder messageHolder = new StringHolder();
-	
-	public MemberValidatorEmailTest(boolean expected, String email) {
+
+	public void initMemberValidatorEmailTest(boolean expected, String email) {
 		this.email = email;
 		this.expected = expected;
 	}
 	
-	@Parameters
 	public static List<Object[]> getParams() {
 		return Arrays.asList(new Object[][]{
 				// Null or Empty are valid for us, might not be for you.
@@ -37,10 +33,12 @@ public class MemberValidatorEmailTest {
 				{true, "ketchup@mcdonalds.infomaterial"},
 				{true,  "hey-gal@sympatico-online.ca"},
 		});
-	}	
-	
-	@Test
-	public void test() {
+	}
+
+	@MethodSource("getParams")
+	@ParameterizedTest
+	public void test(boolean expected, String email) {
+		initMemberValidatorEmailTest(expected, email);
 		System.out.println("Testing: " + email);
 		assertSame(expected, MemberValidator.validateEmail(email, messageHolder));
 	}

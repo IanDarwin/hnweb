@@ -1,23 +1,24 @@
 package data;
 
-import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDate;
 
 import action.YearCalcs;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class MemberHomeTest extends AbstractPersistenceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class MemberHomeTest extends AbstractPersistenceTest {
 
 	@Test
-	public void testGetNewMemberAugustExpiryYear() {
+	void getNewMemberAugustExpiryYear() {
 		LocalDate aug31 = LocalDate.of(2011, 8, 29);
 		assertEquals(2011, YearCalcs.getNewMemberExpiryYear(aug31));
 	}
-	
-	@Test @Ignore
-	public void testGetNewMemberSeptemberExpiryYear() {
+
+	@Test
+	@Disabled
+	void getNewMemberSeptemberExpiryYear() {
 		LocalDate sep1 = LocalDate.of(2011, 9, 01);
 		assertEquals(2012, YearCalcs.getNewMemberExpiryYear(sep1));
 	}

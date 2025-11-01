@@ -3,9 +3,9 @@ package outreach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MailManSanitizersTest {
+class MailManSanitizersTest {
 
 	final static String SHORT_INPUT = "“Hello”—said I.";
 
@@ -20,19 +20,19 @@ public class MailManSanitizersTest {
 		"&quot;Don&apos;t cry for me, Argentina - &apos;Evita&apos;";
 
 	@AfterAll
-	public static void dump() {
+	static void dump() {
 		System.out.println("Input:\t" + INPUT);
 		System.out.println("Expect:\t" + EXPECT_UTF8);
 		System.out.println("Expect:\t" + EXPECT_HTML);
 	}
 
-    @Test
-    public void testSanitizeToUtf8() {
+	@Test
+	void sanitizeToUtf8() {
         assertEquals(EXPECT_UTF8, MailMan.sanitizeToUtf8(INPUT));
     }
 
-    @Test
-    public void testSanitizeToHTML() {
+	@Test
+	void sanitizeToHTML() {
         assertEquals(EXPECT_HTML, MailMan.sanitizeToHtml(INPUT));
     }
 }

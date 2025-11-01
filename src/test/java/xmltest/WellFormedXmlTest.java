@@ -7,16 +7,13 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /** Non-validating parse of the XML/XHTML files under "src/main/webapp";
  * faster than deploying and failing for missing ">" or "/"...
  * @author Ian Darwin, http://www.darwinsys.com/
  */
-@RunWith(Parameterized.class)
 public class WellFormedXmlTest {
 
 	/** Where to look for pages */
@@ -28,9 +25,9 @@ public class WellFormedXmlTest {
 
 	static boolean verbose = false;
 
-	final File xmlFile;
-	
-	public WellFormedXmlTest(File xmlFile) {
+	File xmlFile;
+
+	public void initWellFormedXmlTest(File xmlFile) {
 		this.xmlFile = xmlFile;
 	}
 
@@ -38,7 +35,6 @@ public class WellFormedXmlTest {
 	 * Give up the list of files to test.
 	 * @Return a List of Object[] the first of each of which is a File[] for a page to test
 	 */
-	@Parameters
 	public static List<Object[]> findFiles() {
 		List<File> allFiles = new ArrayList<>(100);
 		doDir(new File(VIEW_DIR), allFiles);
@@ -74,8 +70,10 @@ public class WellFormedXmlTest {
 	 * Parse the one file named in "XmlFile"; will be called many
 	 * times by the Parameterized runner, once per file
 	 */
-	@Test
-	public void parseOneFile() throws Exception {
+	@MethodSource("findFiles")
+	@ParameterizedTest
+	public void parseOneFile(File xmlFile) throws Exception {
+		initWellFormedXmlTest(xmlFile);
 			if (verbose) {
 				System.err.println( "Parsing " + xmlFile.getAbsolutePath() + "...");
 			}
