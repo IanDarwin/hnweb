@@ -159,13 +159,6 @@
 			<version>${junit5.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- JUnit 4 compat -->
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>${junit5.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- JUnit 5 Parameterized -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
