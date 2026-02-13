@@ -91,12 +91,12 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		logger.log(Level.INFO, "preDelete(" + instance + ")");
 		// Remove transactions for this user
 		for (MemberTransaction tx : instance.getMemberTransactions()) {
-			entityManager.remove(tx);
+			entityManager.remove(entityManager.merge(tx));
 		}
 
 		// Remove secondaries, if any, before primary
 		for (Member sm : instance.getSecondaryMembers()) {
-			entityManager.remove(sm);
+			entityManager.remove(entityManager.merge(sm));
 		}
 	}
 
