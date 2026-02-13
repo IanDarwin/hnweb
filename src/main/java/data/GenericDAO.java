@@ -53,7 +53,7 @@ public abstract class GenericDAO<T> implements Serializable {
 		postCreate(instance);
 	}
 
-	// No pre-create; just tailer the object before calling create().
+	// No pre-create; just tailor the object before calling create().
 
 	void postCreate(T instance) {
 		// Hook for subclasses, eg add MemberTX to Member while in JPA tx
@@ -89,7 +89,7 @@ public abstract class GenericDAO<T> implements Serializable {
 		preDelete(instance);
 
 		// Finally remove the member instance
-		entityManager.remove(entityManager.merge(instance));
+		entityManager.remove(instance);
 
 		postDelete(instance);
 	}

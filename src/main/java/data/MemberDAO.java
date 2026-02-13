@@ -3,6 +3,8 @@ package data;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
@@ -21,11 +23,14 @@ import model.TransactionReason;
 @SessionScoped
 public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
+	Logger logger = Logger.getLogger(MemberDAO.class.getName());
+
 	@Override
 	protected String getFindAllQueryString() {
 		return "SELECT m FROM Member m order by m.lastName";
 	}
 
+	@SuppressWarnings("unused") // Needed by JPA
 	public MemberDAO() {
 		super(Member.class);
 	}
@@ -69,7 +74,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 	public List<Member> findNonSecondaries() {
 		return entityManager.createQuery(
-				"SELECT m FROM member m where m.memberType != " + MemberType.Secondary.name())
+				"SELECT m FROM member m where m.memberType != " + MemberType.Secondary.name(), Member.class)
 				.getResultList();
 	}
 
@@ -83,19 +88,21 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 	@Override
 	public void preDelete(Member instance) {
+		logger.log(Level.INFO, "preDelete(" + instance + ")");
 		// Remove secondaries, if any, before primary
 		for (Member sm : instance.getSecondaryMembers()) {
-			entityManager.remove(entityManager.merge(sm));
+			entityManager.remove(sm);
 		}
 
 		// Remove transactions for this user
 		for (MemberTransaction tx : instance.getMemberTransactions()) {
-			entityManager.remove(entityManager.merge(tx));
+			entityManager.remove(tx);
 		}
 	}
 
 	@Override
 	protected void postDelete(Member instance) {
+		logger.log(Level.INFO, "postDelete(" + instance + ")");
 		entityManager.persist(new MemberArchived(instance));
 	}
 
