@@ -1,5 +1,7 @@
 = TODO
 
+Use Jakarta Data to crush most DAOs.
+
 MAKE ME A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
 
 New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
