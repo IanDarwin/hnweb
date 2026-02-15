@@ -2,11 +2,15 @@ package data;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import model.Member;
+import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class MemberDAOTest extends AbstractPersistenceTest {
 
@@ -38,8 +42,31 @@ class MemberDAOTest extends AbstractPersistenceTest {
         memberDAO.create(member);
         tx.commit();
         long id = member.getId();
+        System.out.println("createAndDelete: member id " + id);
         tx = getEntityManager().getTransaction();
         tx.begin();
+        memberDAO.delete(getEntityManager().merge(member));
+        tx.commit();
+        assertEquals(0, getEntityManager().createQuery("SELECT m FROM Member m").getResultList().size());
+    }
+
+    @Test
+    void createAndDeleteComplex() {
+        EntityTransaction tx = getEntityManager().getTransaction();
+        tx.begin();
+        memberDAO.create(member);
+        member.getMemberTransactions().add(new MemberTransaction(member, 1, TransactionReason.N, PaymentType.CASH));
+        member.setMemberType(MemberType.Family);
+        Member spouse = new Member("Melly", "T", "Grump", "melly@grift.bar");
+        spouse.setMasterMember(member);
+        Set secondaries = new HashSet<Member>();
+        secondaries.add(spouse);
+        member.setSecondaryMembers(secondaries);
+        tx.commit();
+        long id = member.getId();
+        tx = getEntityManager().getTransaction();
+        tx.begin();
+        Member member = memberDAO.findById(id);
         memberDAO.delete(member);
         tx.commit();
         assertEquals(0, getEntityManager().createQuery("SELECT m FROM Member m").getResultList().size());
