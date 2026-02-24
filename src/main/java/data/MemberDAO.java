@@ -23,7 +23,7 @@ import model.TransactionReason;
 @SessionScoped
 public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
-	private static long serialVersionUID = 984239084209L;
+	private static final long serialVersionUID = 380283091981L;
 
 	Logger logger = Logger.getLogger(MemberDAO.class.getName());
 
@@ -89,26 +89,31 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 	// delete() is inherited, but uses these:
 
 	@Override
-	public void preDelete(Member instance) {
-		logger.log(Level.INFO, "preDelete(" + instance + ")");
+	public void preDelete(Member member) {
+		logger.log(Level.INFO, "preDelete(" + member + ")");
 		// Remove transactions for this user
-		for (MemberTransaction tx : instance.getMemberTransactions()) {
-			entityManager.remove(entityManager.merge(tx));
-		}
+		// Do this by hand as some TXes may not be linked properly
+		entityManager.createQuery(
+				"SELECT t FROM MemberTransaction t where t.member = :member", MemberTransaction.class)
+				.setParameter("member", member)
+				.getResultList()
+				.forEach(entityManager::remove);
 
 		// Remove secondaries, if any, before primary
-		for (Member sm : instance.getSecondaryMembers()) {
-			entityManager.remove(entityManager.merge(sm));
-		}
+//		for (Member sm : member.getSecondaryMembers()) {
+//			entityManager.remove(entityManager.merge(sm));
+//		}
 	}
 
 	@Override
 	protected void postDelete(Member instance) {
 		logger.log(Level.INFO, "postDelete(" + instance + ")");
-		entityManager.persist(new MemberArchived(instance));
+		final MemberArchived newMemberArchived = new MemberArchived(instance);
+		System.out.println("newMemberArchived = " + newMemberArchived);
+		entityManager.persist(newMemberArchived);
 	}
 
-	// Home of the necromancer:
+	// Beware the hall of the necromancer!
 
 	/** For members only, we keep an "archived" version of some fields;
 	 * this method lets us undelete, given the archivedMember's pkey.

@@ -20,6 +20,9 @@ import action.YearCalcs;
 @Entity
 @Named("person")
 public class Member {
+
+	private static final long serialVersionUID = 92899228338972L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
     @SequenceGenerator(name = "member_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)

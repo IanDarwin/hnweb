@@ -110,8 +110,8 @@ public class MemberArchived {
             // t.setCause(ex);
             throw t;
         }
-        // Now have to clear the ID field
-        id = 0L;
+        // Do NOT clear the ID field
+        // id = 0L;
     }
 
 

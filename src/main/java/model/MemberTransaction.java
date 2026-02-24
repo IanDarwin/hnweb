@@ -75,7 +75,6 @@ public class MemberTransaction implements Serializable {
 	public PaymentType getPaymentType() {
 		return paymentType;
 	}
-
 	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
 	}
@@ -86,18 +85,21 @@ public class MemberTransaction implements Serializable {
 	public void setMember(Member member) {
 		this.member = member;
 	}
+
 	public Date getDateRenewed() {
 		return dateRenewed;
 	}
 	public void setDateRenewed(Date renewalDate) {
 		this.dateRenewed = renewalDate;
 	}
+
 	public int getNumYears() {
 		return numYears;
 	}
 	public void setNumYears(int nYears) {
 		this.numYears = nYears;
 	}
+
 	public int getNewExpiryYear() {
 		return newExpiryYear;
 	}

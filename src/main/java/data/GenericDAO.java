@@ -24,6 +24,7 @@ import java.util.List;
  * * Ensure called from a @Transactional-annotate method!
  */
 public abstract class GenericDAO<T> implements Serializable {
+	private static final long serialVersionUID = 29302390482093L;
 
 	private final Class<?> targetClass; // Both as T and as constr arg0
 	protected String getFindAllQueryString() {
@@ -88,11 +89,10 @@ public abstract class GenericDAO<T> implements Serializable {
 	public void delete(T instance) {
 		preDelete(instance);
 
-		// Finally remove the instance
-		final T merge = entityManager.merge(instance);
-		System.out.println("merge = " + merge);
-		entityManager.remove(merge);
+		// Now remove the instance
+		entityManager.remove(instance);
 
+		// And do any cleanup needed
 		postDelete(instance);
 	}
 
