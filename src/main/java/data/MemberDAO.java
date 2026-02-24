@@ -76,7 +76,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 	public List<Member> findNonSecondaries() {
 		return entityManager.createQuery(
-				"SELECT m FROM member m where m.memberType != " + MemberType.Secondary.name(), Member.class)
+				"SELECT m FROM Member m where m.memberType != " + MemberType.Secondary.name(), Member.class)
 				.getResultList();
 	}
 
