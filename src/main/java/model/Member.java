@@ -145,7 +145,7 @@ public class Member {
         }
         // Now have to clear some fields.
         id = 0L;
-        // XXX transactions = new ArrayList<>();
+        memberTransactions.clear();
         secondaryMembers = new HashSet<>();
         position = null;
     }
