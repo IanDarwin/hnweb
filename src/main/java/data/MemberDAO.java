@@ -23,6 +23,8 @@ import model.TransactionReason;
 @SessionScoped
 public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
+	private static long serialVersionUID = 984239084209L;
+
 	Logger logger = Logger.getLogger(MemberDAO.class.getName());
 
 	@Override
