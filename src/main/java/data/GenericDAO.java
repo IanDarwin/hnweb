@@ -88,8 +88,10 @@ public abstract class GenericDAO<T> implements Serializable {
 	public void delete(T instance) {
 		preDelete(instance);
 
-		// Finally remove the member instance
-		entityManager.remove(entityManager.merge(instance));
+		// Finally remove the instance
+		final T merge = entityManager.merge(instance);
+		System.out.println("merge = " + merge);
+		entityManager.remove(merge);
 
 		postDelete(instance);
 	}
