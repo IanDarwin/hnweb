@@ -19,6 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<javase.version>17</javase.version>
 		<jakartaee.version>11.0.0-M1</jakartaee.version>
+		<jakartadata.version>1.0.1</jakartadata.version>
 		<jakartamail.version>2.0.2</jakartamail.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
@@ -151,6 +152,29 @@
 			<version>2.3.232</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Jakarta Data -->
+		<dependency>
+			<groupId>jakarta.data</groupId>
+			<artifactId>jakarta.data-api</artifactId>
+			<version>${jakartadata.version}</version>
+		</dependency>
+
+		<!-- Hibernate ORM specific dependencies -->
+<!--
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-hibernate-orm-panache</artifactId>
+		</dependency>
+-->
+
+		<!-- JDBC driver dependencies -->
+<!--
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-jdbc-postgresql</artifactId>
+		</dependency>
+-->
 
 		<!-- JUnit 5 -->
 		<dependency>
