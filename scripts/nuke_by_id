@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# remove a member after copying into member_archived
+
+if [ $# != 1 ];then
+	echo usage: $0 id
+	exit
+fi
+
+ID=$1
+
+echo "Creating member_archived subset"
+psql -d hn "insert into member_archived select id,firstname,lastname,email,cellphone,homephone,workphone,yearjoined,expiryyear,created,lastmodified from member where id = ${ID};
+
+echo "Deleting any transactions for member"
+psql -d hn "delete from transaction where member_id = ${ID};
+
+echo "Now the real deal..."
+psql -d hn "delete from member cascade where id = ${ID};
+
+echo "Checking if member still exists (should be no rows!)"
+psql -d hn "select * from member where id = ${ID};
+
+echo "Checking member_archived entry."
+psql -d hn "select * from member_archived where id = ${ID};
+!
+
