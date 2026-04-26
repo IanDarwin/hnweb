@@ -8,6 +8,7 @@ New Member/Renewal Signup - with email confirmation - form in $w/SignupForm.html
 needs post handler, or make it a JSF.
 Auto-send welcome or renew thank-you email.
 New members should get the latest Bluebird.
+Enable payment with Helcim - uses C$ natively so no conversions
 
 New class EHandler from on pluggable messager used in LoginAction
 
@@ -34,8 +35,6 @@ Test: create a non-priv user and test their inability to do various things. Arqu
 UserEdit += password
 
 Get/Forgot Password by email
-
-SELF_RENEW W/ PAYPAL
 
 Update Secondary member when renewing or setting date (low prio since we already display master's exp)
 
