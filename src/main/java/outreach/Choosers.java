@@ -18,7 +18,7 @@ public class Choosers {
 
 abstract class MemberChooser implements Predicate<Member> {
 
-	private String name;
+	private final String name;
 
 	/// Describes this chooser for use in a dropdown
 	public String toString() {
