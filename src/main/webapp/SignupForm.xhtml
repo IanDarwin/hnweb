@@ -70,7 +70,7 @@
     </style>
 </head>
 
-<body dir="ltr" style="max-width:21.59cm;margin-top:2cm; margin-bottom:1.3cm; margin-left:2cm; margin-right:2cm; ">
+<body dir="ltr" style="margin-top:2cm; margin-bottom:1.3cm; margin-left:2cm; margin-right:2cm; ">
 
 <div style="height:3.256cm;width:2.725cm; padding:0;  float:left; position:relative; left:-0.019cm; " class="graphic-fr1" id="Image1">
     <img style="height:3.256cm;width:2.725cm;" alt="Club Logo" src="images/mclaren-bluebird-right-facing_med_hr.jpg"/>
@@ -86,31 +86,35 @@
     New memberships after March 1 extend to the following year.
 </p>
 
-<br/>
-
 <form method="post" action="/signup">
 
-    <p>Membership Type:
-        <input type="radio" id="indiv" name="type" value="individual"/>
+	<table>
+
+	<tr>
+    <td>Membership Type:</td>
+    <td><input type="radio" id="indiv" name="type" value="individual"/>
         <label for="indiv">Individual $30.</label>
         <input type="radio" id="fam" name="type" value="family"/>
-        <label for="fam">Family $40.</label>
-        Additional Donation ______
-    </p>
-    <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-        <input type="radio" id="new" name="new_or_renew" value="new"/>
+        <label for="fam">Family $40.&nbsp;</label></td>
+	<td>	
+		<label for="extra_don">Additional Donation $</label>
+		<input type="text" id="extra_don" size="5"/>.
+	</td>
+	</tr>
+	<tr>
+    <td><!--Empty --></td>
+    <td><input type="radio" id="new" name="new_or_renew" value="new"/>
         <label for="new">New</label>
         <input type="radio" id="renew" name="new_or_renew" value="renew"/>
         <label for="renew">Renewal</label>
-    </p>
+    </td>
+    </tr>
+	</table>
+
     <p class="paragraph">
         <label for="names">Name(s)</label>
         <input type="text" id="names" size="70" required="true"/>
     </p>
-    <br/>
     <p class="paragraph">Contact information <em>(N.B. If renewing, please omit the below fields unless they have changed)</em>
     </p>
     <br/>
