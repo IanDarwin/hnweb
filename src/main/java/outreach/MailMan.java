@@ -219,7 +219,7 @@ public class MailMan implements Serializable {
 	 * Perform list subsetting
 	 * @param list The list of members
 	 * @param ch The Predicate
-	 * @return The subset list
+	 * @return The subset list, as email strings
 	 */
 	static List<String> selectListMembers(List<Member> list, Predicate<Member> ch) {
 		List<String> emails = new ArrayList<>(list.size());

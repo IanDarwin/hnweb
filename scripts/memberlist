@@ -2,7 +2,7 @@
 
 # memberlist - print a hardcopy listing. Pipe into print-memberlist to actually print.
 
-# XXX Convert to Java or Python, option to include only current member year
+# XXX Convert to Java, option to include only current member year
 # fold secondaries into main, strip lastname if same
 
 psql -d hn -c 'select id,firstname,lastname,membertype,email,expiryyear from member order by lower(lastname);' |

@@ -4,9 +4,12 @@ Use Jakarta Data to crush most DAOs.
 
 MAKE ME A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
 
-New Member Signup - with email confirmation - cf $git/wf-kitchensink for form.
+New Member/Renewal Signup - with email confirmation - form in $w/SignupForm.html,
+needs post handler, or make it a JSF.
+Auto-send welcome or renew thank-you email.
+New members should get the latest Bluebird.
 
-new class EHandler from on pluggable messager used in LoginAction
+New class EHandler from on pluggable messager used in LoginAction
 
 Save-url-for-login feature doesn't capture parameters, so useless half the time.
 
@@ -25,8 +28,6 @@ Add DeletedView (already linked to from DeletedList).
 
 Ensure Resurrected (and all data-changing) requires admin
 
-Get Renew working; auto-send thank-you email.
-New members should get a welcome email *automatically* with the latest Bluebird.
 
 Test: create a non-priv user and test their inability to do various things. Arquillian?
 
