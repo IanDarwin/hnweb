@@ -4,18 +4,6 @@ import model.Member;
 
 import java.util.function.Predicate;
 
-public class Choosers {
-	public static void main(String[] args) {
-		var ch = new MemberHasEmail();
-		System.out.println(ch);
-		Member member = new Member();
-		member.setFirstName("Test");
-		System.out.println(ch.test(member));
-		member.setEmail("foo@bar.tld");
-		System.out.println(ch.test(member));
-	}
-}
-
 abstract class MemberChooser implements Predicate<Member> {
 
 	private final String name;
