@@ -99,8 +99,8 @@
         <input type="radio" id="fam" name="type" value="family"/>
         <label for="fam">Family $40.&nbsp;</label></td>
 	<td>	
-		<label for="extra_don">Additional Donation $</label>
-		<input type="text" id="extra_don" size="5"/>.
+		<label for="donation">Additional Donation $</label>
+		<input type="text" id="donation" name="donation" size="5"/>.
 	</td>
 	</tr>
 	<tr>
@@ -124,10 +124,10 @@
     <p class="paragraph">
         <label for="email">Email* </label>
         <input id="email" type="text" size="40" required="true"/>
-        <label for="home">Home</label>
         <input type="radio" id="home" name="email_home_or_work" value="home"/>
-        <label for="work">Work</label>
+        <label for="home">Home</label>
         <input type="radio" id="work" name="email_home_or_work" value="work"/>
+        <label for="work">Work</label>
     </p>
     <br/>
 
@@ -137,28 +137,30 @@
 
     <p class="paragraph">
         <label for="town">Town/City</label>
-        <input id='town' type='text' size="30"/> Ontario Canada.
+        <input type='text' id='town' name='town' size="30"/> Ontario Canada.
     </p>
     <br/>
     <p class="paragraph">
-        <label for="phone1">Phone (10 digits)</label><input id="phone1" size="20"/>
+        <label for="phone1">Phone (10 digits)</label>
+		<input id="phone1" name="phone1" size="20"/>
+        <input type="radio" id="phone1_home" name="email_home_or_work_1" value="home"/>
         <label for="phone1_home">Home</label>
-        <input type="radio" id="phone1_home" name="email_home_or_work" value="home"/>
+        <input type="radio" id="phone1_mobile" name="email_home_or_work_1" value="mobile"/>
         <label for="phone1_mobile">Mobile</label>
-        <input type="radio" id="phone1_mobile" name="email_home_or_work" value="mobile"/>
+        <input type="radio" id="phone1_work" name="email_home_or_work_1" value="work"/>
         <label for="phone1_work">Work</label>
-        <input type="radio" id="phone1_work" name="email_home_or_work" value="work"/>
     </p>
 
     <br/>
     <p class="paragraph">
-        <label for="phone2">Phone (10 digits)</label><input id="phone2" size="20"/>
+        <label for="phone2">Phone (10 digits)</label>
+		<input id="phone2" name="phone2" size="20"/>
+        <input type="radio" id="phone2_home" name="email_home_or_work_2" value="home"/>
         <label for="phone2_home">Home</label>
-        <input type="radio" id="phone2_home" name="email_home_or_work" value="home"/>
+        <input type="radio" id="phone2_mobile" name="email_home_or_work_2" value="mobile"/>
         <label for="phone2_mobile">Mobile</label>
-        <input type="radio" id="phone2_mobile" name="email_home_or_work" value="mobile"/>
+        <input type="radio" id="phone2_work" name="email_home_or_work_2" value="work"/>
         <label for="phone2_work">Work</label>
-        <input type="radio" id="phone2_work" name="email_home_or_work" value="work"/>
     </p>
     <br/>
 
