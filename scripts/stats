@@ -11,7 +11,11 @@ cat >/tmp/st <<!
 \echo #1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)
 SELECT COUNT(id) FROM member;
 
-\echo #2 Counting total PAID memberships of all types
+\echo #1a Total who have EVER been full (paid Individual or Family) Members
+select count(id) from member 
+	where expiryyear is not null and expiryyear != 0 and membertype in ('Individual','Family');
+
+\echo #2 Counting total CURRENTLY-PAID memberships of all types (Indivs, Families)
 select count(id) from member where membertype in ('Individual','Family') and expiryyear >= ${CURYEAR};
 
 \echo #2a Of those, Individual paid-up memberships
