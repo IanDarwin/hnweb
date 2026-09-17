@@ -4,20 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.enterprise.inject.Model;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 /**
  * Do not confuse this with a JPA transaction; this is an application object:
@@ -31,7 +18,9 @@ import jakarta.persistence.TemporalType;
 public class MemberTransaction implements Serializable {
 
 	private static final long serialVersionUID = 4112042259125129308L;
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
+    @SequenceGenerator(name = "member_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
+	@Id
 	private long id;
 	@Enumerated(EnumType.STRING)
 	private TransactionReason reason = TransactionReason.R;

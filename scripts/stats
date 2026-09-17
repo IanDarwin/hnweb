@@ -1,12 +1,21 @@
 #!/bin/sh
 
+SSH=
+TMP=$(mktemp /tmp/stXXXXXXXXXX)
+
+case $1 in
+""|-l)	;;
+-r)		SSH="ssh dos";;
+esac
+
 . ./CURYEAR
 LASTYEAR=$((CURYEAR - 1))
 
 echo "Headwaters Nature: Stats for membership year ${CURYEAR}"
 echo
 
-cat >/tmp/st <<!
+(
+cat <<!
 
 \echo #1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)
 SELECT COUNT(id) FROM member;
@@ -39,4 +48,6 @@ SELECT count(id) from member where membertype NOT IN ('Individual','Family','Sec
 	(membertype = 'Individual' AND expiryyear = 0);
 
 !
-psql -d hn < /tmp/st | rg -v '(rows?\))|-----|^ count'
+) >$TMP 
+
+cat $TMP | $SSH /usr/local/bin/psql -d hn | rg -v '(rows?\))|-----|^ count'

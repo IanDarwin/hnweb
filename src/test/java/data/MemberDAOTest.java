@@ -1,6 +1,5 @@
 package data;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,8 @@ class MemberDAOTest extends AbstractPersistenceTest {
         System.out.println(4);
         memberDAO.delete(member);
         tx.commit();
-        final List<Member> members = getEntityManager().createQuery("SELECT m FROM Member m").getResultList();
+        final List<Member> members =
+                getEntityManager().createQuery("SELECT m FROM Member m", Member.class).getResultList();
         members.forEach(System.out::println);
         assertEquals(0, members.size());
     }

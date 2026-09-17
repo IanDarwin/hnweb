@@ -1,1 +1,2 @@
-/usr/local/bin/lpr -T 'HN List' -o media=letter -o orientation-requested=5 -o prettyprint
+ssh dos git-webs/hnweb/scripts/memberlist |
+	/usr/local/bin/lpr -T 'HN List' -o media=letter -o orientation-requested=5 -o prettyprint
