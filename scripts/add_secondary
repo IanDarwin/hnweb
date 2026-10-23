@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# usage: add_secondary firstname lastname master-id
+
+FNAME=$1
+LNAME=$2
+MST_ID=$3
+
+echo "insert into member(firstname,lastname,member_type,mastermember_id) values($FNAME,$LNAME,'Secondary', $MST_ID);
