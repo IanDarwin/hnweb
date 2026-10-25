@@ -19,6 +19,8 @@
 <ui:define name="body">
 
 	<h:form id="entityForm">
+	<!-- Says which event this form is about; see EventHome.getEditId() -->
+	<h:inputHidden id="editId" value="#{eventHome.editId}"/>
 	<p:panel>
 		<f:facet name="header">Edit Event</f:facet>
 		<p:panelGrid columns='3' layout='flex'>
@@ -68,17 +70,23 @@
 		</p:panelGrid>
 	</p:panel>
 
-	<p:commandButton value="Save" action="#{eventHome.update}" ajax='false'/>
+	<p:commandButton value="Save event" action="#{eventHome.saveEvent}" ajax="false"/>
+	</h:form>
 
-	<p:commandButton value="Delete" action="#{eventHome.remove}">
-        <p:confirm header="Confirm Deletion" message="Really delete this event?" icon="ui-icon-alert" />
-    </p:commandButton>
- 
-    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-    </p:confirmDialog>
-	<p:commandButton value="Cancel" action="#{eventHome.cancel}" ajax='false'/>
+	<!-- Their own form, so Cancel and Delete never get stuck on validation of the fields above -->
+	<h:form id="eventActions" styleClass="actions">
+		<h:inputHidden id="editId" value="#{eventHome.editId}"/>
+
+		<p:commandButton value="Cancel" action="#{eventHome.cancel}" ajax="false" immediate="true" styleClass="btn-secondary"/>
+
+		<p:commandButton value="Delete event" action="#{eventHome.deleteEvent}" ajax="false" styleClass="btn-danger">
+			<p:confirm header="Confirm deletion" message="Really delete this event?" icon="ui-icon-alert" />
+		</p:commandButton>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
+		</p:confirmDialog>
 	</h:form>
 	
 </ui:define>
