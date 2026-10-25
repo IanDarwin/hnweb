@@ -1,4 +1,4 @@
-= clublist - Club Membership List
+= hnweb - Club Membership List
 
 Modified version for Orangeville "Headwaters Nature."
 
@@ -8,8 +8,7 @@ STATUS:
 	Member Mailing has serious charset issues - 
 	Check the widget for charset options?
 
-This does show off some basic functionality of JakartaEE-Persistence
-and JakaraEE-Data in a JSF environment.
+This shows some basic functionality of JakartaEE-Persistence in a JSF environment.
 
 == DB Design Issues
 
@@ -18,41 +17,36 @@ The former is the traditional EE security role, established in the MemberRole cl
 The latter is club-specific, and controlled by the "position" field in the Member table.
 
 One of the issues is how to handle family memberships. In our club, some of the families are
-sufficiently internet-savvy that they have 3 or 4 email accounts (two parents, one or two kids)
+sufficiently internet-savvy that they have 2, 3 or 4 email accounts (two parents, one or two kids)
 whereas some actually have one for all. The way I handle families is to arbitrarily designate one
 as the "family master" and all the others as "secondaries" - in JPA/Hibernate terms, a one-to-many
 from Member to Member. Payments are attributed to the master member.
 
 A few older entries weren't done this way, but the ones with "+" have been fixed 
 by running `scripts/splitnames.awk`; there are still a few with "and" and "&"
-that should be fixed. Be careful with spllitnames, and back up the database first!
+that should be fixed. Be careful with splitnames, and back up the database first!
 
-== Deployment
+== Deploying this for your own club
 
-. Copy config-sample.properties to config.properties, change the name in the orgName property
-in this file from 'Sample Club' to your organization's name (keep it short).
+This is nowhere near user-friendly, but if you are know your way around
+Java Enterprise servers, this will get you going.
+
+Note that in all editing operations, you *must* use a "plain text" editor 
+like vi, nano, notepad, and so on, but *not* a word processor!.
+
+. Copy config-sample.properties to config.properties. Edit the new file 
+changing the name in the orgName property
+from 'Sample Club' to your organization's name (keep it short).
+Ditto for the email server config in the same file.
 . Set up a JTA datasource in your app server
-. Change persistence.xml from the in-memory H2 to the JTA datasource
+. Change persistence.xml from the in-memory H2 to the JTA datasource you just created
+. XXX That doesn't create the tables; document how to run once with the create option.
 . Setup the deployment as needed (e.g., edit jboss-deployment.xml)
 . Container-managed security is already configured. Just create a user in the role of club_exec in your app server.
 . Deploy (e.g., mvn wildfly:deploy if you use JBoss WildFly).
 . Enjoy!
 
-If you want to be able to send emails to your club, you'll need some additional
-configuration, which is under development at the moment.
-
 == ToDo
 
-Here are some things that should be added. 
-Roughly in increasing order of difficulty.
-https://github.com/IanDarwin/clublist[Fork this project on GitHub] and send pull requests when you get one working!
+See the separate TODO file.
 
-. Login should take you to view yourself, not a blank (is coded but doesn't work ATM)
-. Allow members to update their own record (only!)
-. Move Renewal into Edit page or at least into list of buttons on List page.
-. Provide a Change Password button
-. Search with 'Like' method in DS Data
-. Implement the Print Member Badge/Label page.
-. Refactor Home object to merge w/ darwinsys-ee EntityHome?
-. "Position" should be a relationship to another Entity, or an Enum, with a dropdown chooser.
-Note that this will need its own list-detail mechanism to manage the list of Positions!
