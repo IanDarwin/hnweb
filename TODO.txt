@@ -1,17 +1,29 @@
-= TODO
-
-Generalize for use by other nature clubs!?
+= HnWeb TODO
 
 Use Jakarta Data to crush most DAOs.
+Here are some things that should be added. 
+These should be converted into GH Issues someday.
+Fork this project on GitHub and send pull requests when you get one working!
 
-TURN INTO A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
+. Generalize for use by other nature clubs!?
+
+. Allow members to update their own record (only!)
+. Move Renewal into Edit page or at least into list of buttons on List page.
+. Provide a Change Password button
+. Search with 'Like' method in DS Data
+. "Position" should be a relationship to another Entity, or an Enum, with a dropdown chooser.
+Note that this will need its own list-detail mechanism to manage the list of Positions!
+. Refactor Home object to merge w/ darwinsys-ee EntityHome?
+
+. Use Jakarta Data to crush most DAOs.
+
+. TURN INTO A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
 
 New Member/Renewal Signup - with email confirmation - form in $w/SignupForm.html,
 needs post handler, or make it a JSF.
 
 Auto-send welcome or renew thank-you email.
-
-New members should get the latest Bluebird.
+New members should get the latest Bluebird issue.
 
 Enable payment with Helcim - uses C$ natively so no conversions
 

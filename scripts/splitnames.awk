@@ -1,12 +1,10 @@
+#!/usr/bin/awk -f
+
 # split up entries like "Bob + Josey" "Smith"
 # Use psql & vi to create input lines like: 
 # 743|Bob|Mary|Smith
 # e.g., remove ALL spaces except in names like 'Billy Bob'
 # Make sure no blank line at end.
-
-# Maybe start w/ something like this:
-# select firstname,lastname,membertype from member where firstname like '%&%' or firstname like '% and %'
-# order by lastname;
 
 BEGIN {
 	OFS=""
@@ -17,7 +15,7 @@ NF=4 {
 	secondary_firstname=$3
 	lastname=$4
 
-print "select id,membertype,firstname,lastname,expiryyear from member where firstname like '%+%';"
+print "select id,membertype,firstname,lastname,expiryyear from member where firstname like '% and %';"
 print "insert into member(firstname,lastname,membertype,mastermember_id)" \
 	"values('" secondary_firstname "', '" lastname "','Secondary', " id ");"
 print "update member set firstname = '" master_firstname "' where id = " id ";"

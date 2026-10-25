@@ -6,8 +6,6 @@ import java.util.List;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 import model.Event;
 
@@ -18,9 +16,6 @@ import model.Event;
 @Named("eventList")
 @RequestScoped
 public class EventDAO extends GenericDAO<Event> implements Serializable {
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	EventDAO() {
 		super(Event.class);
