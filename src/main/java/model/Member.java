@@ -205,7 +205,12 @@ public class Member {
     }
 
     public void acceptRenewal(MemberTransaction renewal) {
-        setExpiryYear(YearCalcs.getCurrentMembershipYear() + renewal.getNumYears());
+        acceptRenewal(renewal, LocalDate.now());
+    }
+
+    /** As {@link #acceptRenewal(MemberTransaction)} but as of a given date, for testing. */
+    public void acceptRenewal(MemberTransaction renewal, LocalDate now) {
+        setExpiryYear(YearCalcs.getRenewedExpiryYear(getExpiryYear(), renewal.getNumYears(), now));
         renewal.setNewExpiryYear(getExpiryYear());
     }
 

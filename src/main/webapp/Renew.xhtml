@@ -7,45 +7,63 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Renew Membership Online</ui:define>
+<ui:define name="pageTitle">Renew membership</ui:define>
 <ui:define name="body">
 
-	<p:panel>
-	  <h:form>
+	<h:form id="renewForm" styleClass="sheet sheet-narrow">
+		<div class="form-grid">
 
-		<p:panelGrid columns='2'>
+			<div class="field">
+				<p:outputLabel for="member" value="Member"/>
+				<div class="control">
+					<!--
+						itemValue must be the Member object itself: memberConverter turns it into
+						the primary key for the browser and back again on submit.
+					-->
+					<p:autoComplete id="member"
+						value="#{renewAction.member}"
+						completeMethod="#{memberCompleteAction.completeMember}"
+						converter="#{memberConverter}"
+						var="_member" itemLabel="#{_member.names}" itemValue="#{_member}"
+						forceSelection="true" scrollHeight="260"
+						required="true" requiredMessage="Choose a member from the list."
+						placeholder="Start typing a last name"
+						effect="blind"/>
+					<p:message for="member"/>
+					<div class="hint">Type part of a last name, then pick the member from the list.</div>
+				</div>
+			</div>
 
-		<h:outputText value="Member (last name only)"/>
-		<p:autoComplete id="member"
-			value="#{renewAction.member}" 
-			completeMethod="#{memberCompleteAction.completeMember}"
-			converter="#{memberConverter}" 
-			var="_member" itemLabel="#{_member.names}" itemValue="#{_member.id}"
-			effect="blind" />
+			<div class="field">
+				<p:outputLabel for="numYears" value="Years to renew"/>
+				<div class="control">
+					<h:selectOneMenu id="numYears" value="#{renewAction.numYears}">
+						<f:selectItem itemLabel="1 year" itemValue="1"/>
+						<f:selectItem itemLabel="2 years" itemValue="2"/>
+						<f:selectItem itemLabel="3 years" itemValue="3"/>
+					</h:selectOneMenu>
+					<p:message for="numYears"/>
+				</div>
+			</div>
 
-		<h:outputText value="Number of Years"/>
-		<h:selectOneMenu value="#{renewAction.numYears}">
-			<f:selectItem itemLabel='1' itemValue='1'/>
-			<f:selectItem itemLabel='2' itemValue='2'/>
-			<f:selectItem itemLabel='3' itemValue='3'/>
-		</h:selectOneMenu>
+			<div class="field">
+				<p:outputLabel for="paymentType" value="Paid by"/>
+				<div class="control">
+					<h:selectOneMenu id="paymentType" value="#{renewAction.paymentType}">
+						<f:selectItems value="#{factories.renewalPaymentTypes}"
+							var="_pt" itemValue="#{_pt}" itemLabel="#{_pt.label}"/>
+					</h:selectOneMenu>
+					<p:message for="paymentType"/>
+				</div>
+			</div>
 
-		<h:outputText value="Payment Type"/>
-		<h:selectOneMenu value="#{renewAction.paymentType}">
-			<f:selectItem itemLabel='Cash' itemValue='PaymentType.CASH'/>
-			<f:selectItem itemLabel='Cheque' itemValue='PaymentType.CHEQUE'/>
-			<!-- PaymentType.CREDIT -->
-			<!-- PaymentType.DEBIT  -->
-			<f:selectItem itemLabel='eTransfer' itemValue='PaymentType.ETRANSFER'/>
-		</h:selectOneMenu>
+		</div>
 
-
-		&nbsp;
-		<p:commandButton value="Save" action="#{renewAction.renew}" ajax='false'/>
-		
-		</p:panelGrid>
-
+		<div class="actions">
+			<p:commandButton value="Renew membership" action="#{renewAction.renew}" ajax="false"/>
+			<h:outputLink value="#{request.contextPath}/MemberList.web" styleClass="btn-link">Cancel</h:outputLink>
+		</div>
 	</h:form>
-	</p:panel>
+
 </ui:define>
 </ui:composition>

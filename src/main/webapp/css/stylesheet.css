@@ -1,53 +1,331 @@
-/* 
- * Style Sheet for Ian Darwin web site.
- * This is the web: go ahead and borrow this page, but change it for
- * your own web, and pass it on with the same terms of re-use.
- * $Id$
+/*
+ * Headwaters Nature club membership site.
+ *
+ * Sits on top of the PrimeFaces "saga" theme (see web.xml) and overrides only
+ * what we need. Selectors for PrimeFaces widgets are prefixed with "body" so
+ * they win over the theme regardless of the order the stylesheets load in.
+ *
+ * Palette: spruce (header, headings), bluebird (actions), neutral paper.
  */
 
-/* Attributes named after an HTML element apply to all occurrences of type.
- * Attributes named like tr.foo only appy to tr's with class=foo.
- * Attributes named *.home_* are only used on the home page.
- * Attributes named with a "#" can apply to any element but only if class= used,
- * e.g., <p class="nav">Link: ...</p>
- */
-
-/* Paragraph formats: use generic, non-vendor specific names (no Arial) */
-h1	{ color: blue; font-family: Helvetica, sans-serif; }
-h2	{ color: blue; font-family: Helvetica, sans-serif; }
-h3	{ color: blue; font-family: Helvetica, sans-serif; }
-h4	{ color: blue; font-family: Helvetica, sans-serif; }
-h5	{ color: blue; font-family: Helvetica, sans-serif; }
-h6	{ color: blue; font-family: Helvetica, sans-serif; }
-
-
-th { background-color: #eee; font-family: Helvetica, sans-serif; }
-
-td { font-family: sans-serif,Helvetica; font-size: 1.0em; }
-
-p, li { font-family: sans-serif,Helvetica; font-size: 1.0em; }
-
-a:hover {
-        background-color: #dbd4a6;
+:root {
+	--spruce:        #1e3b33;
+	--spruce-soft:   #2d5448;
+	--bluebird:      #2b6cb0;
+	--bluebird-dark: #1f4f86;
+	--paper:         #f3f5f2;
+	--surface:       #ffffff;
+	--ink:           #1c2522;
+	--muted:         #58665f;
+	--line:          #d5dcd7;
+	--row-alt:       #f7f9f7;
+	--ok:            #226b3a;
+	--ok-bg:         #e7f3ea;
+	--warn:          #7a5200;
+	--warn-bg:       #fbf1d9;
+	--bad:           #a1301f;
+	--bad-bg:        #fbe9e5;
+	--radius:        6px;
+	--font-body:     system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--font-display:  Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 }
 
-#message	{ color: red; }
-#errormsg	{ color: red; }
-#infomsg	{ color: orange; }
-#warnmsg	{ color: orange; }
+*, *::before, *::after { box-sizing: border-box; }
 
+html { -webkit-text-size-adjust: 100%; }
 
-/* Heading colors */
-#TextAbout   { color: #0000FF;	 /* blue */
-	font-family: Helvetica, sans-serif
+body {
+	margin: 0;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: 16px;
+	line-height: 1.5;
 }
 
-/* Link colors */
-#LinkLocal   { color: #00FF00 } /* green */
-#LinkRemote  { color: #ff0000 } /* red  */
+a { color: var(--bluebird); text-underline-offset: 2px; }
+a:hover { color: var(--bluebird-dark); background: none; }
 
-#Nav	{ font-family: Helvetica, sans-serif; font-size: 0.6em }
+:focus-visible { outline: 3px solid #7fb0e6; outline-offset: 2px; }
 
-/* Pseudo-headings */
-#ph1	{ color: blue; font-family: Helvetica, sans-serif; font-weight: bold }
+/* ---------- Typography ---------- */
 
+h1, h2, h3, h4 {
+	font-family: var(--font-display);
+	color: var(--spruce);
+	line-height: 1.2;
+	margin: 0 0 .5em;
+}
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; }
+
+p, li, td { font-size: 1rem; }
+p { max-width: 70ch; }
+
+/* ---------- Header and navigation ---------- */
+
+.site-header {
+	background: var(--spruce);
+	color: #fff;
+}
+.site-header-inner {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: .75rem 1.25rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .5rem 2rem;
+}
+.site-name {
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	font-weight: 700;
+	color: #fff;
+	text-decoration: none;
+}
+.site-name:hover { color: #fff; }
+
+.site-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem 1.1rem;
+	flex: 1 1 auto;
+}
+.site-nav a,
+.site-account a,
+.site-account .ui-commandlink,
+.site-account a:visited {
+	color: #dfe9e4;
+	text-decoration: none;
+	padding: .25rem 0;
+	border-bottom: 2px solid transparent;
+}
+.site-nav a:hover,
+.site-account a:hover {
+	color: #fff;
+	border-bottom-color: #8fbbe9;
+	background: none;
+}
+.site-account { font-size: .9rem; }
+.site-account .inline-form { display: flex; flex-wrap: wrap; gap: .25rem 1rem; align-items: center; }
+.site-account .welcome { color: #fff; }
+
+/* ---------- Page body ---------- */
+
+.page {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 1.75rem 1.25rem 3rem;
+}
+.page-title { margin-bottom: 1rem; }
+
+.site-footer {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 1.25rem;
+	border-top: 1px solid var(--line);
+	color: var(--muted);
+	font-size: .875rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem 1.5rem;
+}
+
+/* ---------- Messages ---------- */
+
+ul.messages {
+	list-style: none;
+	margin: 0 0 1.25rem;
+	padding: 0;
+}
+ul.messages li {
+	padding: .65rem .9rem;
+	margin-bottom: .4rem;
+	border-radius: var(--radius);
+	border-left: 4px solid;
+}
+ul.messages li.infomsg  { background: var(--ok-bg);   border-color: var(--ok);   color: var(--ok); }
+ul.messages li.warnmsg  { background: var(--warn-bg); border-color: var(--warn); color: var(--warn); }
+ul.messages li.errormsg { background: var(--bad-bg);  border-color: var(--bad);  color: var(--bad); }
+
+/* ---------- Panels and forms ---------- */
+
+body .ui-panel {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	margin-bottom: 1.25rem;
+}
+body .ui-panel .ui-panel-titlebar {
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--line);
+	border-radius: var(--radius) var(--radius) 0 0;
+	padding: .8rem 1.1rem;
+	font-family: var(--font-display);
+	font-size: 1.15rem;
+	color: var(--spruce);
+}
+body .ui-panel .ui-panel-content { padding: 1.1rem; border: 0; background: transparent; }
+
+/* A plain white sheet for hand-built forms and detail views */
+.sheet {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	padding: 1.25rem 1.4rem;
+	margin-bottom: 1.25rem;
+}
+.sheet-narrow { max-width: 38rem; }
+
+.form-grid {
+	display: grid;
+	grid-template-columns: minmax(9rem, 14rem) minmax(0, 1fr);
+	gap: .9rem 1.25rem;
+	align-items: start;
+}
+.form-grid > .field { display: contents; }
+.form-grid .field > label,
+.form-grid .field > .label {
+	padding-top: .5rem;
+	font-weight: 600;
+	color: var(--spruce);
+}
+.form-grid .control { min-width: 0; }
+.form-grid .hint { color: var(--muted); font-size: .875rem; margin-top: .2rem; }
+.inline-group { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: center; }
+
+.field-error, .ui-message-error {
+	display: block;
+	color: var(--bad);
+	font-size: .875rem;
+	margin-top: .2rem;
+}
+.ui-message-error-detail, .ui-message-error-icon { color: var(--bad); }
+
+body .ui-inputfield,
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+	font-family: inherit;
+	font-size: 1rem;
+	padding: .45rem .6rem;
+	border: 1px solid #aeb9b3;
+	border-radius: var(--radius);
+	background: #fff;
+	color: var(--ink);
+	max-width: 100%;
+}
+body .ui-inputfield:enabled:focus,
+input:focus, select:focus, textarea:focus {
+	border-color: var(--bluebird);
+	box-shadow: 0 0 0 3px rgba(43,108,176,.2);
+	outline: none;
+}
+input:disabled, select:disabled { background: #eef1ef; color: var(--muted); }
+body .ui-inputfield.ui-state-error { border-color: var(--bad); }
+
+body .ui-autocomplete { width: 100%; max-width: 26rem; }
+body .ui-autocomplete-input { width: 100%; }
+
+body .ui-selectonemenu {
+	border: 1px solid #aeb9b3;
+	border-radius: var(--radius);
+	background: #fff;
+	min-width: 9rem;
+}
+body .ui-selectonemenu .ui-selectonemenu-label { padding: .45rem .6rem; }
+
+/* ---------- Buttons ---------- */
+
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1.25rem; }
+
+body .ui-button, button, input[type="submit"] {
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: 600;
+	padding: .5rem 1.1rem;
+	border-radius: var(--radius);
+	border: 1px solid var(--bluebird);
+	background: var(--bluebird);
+	color: #fff;
+	cursor: pointer;
+	box-shadow: none;
+}
+body .ui-button:enabled:hover, button:hover, input[type="submit"]:hover {
+	background: var(--bluebird-dark);
+	border-color: var(--bluebird-dark);
+	color: #fff;
+}
+body .ui-button:enabled:focus { box-shadow: 0 0 0 3px rgba(43,108,176,.3); }
+
+/* Secondary action: add styleClass="btn-secondary" */
+body .ui-button.btn-secondary {
+	background: #fff;
+	color: var(--spruce);
+	border-color: #aeb9b3;
+}
+body .ui-button.btn-secondary:enabled:hover { background: #eef2ef; color: var(--spruce); border-color: var(--spruce-soft); }
+
+/* Destructive action: add styleClass="btn-danger" */
+body .ui-button.btn-danger { background: #fff; color: var(--bad); border-color: var(--bad); }
+body .ui-button.btn-danger:enabled:hover { background: var(--bad); color: #fff; border-color: var(--bad); }
+
+.btn-link { color: var(--muted); }
+
+/* ---------- Tables ---------- */
+
+body .ui-datatable .ui-datatable-header,
+body .ui-datatable .ui-datatable-footer {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	font-family: var(--font-display);
+	font-size: 1.1rem;
+	color: var(--spruce);
+	text-align: left;
+}
+body .ui-datatable thead th {
+	background: #e8eee9;
+	color: var(--spruce);
+	border: 1px solid var(--line);
+	font-family: var(--font-body);
+	font-size: .9rem;
+	text-align: left;
+	padding: .55rem .7rem;
+}
+body .ui-datatable tbody td {
+	border: 1px solid var(--line);
+	padding: .5rem .7rem;
+	vertical-align: top;
+}
+body .ui-datatable tbody tr.ui-widget-content { background: var(--surface); }
+body .ui-datatable tbody tr.ui-datatable-odd { background: var(--row-alt); }
+body .ui-datatable tbody tr:hover { background: #eaf1f8; }
+
+table { border-collapse: collapse; }
+
+/* Read-only detail pages: <dl class="details"> */
+dl.details {
+	display: grid;
+	grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
+	gap: .55rem 1.25rem;
+	margin: 0;
+}
+dl.details dt { font-weight: 600; color: var(--spruce); }
+dl.details dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 640px) {
+	.page { padding: 1.25rem .9rem 2.5rem; }
+	h1 { font-size: 1.55rem; }
+	.form-grid, dl.details { grid-template-columns: minmax(0, 1fr); gap: .35rem; }
+	.form-grid .field { display: block; margin-bottom: .6rem; }
+	.form-grid .field > label, .form-grid .field > .label { padding-top: 0; display: block; margin-bottom: .2rem; }
+	body .ui-autocomplete { max-width: none; }
+	.site-header-inner { gap: .5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* { transition: none !important; animation: none !important; }
+}

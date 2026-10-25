@@ -2,26 +2,22 @@
 
 Use Jakarta Data to crush most DAOs.
 
-MAKE ME A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
+TURN INTO A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
 
 New Member/Renewal Signup - with email confirmation - form in $w/SignupForm.html,
 needs post handler, or make it a JSF.
+
 Auto-send welcome or renew thank-you email.
+
 New members should get the latest Bluebird.
+
 Enable payment with Helcim - uses C$ natively so no conversions
 
 New class EHandler from on pluggable messager used in LoginAction
 
 Save-url-for-login feature doesn't capture parameters, so useless half the time.
 
-Renewal - doesn't actually find member, but crashes on submit with
-	UI:
-	Conversion Error
-	j_idt47:j_idt56: 'PaymentType.CASH' must be convertible to an enum
-	Back-end:
-	Conversion error: java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
-
-EventsView - multi-column with rowspan?
+EventsView - fix column widths
 
 Member Mailing Page - FIX CHARACTER MESS-UP quotes dquotes emdash
 
@@ -29,13 +25,10 @@ Add DeletedView (already linked to from DeletedList).
 
 Ensure Resurrected (and all data-changing) requires admin
 
-
 Test: create a non-priv user and test their inability to do various things. Arquillian?
 
 UserEdit += password
 
 Get/Forgot Password by email
-
-Update Secondary member when renewing or setting date (low prio since we already display master's exp)
 
 MailingListCSV - show master when displaying a secondary

@@ -7,134 +7,185 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	template="/template/template.xhtml">
 
-<h:head>
-<f:metadata>
-	<f:event type="preRenderView" rendered="#{ empty request.getParameter('memberId')}" listener="#{memberHome.create()}"/>
-	<f:event type="preRenderView" rendered="#{!empty request.getParameter('memberId')}" listener="#{memberHome.wire(request.getParameter('memberId'))}"/>
-</f:metadata>
-</h:head>
+<ui:define name="pageTitle">#{empty memberHome.id ? 'Add member' : 'Edit member'}</ui:define>
 
-<ui:define name="pageTitle">Member Edit</ui:define>
+<!-- Loads the member named by ?memberId=, or starts a blank one. Must be in this define. -->
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewAction action="#{memberHome.wire(param.memberId)}"/>
+	</f:metadata>
+</ui:define>
 
 <ui:define name="body">
-	<h:form id="personForm">
-	<p:panel>
-		<f:facet name="header">Member Edit</f:facet>
-		<h:panelGrid columns='3'>
-		
-		Id:
-		<h:outputText id="idTF" value="#{memberHome.instance.id}"/>
-		<h:message id='idMessage' for='idTF'/>
-		
-		First Name:
-		<h:inputText id="firstnameTF" value="#{memberHome.instance.firstName}" required='true' size="50"/>
-		<h:message id='firstnameMessage' for='firstnameTF'/>
-		
-		M.I.:
-		<h:inputText id="middlenameTF" value="#{memberHome.instance.middle}" required='false' size="50"/>
-		<h:message id='middlenameMessage' for='middlenameTF'/>
-		
-		Last Name:
-		<h:inputText id="lastnameTF" value="#{memberHome.instance.lastName}" required='true' size="50"/>
-		<h:message id='lastnameMessage' for='lastnameTF'/>
+	<h:form id="personForm" styleClass="sheet">
+		<div class="form-grid">
 
-		<p:outputLabel for="memberTypeChoice" value="Member Type: "/>
-		<ui:fragment id="primoChooser">
-		<p:selectOneMenu id="memberTypeChoice" value="#{memberHome.instance.memberType}" partialSubmit="true">
-			<f:selectItems value="#{factories.memberTypes}"/>
-			<p:ajax listener="#{memberHome.notifySetMemberType}" update="primoChooser"/>
-		</p:selectOneMenu>
-			Master: 
-			<h:selectOneMenu id="primoMenu" 
-	            value="#{memberHome.instance.masterMember}"
-				converter="entityConverter"
-				disabled="#{memberHome.instance.getMemberType() != model.MemberType.Secondary}"
-				>
-				<!-- XXX here is where to kill the putrid '... SELECT ...' in bus tier code -->
-	            <f:selectItems var="_member" value="#{memberHome.memberList}"
-	            	noSelectionValue="#{memberHome.memberList[0]}"
-	            	itemLabel="#{_member.name}"
-	                itemValue="#{_member}"/>
-	        </h:selectOneMenu>
-	    </ui:fragment>
-		<h:message id='primoMessage' for='primoMenu'/>
+			<ui:fragment rendered="#{not empty memberHome.id}">
+				<div class="field">
+					<span class="label">Id</span>
+					<div class="control"><h:outputText id="idTF" value="#{memberHome.instance.id}"/></div>
+				</div>
+			</ui:fragment>
 
-		Email:
-		<h:inputText id="emailTF" value="#{memberHome.instance.email}" 
-			required='#{memberHome.instance.memberType != model.MemberType.Secondary}'
-			validator="#{memberHome.validateEmail}"
-			size="50">
-			<f:ajax event="blur" render='emailMessage'/>
-		</h:inputText>
-		<h:message id='emailMessage' for='emailTF'/>
+			<div class="field">
+				<p:outputLabel for="firstnameTF" value="First name"/>
+				<div class="control">
+					<h:inputText id="firstnameTF" value="#{memberHome.instance.firstName}" required="true"
+						requiredMessage="First name is required." size="40"/>
+					<p:message for="firstnameTF"/>
+				</div>
+			</div>
 
-		City:
-		<h:inputText id="cityTF" value="#{memberHome.instance.city}" required='false'/>
-		<h:message id='cityMessage' for='cityTF'/>
-		
-		Province,Country:
-		<ui:fragment>
-			<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
-	            <!-- <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />  -->
-	            <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-	            <f:selectItem itemLabel="Canada" itemValue="CA" />
-	            <f:selectItem itemLabel="U.S.A." itemValue="US" />
-	        </p:selectOneMenu>
-			<p:selectOneMenu id="provinceMenu" value="#{memberHome.instance.province}" style="width:150px">
-	            <f:selectItem itemLabel="Ontario" itemValue="ON" noSelectionOption="true" />
-				<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
-	                itemValue="#{_prov.name()}"
-	                itemlabel="#{_prov.longName}"/>
-			</p:selectOneMenu>
-		</ui:fragment>
-		<ui:fragment>
-			<h:message id='provinceMessage' for='provinceMenu'/>
-		</ui:fragment>
+			<div class="field">
+				<p:outputLabel for="middlenameTF" value="Middle initial"/>
+				<div class="control">
+					<h:inputText id="middlenameTF" value="#{memberHome.instance.middle}" size="10"/>
+					<p:message for="middlenameTF"/>
+				</div>
+			</div>
 
-		Phones:
-		<ui:fragment>
-			Home: <h:inputText id="homePhoneTF" value="#{memberHome.instance.homePhone}"/>
-			Mobile: <h:inputText id="cellPhoneTF" value="#{memberHome.instance.cellPhone}"/>
-		</ui:fragment>
-		<h:message id='homePhoneMessage' for='homePhoneTF'/>
+			<div class="field">
+				<p:outputLabel for="lastnameTF" value="Last name"/>
+				<div class="control">
+					<h:inputText id="lastnameTF" value="#{memberHome.instance.lastName}" required="true"
+						requiredMessage="Last name is required." size="40"/>
+					<p:message for="lastnameTF"/>
+				</div>
+			</div>
 
-		<p:outputLabel for="expdt" value="Expiry:" />
-		<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryYear}">
-			<f:selectItem itemLabel="Unpaid" itemValue="0" />
-			<!-- Maint note: always set the noSelectionOption to the current *expiry* year -->
-			<f:selectItem itemLabel="2024" itemValue="2024" noSelectionOption="true" />
-			<f:selectItem itemLabel="2025" itemValue="2025" />
-			<f:selectItem itemLabel="2026" itemValue="2026" />
-			<f:selectItem itemLabel="2027" itemValue="2027" />
-			<f:selectItem itemLabel="2028" itemValue="2028" />
-			<f:selectItem itemLabel="2029" itemValue="2029" />
-			<f:selectItem itemLabel="2030" itemValue="2030" />
-		</p:selectOneMenu>
-		&nbsp;
-			
-		<p:outputLabel for="positionTF" value="Club Executive Position if any:"/>
-		<h:inputText id="positionTF" value="#{memberHome.instance.position}"/>
-		<h:message id='positionMessage' for='positionTF'/>
+			<div class="field">
+				<p:outputLabel for="memberTypeChoice" value="Member type"/>
+				<div class="control">
+					<p:selectOneMenu id="memberTypeChoice" value="#{memberHome.instance.memberType}">
+						<f:selectItems value="#{factories.memberTypes}"/>
+						<p:ajax listener="#{memberHome.notifySetMemberType}" update="primoChooser"/>
+					</p:selectOneMenu>
+				</div>
+			</div>
 
-		</h:panelGrid>
+			<div class="field">
+				<p:outputLabel for="primoMenu" value="Master member"/>
+				<!-- A real element (not ui:fragment) so the ajax update above has something to replace -->
+				<h:panelGroup id="primoChooser" layout="block" styleClass="control">
+					<h:selectOneMenu id="primoMenu"
+						value="#{memberHome.instance.masterMember}"
+						converter="entityConverter"
+						disabled="#{not memberHome.enableMasterMember}">
+						<!-- XXX here is where to kill the putrid '... SELECT ...' in bus tier code -->
+						<f:selectItems var="_member" value="#{memberHome.memberList}"
+							noSelectionValue="#{memberHome.memberList[0]}"
+							itemLabel="#{_member.name}"
+							itemValue="#{_member}"/>
+					</h:selectOneMenu>
+					<p:message for="primoMenu"/>
+					<div class="hint">Only used for secondary members of a family membership.</div>
+				</h:panelGroup>
+			</div>
 
-	</p:panel>
+			<div class="field">
+				<p:outputLabel for="emailTF" value="Email"/>
+				<div class="control">
+					<h:inputText id="emailTF" value="#{memberHome.instance.email}"
+						required="#{not memberHome.enableMasterMember}"
+						requiredMessage="Email is required, except for secondary members."
+						validator="#{memberHome.validateEmail}"
+						size="40">
+						<f:ajax event="blur" render="emailMessage"/>
+					</h:inputText>
+					<p:message id="emailMessage" for="emailTF"/>
+				</div>
+			</div>
 
-	<p:commandButton value="Save" action="#{memberHome.saveOrUpdate}" ajax='false'/>
+			<div class="field">
+				<p:outputLabel for="cityTF" value="City"/>
+				<div class="control">
+					<h:inputText id="cityTF" value="#{memberHome.instance.city}"/>
+					<p:message for="cityTF"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="provinceMenu" value="Province"/>
+				<div class="control">
+					<p:selectOneMenu id="provinceMenu" value="#{memberHome.instance.province}" style="width:150px">
+						<f:selectItem itemLabel="Ontario" itemValue="ON" noSelectionOption="true" />
+						<f:selectItems var="_prov" value="#{factories.canadaProvinces}"
+							itemValue="#{_prov.name()}"
+							itemlabel="#{_prov.longName}"/>
+					</p:selectOneMenu>
+					<p:message for="provinceMenu"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="country" value="Country"/>
+				<div class="control">
+					<p:selectOneMenu id="country" value="#{memberHome.instance.country}" style="width:150px">
+						<f:selectItem itemLabel="Select country" itemValue="" noSelectionOption="true" />
+						<f:selectItem itemLabel="Canada" itemValue="CA" />
+						<f:selectItem itemLabel="U.S.A." itemValue="US" />
+					</p:selectOneMenu>
+					<p:message for="country"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="homePhoneTF" value="Home phone"/>
+				<div class="control">
+					<h:inputText id="homePhoneTF" value="#{memberHome.instance.homePhone}"/>
+					<p:message for="homePhoneTF"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="cellPhoneTF" value="Mobile phone"/>
+				<div class="control">
+					<h:inputText id="cellPhoneTF" value="#{memberHome.instance.cellPhone}"/>
+					<p:message for="cellPhoneTF"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="expdt" value="Membership expires"/>
+				<div class="control">
+					<p:selectOneMenu id="expdt" value="#{memberHome.instance.expiryYear}">
+						<f:selectItem itemLabel="Unpaid" itemValue="0"/>
+						<f:selectItems value="#{factories.expiryYears}"/>
+					</p:selectOneMenu>
+					<p:message for="expdt"/>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="positionTF" value="Club executive position"/>
+				<div class="control">
+					<h:inputText id="positionTF" value="#{memberHome.instance.position}"/>
+					<p:message for="positionTF"/>
+					<div class="hint">Leave blank for regular members.</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="actions">
+			<p:commandButton value="Save member" action="#{memberHome.saveOrUpdate}" ajax="false"/>
+		</div>
 	</h:form>
-	<h:form>
-	<!-- In their own form to avoid hanging on validation -->
-	<p:commandButton value="Delete" action="#{memberHome.remove()}" icon="ui-icon-trash">
-	    <p:confirm header="Confirm Deletion" message="Really delete this member?" icon="ui-icon-alert" />
-	</p:commandButton>
- 
-	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-	    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-	    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-	</p:confirmDialog>
 
-	<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
+	<!-- Their own form, so Cancel and Delete never get stuck on validation of the fields above -->
+	<h:form styleClass="actions">
+		<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax="false" styleClass="btn-secondary"/>
+
+		<p:commandButton value="Delete member" action="#{memberHome.remove()}" icon="ui-icon-trash"
+			styleClass="btn-danger" rendered="#{not empty memberHome.id}">
+			<p:confirm header="Confirm deletion" message="Really delete this member?" icon="ui-icon-alert" />
+		</p:commandButton>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
+		</p:confirmDialog>
 	</h:form>
-	
+
 </ui:define>
 </ui:composition>

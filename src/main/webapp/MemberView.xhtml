@@ -6,65 +6,67 @@
       template="/template/template.xhtml">
 
 <ui:define name="pageTitle">Member</ui:define>
-<h:head>
-<f:metadata>
-    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberId')}" listener="#{memberHome.wire(request.getParameter('memberId'))}"/>
-</f:metadata>
-</h:head>
 
-	<ui:define name="pageHeader">Member View</ui:define>
+<!-- Loads the member named by ?memberId=. Must be in this define, or Facelets ignores it. -->
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewAction action="#{memberHome.wire(param.memberId)}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="body">
+<ui:define name="body">
 
-			<p:panelGrid columns="2" title="MemberView">
-				FirstName:
-				<h:outputText value="#{memberHome.instance.firstName}"/>
+	<div class="sheet">
+		<h2>#{memberHome.instance.name}</h2>
+		<dl class="details">
+			<dt>First name</dt>
+			<dd><h:outputText value="#{memberHome.instance.firstName}"/></dd>
 
-				LastName:
-				<h:outputText value="#{memberHome.instance.lastName}"/>
+			<dt>Last name</dt>
+			<dd><h:outputText value="#{memberHome.instance.lastName}"/></dd>
 
-				Membership:
-				<h:outputText value="#{memberHome.instance.memberType}"/>
+			<dt>Membership</dt>
+			<dd><h:outputText value="#{memberHome.instance.memberType}"/></dd>
 
-				Expiry:
-				<h:outputText value="#{memberHome.instance.expiryYear}"/>
+			<dt>Expires</dt>
+			<dd><h:outputText value="#{memberHome.instance.expiryYear}"/></dd>
 
-				City:
-				<h:outputText value="#{memberHome.instance.city}"/>
+			<dt>City</dt>
+			<dd><h:outputText value="#{memberHome.instance.city}"/></dd>
 
-				Province,Country:
-				<ui:fragment>
-					<h:outputText value="#{memberHome.instance.province}"/>#{' '}
-					<h:outputText value="#{memberHome.instance.country}"/>#{' '}
-				</ui:fragment>
+			<dt>Province, country</dt>
+			<dd>
+				<h:outputText value="#{memberHome.instance.province}"/>#{' '}
+				<h:outputText value="#{memberHome.instance.country}"/>
+			</dd>
 
-				Phone:
-				<ui:fragment>
-				Home: <h:outputText value="#{memberHome.instance.homePhone};"/>
-				Mobile: <h:outputText value="#{memberHome.instance.cellPhone}"/>
-				Work: <h:outputText value="#{memberHome.instance.workPhone}"/>
-				</ui:fragment>
+			<dt>Phone</dt>
+			<dd>
+				Home: <h:outputText value="#{memberHome.instance.homePhone}"/>
+				#{' '}Mobile: <h:outputText value="#{memberHome.instance.cellPhone}"/>
+				#{' '}Work: <h:outputText value="#{memberHome.instance.workPhone}"/>
+			</dd>
 
-				Email:
-				<h:outputText value="#{memberHome.instance.email}"/>
+			<dt>Email</dt>
+			<dd><h:outputText value="#{memberHome.instance.email}"/></dd>
 
-				Trips-List:
-				<h:outputText value="#{memberHome.instance.emailTrips}"/>
+			<dt>Trips email list</dt>
+			<dd><h:outputText value="#{memberHome.instance.emailTrips}"/></dd>
 
-				Position:
-				<h:outputText value="#{memberHome.instance.position}"/>
+			<dt>Position</dt>
+			<dd><h:outputText value="#{memberHome.instance.position}"/></dd>
+		</dl>
+	</div>
 
-			</p:panelGrid>
-
-	<h:form>
-		<h:outputLink value="MemberEdit.web" rendered="#{identity.hasRole('admin')}">
-			Edit
+	<h:form styleClass="actions">
+		<h:outputLink value="#{request.contextPath}/MemberEdit.web" rendered="#{identity.hasRole('admin')}"
+			styleClass="ui-button ui-widget btn-secondary">
+			Edit member
 			<f:param name="memberId" value="#{memberHome.instance.id}"/>
 		</h:outputLink>
-		<p:commandButton value="Done" action="#{memberHome.done}"/>
+		<p:commandButton value="Done" action="#{memberHome.done}" ajax="false"/>
 	</h:form>
 
-	</ui:define>
-			
-</ui:composition>
+</ui:define>
 
+</ui:composition>

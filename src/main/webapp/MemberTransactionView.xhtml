@@ -8,11 +8,12 @@
 	template="/template/template.xhtml">
 
 <ui:define name="pageTitle">MemberTransaction Details</ui:define>
-<h:head>
-<f:metadata>
-    <f:event type="preRenderView" rendered="#{!empty request.getParameter('memberTransactionId')}" listener="#{memberTransactionHome.wire(Long.parseLong(request.getParameter('memberTransactionId')))}"/>
-</f:metadata>
-</h:head>
+<!-- Must be in this define, or Facelets ignores it -->
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewAction action="#{memberTransactionHome.wire(param.memberTransactionId)}"/>
+	</f:metadata>
+</ui:define>
 
 <ui:define name="body">
 
@@ -46,7 +47,7 @@
 		</p:panelGrid>
 	</p:panel>
 
-	<p:commandButton value="Edit" action="/memberTransactionEdit.web" ajax='false'>
+	<p:commandButton value="Edit" action="/MemberTransactionEdit?faces-redirect=true" ajax='false'>
 		<f:param name="memberTransactionId" value="#{memberTransactionHome.instance.id}"/>
 	</p:commandButton>
 	<p:commandButton value="Done" action="#{memberTransactionHome.done}" ajax='false'/>

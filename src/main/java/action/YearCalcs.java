@@ -32,6 +32,25 @@ public class YearCalcs {
 		return getCurrentMembershipYear(now);
 	}
 
+	/**
+	 * The expiry year a member should have after buying a renewal.
+	 * <p>
+	 * A membership year is named for the year it ends (Sept 2026 - Aug 2027 is
+	 * "2027"), so a member who lets their membership lapse is paid up through the
+	 * year <em>before</em> the current membership year, and one year of renewal
+	 * takes them to the current membership year. A member who is already paid up
+	 * (renewing early) is extended from where their membership currently ends.
+	 *
+	 * @param currentExpiryYear The member's expiry year before this renewal (0 if never paid)
+	 * @param numYears How many years are being bought
+	 * @param now Today's date (a parameter so this can be tested)
+	 * @return The new expiry year
+	 */
+	public static int getRenewedExpiryYear(int currentExpiryYear, int numYears, LocalDate now) {
+		final int paidThrough = Math.max(currentExpiryYear, getCurrentMembershipYear(now) - 1);
+		return paidThrough + numYears;
+	}
+
 	/** Return true iff this member (or their Master Member) is expired */
 	public static boolean isExpired(Member m) {
 		return isExpired(m, LocalDate.now());

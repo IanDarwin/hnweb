@@ -7,9 +7,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	template="/template/template.xhtml">
 
-<h:head>
-</h:head>
-
 <ui:define name="pageTitle">Executive Functions</ui:define>
 
 <ui:define name="body">
@@ -27,11 +24,12 @@
 		<p:panel>
 			<f:facet name="header">Executive Functions</f:facet>
 			
-			<h:inputText id="idTF" value="#{memberHome.id}"/>
+			<h:inputText id="idTF" value="#{memberHome.id}" required="true" requiredMessage="Enter the id of the deleted member."/>
+				<p:message for="idTF"/>
 			#{' '}
-			<p:commandButton value="Resurrect Deleted Member" action="#{memberHome.unDelete(memberHome.id)}" ajax='false'/>
+			<p:commandButton value="Resurrect Deleted Member" action="#{memberHome.undelete}" ajax='false'/>
 			#{' '}
-			<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax='false'/>
+			<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax="false" immediate="true" styleClass="btn-secondary"/>
 		</p:panel>
 	</h:form>
 	

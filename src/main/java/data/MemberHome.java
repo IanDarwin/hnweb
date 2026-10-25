@@ -39,11 +39,12 @@ public class MemberHome implements Serializable {
 
 	@Inject Conversation conv;
 
-	private static final String LIST_PAGE = "/MemberDAO";
+	// Name of page to go to (MemberList.xhtml). 
+	private static final String LIST_PAGE = "/MemberList";
 
 	/**
 	 * This should be externalized as it depends on our club's policies:
-	 * NEW MEMBERS who sign up on or after September 1 you get next year's membership
+	 * NEW MEMBERS who sign up on or after September 1 get next year's membership
 	 */
 	public final static int RENEWAL_MONTH = 9;
 
@@ -116,10 +117,10 @@ public class MemberHome implements Serializable {
 		}
 	}
 
-    // Calls the version that is @Transactional
+	/** Entry point for f:viewAction: wire up from the "memberId" request parameter, if any. */
 	public void wire(String id) {
-		if (id != null && !id.isEmpty()) {
-			setId(Long.parseLong(id));
+		if (id != null && !id.isBlank()) {
+			setId(Long.parseLong(id.trim()));
 		}
 		wire();
 	}
@@ -144,7 +145,7 @@ public class MemberHome implements Serializable {
 			instance.setMasterMember(null);
 		}
 		memberDAO.create(instance);
-		conv.end();
+		endConversation();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
@@ -153,7 +154,7 @@ public class MemberHome implements Serializable {
 	@Transactional
 	public String update() {
 		memberDAO.update(instance);
-		conv.end();
+		endConversation();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
@@ -161,7 +162,7 @@ public class MemberHome implements Serializable {
 	@Transactional
 	public String remove() {
 		memberDAO.delete(instance);
-		conv.end();
+		endConversation();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
@@ -169,7 +170,7 @@ public class MemberHome implements Serializable {
 	@Transactional
 	public String undelete() {
 		memberDAO.undelete(id);
-		conv.end();
+		endConversation();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
@@ -194,6 +195,13 @@ public class MemberHome implements Serializable {
 		return LIST_PAGE;
 	}
 
+	/** conv.end() throws if the conversation is transient, so check first. */
+	private void endConversation() {
+		if (!conv.isTransient()) {
+			conv.end();
+		}
+	}
+
 	@Resource EJBContext context;
 
 	/** Close an editing operation: mark tx for
@@ -203,7 +211,7 @@ public class MemberHome implements Serializable {
 	 */
 	public String cancel() {
 		context.setRollbackOnly();
-		conv.end();
+		endConversation();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
@@ -211,6 +219,7 @@ public class MemberHome implements Serializable {
 	 * @return The List Page
 	 */
 	public String done() {
+		endConversation();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 

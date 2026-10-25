@@ -58,6 +58,15 @@ class MemberTest {
 	}
 
 	@Test
+	void acceptRenewalOfLapsedMemberInOctoberGivesNextYear() {
+		member.setExpiryYear(2026);
+		var renewal = new MemberTransaction(member, 1, TransactionReason.R, PaymentType.CASH);
+		member.acceptRenewal(renewal, LocalDate.of(2026, 10, 23));
+		assertEquals(2027, member.getExpiryYear());
+		assertEquals(2027, renewal.getNewExpiryYear());
+	}
+
+	@Test
 	void isExpiredTrue() {
 		member.setExpiryYear(LocalDate.now().getYear() - 1);
 		assertTrue(YearCalcs.isExpired(member));

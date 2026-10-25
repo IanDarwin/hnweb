@@ -75,7 +75,7 @@ public abstract class GenericDAO<T> implements Serializable {
 
 	//////////////// UPDATE METHODS /////////////////
 
-	public void update(Member instance) {
+	public void update(T instance) {
 		entityManager.merge(instance); // in case detached - shouldn't be!
 		entityManager.flush();
 	}

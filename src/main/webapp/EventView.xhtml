@@ -8,11 +8,12 @@
 	template="/template/template.xhtml">
 
 <ui:define name="pageTitle">Event View</ui:define>
-<h:head>
-<f:metadata>
-    <f:event type="preRenderView" rendered="#{!empty request.getParameter('eventId')}" listener="#{eventHome.wire(request.getParameter('eventId'))}"/>
-</f:metadata>
-</h:head>
+<!-- Must be in this define, or Facelets ignores it -->
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewAction action="#{eventHome.wire(param.eventId)}"/>
+	</f:metadata>
+</ui:define>
 
 <ui:define name="body">
 
@@ -51,7 +52,7 @@
 		</p:panel>
 	</p:panel>
 
-	<p:commandButton value="Edit" action="/EventEdit.web?faces-redirect='true'" ajax='false'
+	<p:commandButton value="Edit" action="/EventEdit?faces-redirect=true" ajax='false'
 		rendered="#{identity.loggedIn and identity.hasRole('admin')}">
 		<f:param name="eventId" value="#{eventHome.instance.id}"/>
 	</p:commandButton>

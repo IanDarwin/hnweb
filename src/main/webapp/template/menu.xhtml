@@ -1,44 +1,35 @@
-<p:toolbar
+<ui:composition
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<p:toolbarGroup align="left">
-		<h:outputLink value="https://onheadwatersnature.ca/">Club Home @ Main Site</h:outputLink>
-		&#xA0;
-		<h:outputLink value="index.web">Membership Home</h:outputLink>
-		&#xA0;
-		<h:outputLink value="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook Group</h:outputLink>
-		&#xA0;
-		<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
-		<h:outputLink value="MemberList.web">Member List</h:outputLink>
-		&#xA0;
-		<h:outputLink value="MemberEdit.web">Add Member</h:outputLink>
-		&#xA0;
-		<h:outputLink value="Renew.web">Renew Member</h:outputLink>
-		&#xA0;
-		<h:outputLink value="EventList.web">Event List</h:outputLink>
-		&#xA0;
-		<h:outputLink value="MailingList.web">Member Mailings</h:outputLink>
-		</ui:fragment>
-	</p:toolbarGroup>
+<header class="site-header">
+	<div class="site-header-inner">
+		<a class="site-name" href="#{request.contextPath}/index.web">#{config.orgName}</a>
 
-	<p:toolbarGroup align="right">
-	<h:form>
-		<h:outputLink value="About.web">About ClubList</h:outputLink>
-		&#xA0;
-		<h:outputLink value="https://github.com/IanDarwin/clublist">
-			<h:graphicImage value="/images/invertocat.png" width="24" height="24" />
-		</h:outputLink>
-		&#xA0;
-		<h:outputLink value="Login.web" rendered="#{not identity.loggedIn}">
-			Login
-		</h:outputLink>
-		<h:outputText value="Welcome #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>
-		&#xA0;
-		<h:commandLink action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}"/>
-	</h:form>
-	</p:toolbarGroup>
-</p:toolbar>
+		<nav class="site-nav" aria-label="Main">
+			<a href="https://onheadwatersnature.ca/">Club site</a>
+			<a href="#{request.contextPath}/index.web">Membership home</a>
+			<a href="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook group</a>
+			<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
+				<a href="#{request.contextPath}/MemberList.web">Members</a>
+				<a href="#{request.contextPath}/MemberEdit.web">Add member</a>
+				<a href="#{request.contextPath}/Renew.web">Renew member</a>
+				<a href="#{request.contextPath}/EventList.web">Events</a>
+				<a href="#{request.contextPath}/MailingList.web">Mailings</a>
+			</ui:fragment>
+		</nav>
+
+		<div class="site-account">
+			<h:form styleClass="inline-form">
+				<a href="#{request.contextPath}/About.web">About ClubList</a>
+				<h:outputLink value="#{request.contextPath}/Login.web" rendered="#{not identity.loggedIn}">Log in</h:outputLink>
+				<h:outputText styleClass="welcome" value="Hi, #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>
+				<h:commandLink action="#{identity.logout}" value="Log out" rendered="#{identity.loggedIn}"/>
+			</h:form>
+		</div>
+	</div>
+</header>
+
+</ui:composition>

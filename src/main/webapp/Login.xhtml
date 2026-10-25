@@ -6,31 +6,39 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Member Login</ui:define>
+<ui:define name="pageTitle">Log in</ui:define>
 
 <ui:define name="body">
 
-	<p:panel>
-		<f:facet name="header">Please login</f:facet>
+	<h:form id="loginForm" styleClass="sheet sheet-narrow">
+		<div class="form-grid">
 
-		<h:form id="loginForm">
-		<h:panelGrid columns="3">
+			<div class="field">
+				<p:outputLabel for="email" value="Email"/>
+				<div class="control">
+					<h:inputText id="email" value="#{identity.email}" required="true"
+						requiredMessage="Enter your email address."
+						pt:placeholder="you@example.com" pt:autocomplete="username" size="30"/>
+					<p:message for="email"/>
+				</div>
+			</div>
 
-		<h:outputText value="Your email:"/>
-			<h:inputText id="email" value="#{identity.email}" required="true" message="email required" pt:placeholder="user@domain.name"/>
-			<h:message for="email"/>
+			<div class="field">
+				<p:outputLabel for="password" value="Password"/>
+				<div class="control">
+					<h:inputSecret id="password" value="#{identity.password}" required="true"
+						requiredMessage="Enter your password."
+						pt:autocomplete="current-password" size="30"/>
+					<p:message for="password"/>
+				</div>
+			</div>
 
-		Password: 	
-			<h:inputSecret id="password" value="#{identity.password}" required="true" message="Password required" pt:placeholder="Password"/>
-			<h:message for="password"/>
+		</div>
 
-			#{' '}
-			<h:commandButton id="login" action="#{identity.login}" value="Login"/>
-			#{' '}
-		
-		</h:panelGrid>
-		</h:form>
+		<div class="actions">
+			<h:commandButton id="login" action="#{identity.login}" value="Log in"/>
+		</div>
+	</h:form>
 
-	</p:panel>
 </ui:define>
 </ui:composition>

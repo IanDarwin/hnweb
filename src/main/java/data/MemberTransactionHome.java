@@ -21,4 +21,13 @@ public class MemberTransactionHome extends EntityHome<MemberTransaction,Long> {
 	public String getListPage() {
 		return "MemberTransactionList";
 	}
+
+	/** Entry point for f:viewAction, which passes the request parameter as a String. */
+	public void wire(String s) {
+		if (s == null || s.isEmpty()) {
+			instance = newInstance();
+			return;
+		}
+		wire(Long.parseLong(s));
+	}
 }

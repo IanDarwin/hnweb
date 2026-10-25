@@ -66,17 +66,21 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 				.getSingleResult());
 	}
 
+	/** @return The first match, or empty if there is none (names are not unique). */
 	public Optional<Member> findByFirstNameAndLastName(String firstName, String lastName) {
-		return Optional.of(entityManager.createQuery(
-						"SELECT m FROM Member m WHERE m.firstName = :firstName AND m.lastName = :lastName", Member.class)
+		return entityManager.createQuery(
+						"SELECT m FROM Member m WHERE m.firstName = :firstName AND m.lastName = :lastName ORDER BY m.id", Member.class)
 				.setParameter("firstName", firstName)
 				.setParameter("lastName", lastName)
-				.getSingleResult());
+				.setMaxResults(1)
+				.getResultStream()
+				.findFirst();
 	}
 
 	public List<Member> findNonSecondaries() {
 		return entityManager.createQuery(
-				"SELECT m FROM Member m where m.memberType != " + MemberType.Secondary.name(), Member.class)
+				"SELECT m FROM Member m WHERE m.memberType <> :secondary ORDER BY m.lastName, m.firstName", Member.class)
+				.setParameter("secondary", MemberType.Secondary)
 				.getResultList();
 	}
 
