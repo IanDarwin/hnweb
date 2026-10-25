@@ -1,5 +1,7 @@
 = TODO
 
+Generalize for use by other nature clubs!?
+
 Use Jakarta Data to crush most DAOs.
 
 TURN INTO A QUARKUS MICRO-SERVICE!!! Phase out Wildfly.
