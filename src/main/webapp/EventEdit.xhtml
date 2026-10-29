@@ -79,14 +79,13 @@
 
 		<p:commandButton value="Cancel" action="#{eventHome.cancel}" ajax="false" immediate="true" styleClass="btn-secondary"/>
 
-		<p:commandButton value="Delete event" action="#{eventHome.deleteEvent}" ajax="false" styleClass="btn-danger">
-			<p:confirm header="Confirm deletion" message="Really delete this event?" icon="ui-icon-alert" />
-		</p:commandButton>
+		<!-- The browser's own confirm() gates the submit: PrimeFaces chains this onclick before the
+		     form submit and stops if it returns false. No dialog widget needed. -->
+		<p:commandButton value="Delete event" action="#{eventHome.deleteEvent}" ajax="false" styleClass="btn-danger"
+			onclick="return confirm('Really delete this event?');"/>
 
-		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-			<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
-		</p:confirmDialog>
+		<!-- Show any problem with the hidden id; the page-level messages only show global ones -->
+		<h:message for="editId" styleClass="errormsg"/>
 	</h:form>
 	
 </ui:define>
