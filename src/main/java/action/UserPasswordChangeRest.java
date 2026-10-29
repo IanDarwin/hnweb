@@ -1,6 +1,5 @@
 package action;
 
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
@@ -8,8 +7,15 @@ import jakarta.ws.rs.Path;
 
 import java.util.Random;
 
-@Path("")
+@Path("/")
 public class UserPasswordChangeRest {
+
+    static String MESSAGE_TEMPLATE = """
+                You (or somebody using your account) requested a password change for user %s on site %s.
+                If this was you and you want to proceed, please confirm your email by
+                <a href="%s/ChangePassword2.html">following this link.
+                If it wasn't you, please just ignore this email.
+                """;
 
     final static String host = "https://darwinsys.com";
 
@@ -18,7 +24,7 @@ public class UserPasswordChangeRest {
     @Consumes("application/x-www-form-urlencoded")
     public void changePassword1(@FormParam("email") String email) {
         String token = randomString(20);
-        System.out.println("In chpw1, token = " + token);
+        System.out.println("In chP1, token = " + token);
         sendPart1Email(email, token);
     }
 
@@ -26,19 +32,16 @@ public class UserPasswordChangeRest {
     @POST
     @Consumes("application/x-www-form-urlencoded")
     public void changePassword2(@FormParam("token") String token) {
-        System.out.println("In chpw2, token=" + token);
+        System.out.println("In chP2, token=" + token);
     }
 
     void sendPart1Email(String email, String token) {
-        String message = """
-                You (or somebody using your account) requested a password change for user %s on site %s.
-                If this was you aand you wanto to proceed, please confirm your email by
-                <a href="%s/ChangePassword2.html">following this link.
-                If it wasn't you, please just ignore this email.
-                """.formatted(host, email, host);
+        String message = MESSAGE_TEMPLATE.formatted(host, email, host);
         System.out.printf("Would send %s to %s\n", message, email);
         // XXX
     }
+
+    // Replace w/ $dsapi/genpws
     public String randomString(int targetStringLength) {
         if (targetStringLength < 10) {
             throw new IllegalStateException(targetStringLength + " is too short");
