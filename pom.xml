@@ -27,6 +27,7 @@
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<hibernate.version>8.0.0.Beta1</hibernate.version>
 		<hibernate.validator.version>9.1.3.Final</hibernate.validator.version>
+		<expressly.version>6.0.0</expressly.version>
 		<junit.version>6.1.3</junit.version>
 		<mockito.version>5.23.0</mockito.version>
 		<build.plugins.plugin.version>1.0.1</build.plugins.plugin.version>
@@ -135,6 +136,17 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>${hibernate.validator.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- Expression Language *implementation*, for Hibernate Validator in plain-JVM (JUnit) tests.
+			jakartaee-api contains only the EL interfaces; an app server such as WildFly supplies
+			the implementation at run time, so this is test-scope only. 6.0.0 matches the EL 6.0
+			API in Jakarta EE 11, and is the version Hibernate Validator 9.1.x itself is tested with. -->
+		<dependency>
+			<groupId>org.glassfish.expressly</groupId>
+			<artifactId>expressly</artifactId>
+			<version>${expressly.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- DRIVERS... Only for testing (PROVIDED in prod'n) -->
