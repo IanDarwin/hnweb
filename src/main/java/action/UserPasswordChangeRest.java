@@ -18,7 +18,7 @@ public class UserPasswordChangeRest {
                 <a href="%s/ChangePassword2.html">following this link</a>.
                 If it wasn't you, please just ignore this email.""";
 
-    final static String host = "https://darwinsys.com";
+    final static String host = "https://hn.darwinsys.com";
 
     @Path("changePassword1")
     @POST
