@@ -29,7 +29,7 @@ public class DeletedList implements Serializable {
 	public static final String FIND_ALL_QUERY = "select m from MemberArchived m order by lower(m.lastName) asc";
 
 	public List<MemberArchived> findAll() {
-		return entityManager.createQuery(FIND_ALL_QUERY).getResultList();
+		return entityManager.createQuery(FIND_ALL_QUERY,MemberArchived.class).getResultList();
 	}
 
 	/** Find one member by both names; used in JSF converter */
