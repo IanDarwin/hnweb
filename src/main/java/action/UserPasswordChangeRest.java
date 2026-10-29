@@ -19,7 +19,7 @@ public class UserPasswordChangeRest {
     public void changePassword1(@FormParam("email") String email) {
         String token = randomString(20);
         System.out.println("In chpw1, token = " + token);
-        sendPart1Email(email, String token);
+        sendPart1Email(email, token);
     }
 
     @Path("changePassword2")
