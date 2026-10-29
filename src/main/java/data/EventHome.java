@@ -91,6 +91,7 @@ public class EventHome extends EntityHome<Event,Long> {
 	@Transactional
 	public String deleteEvent() {
 		final Long id = getEditId();
+		System.out.println("EventHome.deleteEvent(): editId = " + id);
 		if (id == null) {
 			return fail("This event hasn't been saved yet, so there is nothing to delete.");
 		}

@@ -47,9 +47,10 @@
 		</p:panelGrid>
 	</p:panel>
 
-	<p:commandButton value="Edit" action="/MemberTransactionEdit?faces-redirect=true" ajax='false'>
+	<!-- A plain GET link: the id travels in the URL, and the edit page loads it -->
+	<p:button value="Edit transaction" outcome="MemberTransactionEdit.web" styleClass="btn-secondary">
 		<f:param name="memberTransactionId" value="#{memberTransactionHome.instance.id}"/>
-	</p:commandButton>
+	</p:button>
 	<p:commandButton value="Done" action="#{memberTransactionHome.done}" ajax='false'/>
 	</h:form>
 	

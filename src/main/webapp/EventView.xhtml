@@ -52,10 +52,12 @@
 		</p:panel>
 	</p:panel>
 
-	<p:commandButton value="Edit" action="/EventEdit?faces-redirect=true" ajax='false'
+	<!-- A plain GET link, like the Edit links on EventList: the id travels in the URL, and
+	     EventEdit loads it. (A command button's f:param is NOT added to a redirect URL.) -->
+	<p:button value="Edit event" outcome="EventEdit.web" styleClass="btn-secondary"
 		rendered="#{identity.loggedIn and identity.hasRole('admin')}">
 		<f:param name="eventId" value="#{eventHome.instance.id}"/>
-	</p:commandButton>
+	</p:button>
 
 	<p:commandButton value="Done" action="#{eventHome.done}" ajax='false'/>
 	</h:form>
