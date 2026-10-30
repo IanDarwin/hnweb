@@ -5,11 +5,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import model.PwChangeToken;
 import outreach.MailMan;
 
 import java.net.URI;
@@ -20,14 +22,19 @@ public class UserPasswordChangeRest {
 
     static String MESSAGE_TEMPLATE = """
                 You (or somebody using your account) requested a password change for user %s on site %s.
-                If this was you and you want to proceed, please confirm your email by
-                <a href="%s/ChangePassword2.html">following this link</a>.
+                If this was you and you want to proceed, please confirm your email.
+                <form action="%s/ChangePassword2.html" method="post">
+                <input type="hidden" name="token">%s</input>
+                <input type="submit">Enter new password...</input>
+                </form>.
                 If it wasn't you, please just ignore this email.""";
 
     final static String host = "https://hn.darwinsys.com";
 
     @Inject
     MailMan mailMan;
+    @Inject
+    EntityManager em;
 
     @Path("changePassword1")
     @POST
@@ -35,7 +42,8 @@ public class UserPasswordChangeRest {
     public Response changePassword1(@FormParam("email") String email) {
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
-        String message = MESSAGE_TEMPLATE.formatted(email, host, host);
+        em.persist(new PwChangeToken(email, token));
+        String message = MESSAGE_TEMPLATE.formatted(email, host, host, token);
         System.out.printf("Sending %s to %s\n", message, email);
         try {
             mailMan.sendMessageTo(email, "HN Passord Reset", message);
