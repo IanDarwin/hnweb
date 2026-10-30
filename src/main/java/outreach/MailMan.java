@@ -257,7 +257,7 @@ public class MailMan implements Serializable {
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
 		String fromAddress = props.getProperty(PROPNAME_MAIL_SMTP_FROM);
-		if (identity != null) {
+		if (identity != null && identity.isLoggedIn()) {
 			Member loggedIn = identity.getLoggedInUser();
 			notNull("your email address", loggedIn.getName());
 			fromAddress = loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
