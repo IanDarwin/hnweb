@@ -31,6 +31,7 @@ public class UserPasswordChangeRest {
 
     final static String host = "https://hn.darwinsys.com";
 	final static String PART2_URL = "ChangePassword2.web";
+	final static String PART3_URL = "ChangePassword3.web";
 
     @Inject
     MailMan mailMan;
@@ -45,7 +46,7 @@ public class UserPasswordChangeRest {
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
         em.persist(new PwChangeToken(email, token));
-        String message = MESSAGE_TEMPLATE.formatted(email, host, host, token);
+        String message = MESSAGE_TEMPLATE.formatted(email, host, token);
         System.out.printf("Sending %s to %s\n", message, email);
         try {
             mailMan.sendMessageTo(email, "HN Passord Reset", message);
@@ -60,8 +61,10 @@ public class UserPasswordChangeRest {
     @Path("changePassword2")
     @POST
     @Consumes("application/x-www-form-urlencoded")
-    public void changePassword2(@FormParam("token") String token) {
+    public Response changePassword2(@FormParam("token") String token) {
         System.out.println("In chP2, got token=" + token);
+        var redirectURI = URI.create(host + "/" + PART3_URL);
+        return Response.seeOther(redirectURI).build();
     }
 
     // Replace w/ $dsapi/genpws

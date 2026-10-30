@@ -22,6 +22,13 @@ public class PwChangeToken {
         this.token = token;
     }
 
+	@PrePersist
+	public void ensureTimeStamp() {
+		if (created == null) {
+			created = LocalDateTime.now();
+		}
+	}
+
     public String getEmail() {
         return email;
     }

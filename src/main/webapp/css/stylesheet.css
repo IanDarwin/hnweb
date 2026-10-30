@@ -252,12 +252,23 @@ body .ui-button, button, input[type="submit"] {
 	cursor: pointer;
 	box-shadow: none;
 }
-body .ui-button:enabled:hover, button:hover, input[type="submit"]:hover {
+body .ui-button:enabled:hover, button:enabled:hover, input[type="submit"]:enabled:hover {
 	background: var(--bluebird-dark);
 	border-color: var(--bluebird-dark);
 	color: #fff;
 }
 body .ui-button:enabled:focus { box-shadow: 0 0 0 3px rgba(43,108,176,.3); }
+
+/* Disabled buttons look washed out and inert, so the enabled state is obvious
+   (e.g. Change Password's submit button until the rules are met). */
+button:disabled, input[type="submit"]:disabled,
+body .ui-button.ui-state-disabled, body .ui-button:disabled {
+	background: #dbe6f2;
+	border-color: #c3d3e6;
+	color: #7f93a8;
+	cursor: not-allowed;
+	opacity: 1;
+}
 
 /* Secondary action: add styleClass="btn-secondary" */
 body .ui-button.btn-secondary {
