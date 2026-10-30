@@ -8,12 +8,13 @@
 
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
 
-		<!-- If you add an Entity class here add it in src/main/resources.. too! -->
+		<!-- If you add an Entity class here, add it in src/main/resources.. too! -->
 		<class>model.Member</class>
 		<class>model.MemberArchived</class>
 		<class>model.MemberRole</class>
 		<class>model.MemberTransaction</class>
 		<class>model.Config</class>
+		<class>model.PwChangeToken</class>
 
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->

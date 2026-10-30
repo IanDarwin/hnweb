@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 @Entity
 public class PwChangeToken {
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Id int id;
     String email;
     String token;
     LocalDate created = LocalDate.now();
