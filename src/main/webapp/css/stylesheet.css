@@ -284,6 +284,18 @@ body .ui-button.btn-danger:enabled:hover { background: var(--bad); color: #fff; 
 
 .btn-link { color: var(--muted); }
 
+/* ---------- Change Password: live rule checklist ---------- */
+
+ul.rules { list-style: none; margin: .4rem 0 0; padding: 0; font-size: .9rem; color: var(--muted); }
+ul.rules li { padding-left: 1.5rem; position: relative; }
+ul.rules li::before { content: "\25CB"; position: absolute; left: 0; }          /* open circle */
+ul.rules li.ok { color: var(--ok); }
+ul.rules li.ok::before { content: "\2713"; }                                    /* check mark */
+ul.rules li.bad { color: var(--bad); font-weight: 600; }
+ul.rules li.bad::before { content: "\2717"; }                                   /* ballot x */
+p.error { color: var(--bad); margin: .35rem 0 0; min-height: 1.2em; }
+button.eye { padding: .3rem .6rem; }
+
 /* ---------- Tables ---------- */
 
 body .ui-datatable .ui-datatable-header,

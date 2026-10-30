@@ -26,6 +26,27 @@
         return r.length && r.upper && r.lower && r.digit && r.special;
     }
 
+    // Short wording for the "still needed" message, in display order.
+    var RULE_LABELS = [
+        ['length',  'at least ' + MIN_LENGTH + ' characters'],
+        ['upper',   'an uppercase letter'],
+        ['lower',   'a lowercase letter'],
+        ['digit',   'a digit'],
+        ['special', 'a special character']
+    ];
+
+    /** Labels of the rules this password does NOT yet satisfy, in display order. */
+    function unmetRules(pw) {
+        var r = checkRules(pw);
+        var out = [];
+        for (var i = 0; i < RULE_LABELS.length; i++) {
+            if (!r[RULE_LABELS[i][0]]) {
+                out.push(RULE_LABELS[i][1]);
+            }
+        }
+        return out;
+    }
+
     /**
      * Show the mismatch error only once the confirm field has enough characters,
      * and only if it has diverged from the first entry. A confirm value that is
@@ -44,6 +65,7 @@
         MIN_LENGTH: MIN_LENGTH,
         CONFIRM_THRESHOLD: CONFIRM_THRESHOLD,
         checkRules: checkRules,
+        unmetRules: unmetRules,
         meetsRules: meetsRules,
         showMismatch: showMismatch,
         canSubmit: canSubmit
@@ -70,11 +92,24 @@
 
         function update() {
             var rules = checkRules(pw1.value);
+            // Unmet rules stay neutral until the user starts typing, then turn red.
+            var started = pw1.value.length > 0;
             for (var i = 0; i < items.length; i++) {
-                items[i].classList.toggle('ok', !!rules[items[i].getAttribute('data-rule')]);
+                var met = !!rules[items[i].getAttribute('data-rule')];
+                items[i].classList.toggle('ok', met);
+                items[i].classList.toggle('bad', started && !met);
             }
             var mismatch = showMismatch(pw1.value, pw2.value);
-            errBox.textContent = mismatch ? "Passwords don't match" : '';
+            // Once they are into the confirm field, say what is still wrong, in the same place.
+            var unmet = pw2.value.length > 0 ? unmetRules(pw1.value) : [];
+            var msgs = [];
+            if (unmet.length) {
+                msgs.push('Password still needs: ' + unmet.join(', ') + '.');
+            }
+            if (mismatch) {
+                msgs.push("Passwords don't match.");
+            }
+            errBox.textContent = msgs.join(' ');
             pw2.setAttribute('aria-invalid', mismatch ? 'true' : 'false');
             submit.disabled = !canSubmit(pw1.value, pw2.value);
         }

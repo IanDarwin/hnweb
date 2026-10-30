@@ -1,7 +1,6 @@
 package action;
 
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -18,6 +17,9 @@ import outreach.MailMan;
 
 import java.net.URI;
 import java.util.Random;
+
+import com.darwinsys.security.DigestUtils;
+import model.Member;
 
 @Path("/")
 public class UserPasswordChangeRest {
@@ -47,7 +49,6 @@ public class UserPasswordChangeRest {
         System.out.println("In chP1, token = " + token);
         em.persist(new PwChangeToken(email, token));
         String message = MESSAGE_TEMPLATE.formatted(email, host, token);
-        System.out.printf("Sending %s to %s\n", message, email);
         try {
             mailMan.sendMessageTo(email, "HN Passord Reset", message);
         } catch (MessagingException e) {
@@ -60,9 +61,25 @@ public class UserPasswordChangeRest {
 
     @Path("changePassword2")
     @POST
+    @Transactional
     @Consumes("application/x-www-form-urlencoded")
-    public Response changePassword2(@FormParam("token") String token) {
+    public Response changePassword2(@FormParam("token") String token, @FormParam("newPassword") String newPassword) {
         System.out.println("In chP2, got token=" + token);
+        var q = em.createQuery("SELECT pw FROM PwChangeToken pw WHERE pw.token = ?1", PwChangeToken.class);
+        q.setParameter(1, token);
+        var email = q.getSingleResult().getEmail();
+        if (email == null) {
+            throw new RuntimeException("Token not found!");
+        }
+        var r = em.createQuery("SELECT m FROM Member m WHERE m.email = ?1", Member.class);
+        r.setParameter(1, email);
+        var member = r.getSingleResult();
+        if (member == null) {
+            throw new IllegalStateException("No member for this email");
+        }
+
+        member.setPassword(DigestUtils.md5(newPassword)); // What we came for!
+
         var redirectURI = URI.create(host + "/" + PART3_URL);
         return Response.seeOther(redirectURI).build();
     }
