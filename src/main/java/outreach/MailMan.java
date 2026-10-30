@@ -154,6 +154,14 @@ public class MailMan implements Serializable {
 		}
 	}
 	
+	/**
+	 * Send an email to one member only.
+	 */
+	public String sendMessageTo(String email, String subject, String body) throws MessagingException {
+		System.out.println("MailMan.sendMessageTo(" + email + ")");
+		return sendMessage(List.of(email), subject, body);
+	}
+	
 
 	/** This has to be just right:
 	 * If it is now December, and you expired in September, you are not paid up.
