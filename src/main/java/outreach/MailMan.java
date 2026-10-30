@@ -155,11 +155,17 @@ public class MailMan implements Serializable {
 	}
 	
 	/**
-	 * Send an email to one member only.
+	 * Send an email to one address only.
 	 */
 	public String sendMessageTo(String email, String subject, String body) throws MessagingException {
 		System.out.println("MailMan.sendMessageTo(" + email + ")");
-		return sendMessage(List.of(email), subject, body);
+		var ret = sendMessage(List.of(email), subject, body);
+		if (ret) {
+			return "/";
+		} else {
+			addFacesMessage("Unable to send message!");
+			return null;
+		}
 	}
 	
 
