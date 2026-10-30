@@ -1,10 +1,15 @@
 package action;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+
+import jakarta.mail.MessagingException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import outreach.MailMan;
 
 import java.net.URI;
 import java.util.Random;
@@ -26,7 +31,15 @@ public class UserPasswordChangeRest {
     public Response changePassword1(@FormParam("email") String email) {
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
-        sendPart1Email(email, token);
+        String message = MESSAGE_TEMPLATE.formatted(email, host, host);
+        System.out.printf("Sending %s to %s\n", message, email);
+        try {
+            // XXX Make a singleton?
+            new MailMan().sendMessageTo(email, "HN Passord Reset", message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to email " + email, e);
+        }
+        FacesContext.getCurrentInstance().addMessage( null, new FacesMessage("Watch your email for the next step."));
         var redirectURI = URI.create(host);
         return Response.seeOther(redirectURI).build();
     }
@@ -36,12 +49,6 @@ public class UserPasswordChangeRest {
     @Consumes("application/x-www-form-urlencoded")
     public void changePassword2(@FormParam("token") String token) {
         System.out.println("In chP2, got token=" + token);
-    }
-
-    void sendPart1Email(String email, String token) {
-        String message = MESSAGE_TEMPLATE.formatted(email, host, host);
-        System.out.printf("Would send %s to %s\n", message, email);
-        // XXX
     }
 
     // Replace w/ $dsapi/genpws
