@@ -46,7 +46,7 @@ class MemberDAOTest extends AbstractPersistenceTest {
         tx.begin();
         memberDAO.delete(member);
         tx.commit();
-        assertEquals(0, getEntityManager().createQuery("SELECT m FROM Member m").getResultList().size());
+        assertEquals(0, getEntityManager().createQuery("SELECT m FROM Member m", Member.class).getResultList().size());
     }
 
 	@Test
