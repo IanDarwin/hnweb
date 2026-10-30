@@ -6,6 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
@@ -22,22 +24,22 @@ public class UserPasswordChangeRest {
 
     static String MESSAGE_TEMPLATE = """
                 You (or somebody using your account) requested a password change for user %s on site %s.
-                If this was you and you want to proceed, please confirm your email.
-                <form action="%s/ChangePassword2.html" method="post">
-                <input type="hidden" name="token">%s</input>
-                <input type="submit">Enter new password...</input>
-                </form>.
-                If it wasn't you, please just ignore this email.""";
+                If this was you and you want to proceed, please confirm your email
+				by pasting this token into the next page, along with your new password.
+                <br/><b>%s</b><br/>
+                If you didn't request this, please just ignore this email.""";
 
     final static String host = "https://hn.darwinsys.com";
+	final static String PART2_URL = "ChangePassword2.web";
 
     @Inject
     MailMan mailMan;
-    @Inject
+    @PersistenceContext
     EntityManager em;
 
     @Path("changePassword1")
     @POST
+	@Transactional
     @Consumes("application/x-www-form-urlencoded")
     public Response changePassword1(@FormParam("email") String email) {
         String token = randomString(20);
@@ -50,8 +52,8 @@ public class UserPasswordChangeRest {
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to email " + email, e);
         }
-        FacesContext.getCurrentInstance().addMessage( null, new FacesMessage("Watch your email for the next step."));
-        var redirectURI = URI.create(host);
+        // XXX FacesContext.getCurrentInstance().addMessage( null, new FacesMessage("Watch your email for the next step."));
+        var redirectURI = URI.create(host + "/" + PART2_URL);
         return Response.seeOther(redirectURI).build();
     }
 

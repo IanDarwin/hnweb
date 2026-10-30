@@ -1,16 +1,17 @@
 package model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class PwChangeToken {
+	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Id int id;
+	long id;
     String email;
     String token;
-    LocalDate created = LocalDate.now();
+    LocalDateTime created;
 
     public PwChangeToken(String token, String email) {
         this.token = token;
@@ -33,11 +34,11 @@ public class PwChangeToken {
         this.token = token;
     }
 
-    public LocalDate getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDate created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 }
