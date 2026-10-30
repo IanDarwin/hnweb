@@ -8,14 +8,18 @@ import java.time.LocalDateTime;
 public class PwChangeToken {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	long id;
+	Long id;
     String email;
     String token;
     LocalDateTime created;
 
-    public PwChangeToken(String token, String email) {
-        this.token = token;
+	public PwChangeToken() {
+		// Empty, needed for JPA
+	}
+
+    public PwChangeToken(String email, String token) {
         this.email = email;
+        this.token = token;
     }
 
     public String getEmail() {
