@@ -2,8 +2,9 @@ package action;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-
+import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
@@ -25,6 +26,9 @@ public class UserPasswordChangeRest {
 
     final static String host = "https://hn.darwinsys.com";
 
+    @Inject
+    MailMan mailMan;
+
     @Path("changePassword1")
     @POST
     @Consumes("application/x-www-form-urlencoded")
@@ -34,8 +38,7 @@ public class UserPasswordChangeRest {
         String message = MESSAGE_TEMPLATE.formatted(email, host, host);
         System.out.printf("Sending %s to %s\n", message, email);
         try {
-            // XXX Make a singleton?
-            new MailMan().sendMessageTo(email, "HN Passord Reset", message);
+            mailMan.sendMessageTo(email, "HN Passord Reset", message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to email " + email, e);
         }
