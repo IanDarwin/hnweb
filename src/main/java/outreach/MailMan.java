@@ -167,9 +167,8 @@ public class MailMan implements Serializable {
 			return null;
 		}
 	}
-	
 
-	/** This has to be just right:
+	/** This has to be just right: // XXX Move to a class for membership calculations
 	 * If it is now December, and you expired in September, you are not paid up.
 	 * If it is now January, and you expired in September, are paid up.
 	 * If it is now January and you expired 15 months ago, you should NOT be considered paid up.
@@ -257,11 +256,13 @@ public class MailMan implements Serializable {
 			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
-		
-		Member loggedIn = identity.getLoggedInUser();
-		notNull("your email address", loggedIn.getName());
-		String fromAddress = loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
-		notNull("message_subject", message_subject);
+		String fromAddress = props.getProperty(PROPNAME_MAIL_SMTP_FROM);
+		if (identity != null) {
+			Member loggedIn = identity.getLoggedInUser();
+			notNull("your email address", loggedIn.getName());
+			fromAddress = loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
+		}
+		notNull("message_subject", props.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX) + " " + message_subject);
 		notNull("message_body", message_body);
 		
 		// Get the Mail Session object
