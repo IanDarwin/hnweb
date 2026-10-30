@@ -17,7 +17,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>21</javase.version>
+		<javase.version>17</javase.version>
 		<jakartaee.version>11.0.0</jakartaee.version>
 		<jakartadata.version>1.1.0-M3</jakartadata.version>
 		<jakartamail.version>2.1.0-M1</jakartamail.version>
