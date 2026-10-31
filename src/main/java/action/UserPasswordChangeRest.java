@@ -88,6 +88,14 @@ public class UserPasswordChangeRest {
             return badToken();
         }
 
+        if (newPassword.length() < 10 ||
+                !newPassword.matches("[a-z]") ||
+                !newPassword.matches("[A-Z]") ||
+                !newPassword.matches("0-9]"))
+        {
+            return badToken();
+        }
+
         // XXX Simplify to getSingleResultOrNull() when Wildfly version provides JPA 3.2 
         var tokens = em.createQuery("SELECT pw FROM PwChangeToken pw WHERE pw.token = ?1", PwChangeToken.class)
                 .setParameter(1, token.trim())
