@@ -37,6 +37,7 @@ public class UserPasswordChangeRest {
     final static int TOKEN_MINUTES = 60;
 
     final static String host = "https://hn.darwinsys.com";
+	final static String PART1_URL = "ChangePassword1.web";
 	final static String PART2_URL = "ChangePassword2.web";
 	final static String PART3_URL = "ChangePassword3.web";
 
@@ -50,13 +51,13 @@ public class UserPasswordChangeRest {
 	@Transactional
     @Consumes("application/x-www-form-urlencoded")
     public Response changePassword1(@FormParam("email") String email) {
-		var members = em.createQuery("SELECT m FROM Member h WHERE m.email = ?1", Member.class)
+		var members = em.createQuery("SELECT m FROM Member m WHERE m.email = ?1", Member.class)
 			.setParameter(1, email)
 			.setMaxResults(2)
 			.getResultList();
         if (members.size() != 1) {
-            System.err.println("changePassword2: no unique member for token's email");
-            return badToken();
+            System.err.println("changePassword1: no unique member for token's email");
+            return badMember();
         }
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
@@ -69,6 +70,11 @@ public class UserPasswordChangeRest {
         }
         var redirectURI = URI.create(host + "/" + PART2_URL);
         return Response.seeOther(redirectURI).build();
+    }
+
+    /** Back to step 1 with a generic message */
+    private Response badMember() {
+        return Response.seeOther(URI.create(host + "/" + PART1_URL + "?error=member")).build();
     }
 
     @Path("changePassword2")
