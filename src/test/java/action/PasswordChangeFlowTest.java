@@ -144,7 +144,7 @@ class PasswordChangeFlowTest {
 		assertEquals(0, ((Number) em.createQuery("select count(t) from PwChangeToken t").getSingleResult()).intValue());
 	}
 
-	// @Test
+	@Test
 	void expiredTokenIsRejectedAndRemoved() throws Exception {
 		step1(EMAIL);
 		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
@@ -154,6 +154,7 @@ class PasswordChangeFlowTest {
 		inTxDo(() -> em.createQuery("update PwChangeToken t set t.created = :c")
 				.setParameter("c", LocalDateTime.now().minusMinutes(UserPasswordChangeRest.TOKEN_MINUTES + 5))
 				.executeUpdate());
+		em.clear();	// bulk update bypasses the persistence context; drop the stale cached token
 
 		assertEquals(tokenError(), step2(token, NEW_PASSWORD).location);
 		assertEquals(OLD_PASSWORD, storedPassword());
