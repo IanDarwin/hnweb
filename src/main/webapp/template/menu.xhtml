@@ -23,7 +23,7 @@
 
 		<div class="site-account">
 			<h:form styleClass="inline-form">
-				<a href="#{request.contextPath}/About.web">About ClubList</a>
+				<a href="#{request.contextPath}/About.web">About</a>
 				<h:outputLink value="#{request.contextPath}/Login.web" rendered="#{not identity.loggedIn}">Log in</h:outputLink>
 				<h:outputText styleClass="welcome" value="Hi, #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>
 				<h:commandLink action="#{identity.logout}" value="Log out" rendered="#{identity.loggedIn}"/>
