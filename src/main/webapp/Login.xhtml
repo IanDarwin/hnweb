@@ -33,17 +33,11 @@
 				</div>
 			</div>
 
-			<div class="field">
-				<p:outputLabel for="forgot" value="Reset Password?"/>
-				<div class="control">
-					<h:link outcome="ChangePassword1" value="Reset" id="forgot" name="forgot"/>
-				</div>
-			</div>
-
 		</div>
 
 		<div class="actions">
 			<h:commandButton id="login" action="#{identity.login}" value="Log in"/>
+			<h:link outcome="ChangePassword1" value="Forgot your password?" id="forgot" styleClass="btn-link"/>
 		</div>
 	</h:form>
 

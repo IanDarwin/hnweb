@@ -16,6 +16,8 @@ import model.PwChangeToken;
 import outreach.MailMan;
 
 import java.net.URI;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import com.darwinsys.security.DigestUtils;
@@ -31,6 +33,9 @@ public class UserPasswordChangeRest {
                 <br/><b>%s</b><br/>
                 If you didn't request this, please just ignore this email.""";
 
+    /** How long an emailed token stays valid */
+    final static int TOKEN_MINUTES = 60;
+
     final static String host = "https://hn.darwinsys.com";
 	final static String PART2_URL = "ChangePassword2.web";
 	final static String PART3_URL = "ChangePassword3.web";
@@ -45,6 +50,14 @@ public class UserPasswordChangeRest {
 	@Transactional
     @Consumes("application/x-www-form-urlencoded")
     public Response changePassword1(@FormParam("email") String email) {
+		var members = em.createQuery("SELECT m FROM Member h WHERE m.email = ?1", Member.class)
+			.setParameter(1, email)
+			.setMaxResults(2)
+			.getResultList();
+        if (members.size() != 1) {
+            System.err.println("changePassword2: no unique member for token's email");
+            return badToken();
+        }
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
         em.persist(new PwChangeToken(email, token));
@@ -54,7 +67,6 @@ public class UserPasswordChangeRest {
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to email " + email, e);
         }
-        // XXX FacesContext.getCurrentInstance().addMessage( null, new FacesMessage("Watch your email for the next step."));
         var redirectURI = URI.create(host + "/" + PART2_URL);
         return Response.seeOther(redirectURI).build();
     }
@@ -64,37 +76,60 @@ public class UserPasswordChangeRest {
     @Transactional
     @Consumes("application/x-www-form-urlencoded")
     public Response changePassword2(@FormParam("token") String token, @FormParam("newPassword") String newPassword) {
-        System.out.println("In chP2, got token=" + token);
-        var q = em.createQuery("SELECT pw FROM PwChangeToken pw WHERE pw.token = ?1", PwChangeToken.class);
-        q.setParameter(1, token);
-        var email = q.getSingleResult().getEmail();
-        if (email == null) {
-            throw new RuntimeException("Token not found!");
-        }
-        var r = em.createQuery("SELECT m FROM Member m WHERE m.email = ?1", Member.class);
-        r.setParameter(1, email);
-        var member = r.getSingleResult();
-        if (member == null) {
-            throw new IllegalStateException("No member for this email");
+        // Every failure below goes to the same vague "try again" message: users
+        // can't act on JPA details, and we shouldn't tell an attacker which part failed.
+        if (token == null || token.isBlank() || newPassword == null || newPassword.isEmpty()) {
+            return badToken();
         }
 
-        member.setPassword(DigestUtils.md5(newPassword)); // What we came for!
+        // XXX Simplify to getSingleResultOrNull() when Wildfly version provides JPA 3.2 
+        var tokens = em.createQuery("SELECT pw FROM PwChangeToken pw WHERE pw.token = ?1", PwChangeToken.class)
+                .setParameter(1, token.trim())
+                .setMaxResults(2)
+                .getResultList();
+        if (tokens.size() != 1) {
+            return badToken();
+        }
+        PwChangeToken pwToken = tokens.get(0);
 
-        var redirectURI = URI.create(host + "/" + PART3_URL);
-        return Response.seeOther(redirectURI).build();
+        // Tokens are single-use: remove it now, whatever happens next
+        em.remove(pwToken);
+
+        var created = pwToken.getCreated();
+        if (created == null || created.plusMinutes(TOKEN_MINUTES).isBefore(LocalDateTime.now())) {
+            return badToken();
+        }
+
+        var members = em.createQuery("SELECT m FROM Member m WHERE m.email = ?1", Member.class)
+                .setParameter(1, pwToken.getEmail())
+                .setMaxResults(2)
+                .getResultList();
+        if (members.size() != 1) {
+            System.err.println("changePassword2: no unique member for token's email");
+            return badToken();
+        }
+
+        members.get(0).setPassword(DigestUtils.md5(newPassword)); // What we came for!
+
+        return Response.seeOther(URI.create(host + "/" + PART3_URL)).build();
     }
 
-    // Replace w/ $dsapi/genpws
+    /** Back to step 2 with a generic message */
+    private Response badToken() {
+        return Response.seeOther(URI.create(host + "/" + PART2_URL + "?error=token")).build();
+    }
+
+    // Replace w/ $dsapi/genpwds
     public String randomString(int targetStringLength) {
         if (targetStringLength < 10) {
             throw new IllegalStateException(targetStringLength + " is too short");
         }
         int leftLimit = 48 + 2; // numeral '0', but skip 0 and 1
         int rightLimit = 122; // letter 'z'
-        Random random = new Random();
+        Random random = new SecureRandom(); // tokens must not be guessable
 
         return random.ints(leftLimit, rightLimit + 1)
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97) && i != 154) // Omit l/c L
+          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97) && i != 108) // Omit l/c L
           .limit(targetStringLength)
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
           .toString();
