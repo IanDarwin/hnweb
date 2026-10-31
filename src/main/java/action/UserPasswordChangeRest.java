@@ -19,6 +19,7 @@ import java.net.URI;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import com.darwinsys.security.DigestUtils;
 import model.Member;
@@ -26,6 +27,9 @@ import model.Member;
 @Path("/")
 public class UserPasswordChangeRest {
 
+    /** The email we send the user with their token.
+     * NOTA BENA: Do NOT add any 'b' tags or unless you change the tests!
+     */
     static String MESSAGE_TEMPLATE = """
                 You (or somebody using your account) requested a password change for user %s on site %s.
                 If this was you and you want to proceed, please confirm your email
@@ -88,11 +92,7 @@ public class UserPasswordChangeRest {
             return badToken();
         }
 
-        if (newPassword.length() < 10 ||
-                !newPassword.matches("[a-z]") ||
-                !newPassword.matches("[A-Z]") ||
-                !newPassword.matches("0-9]"))
-        {
+        if (!meetsPasswordRules(newPassword)) {
             return badToken();
         }
 
@@ -126,6 +126,25 @@ public class UserPasswordChangeRest {
         members.get(0).setPassword(DigestUtils.md5(newPassword)); // What we came for!
 
         return Response.seeOther(URI.create(host + "/" + PART3_URL)).build();
+    }
+
+    // Same rules as js/changepassword.js, which must be kept in step with these.
+    private static final Pattern UPPER = Pattern.compile("\\p{Lu}");
+    private static final Pattern LOWER = Pattern.compile("\\p{Ll}");
+    private static final Pattern DIGIT = Pattern.compile("\\p{Nd}");
+    private static final Pattern SPECIAL = Pattern.compile("[^\\p{L}\\p{N}\\s]");
+
+    /**
+     * Server-side enforcement of the password rules (the JavaScript can be bypassed).
+     * Note find(), not matches(): matches() requires the WHOLE string to match the pattern.
+     */
+    static boolean meetsPasswordRules(String pw) {
+        return pw != null
+                && pw.length() >= 10
+                && UPPER.matcher(pw).find()
+                && LOWER.matcher(pw).find()
+                && DIGIT.matcher(pw).find()
+                && SPECIAL.matcher(pw).find();
     }
 
     /** Back to step 2 with a generic message */
