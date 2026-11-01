@@ -10,20 +10,19 @@
 
 		<nav class="site-nav" aria-label="Main">
 			<a href="https://onheadwatersnature.ca/">Club site</a>
-			<a href="#{request.contextPath}/index.web">Membership home</a>
 			<a href="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook group</a>
 			<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
-				<a href="#{request.contextPath}/MemberList.web">Members</a>
+				<a href="#{request.contextPath}/MemberList.web">Member List</a>
 				<a href="#{request.contextPath}/MemberEdit.web">Add member</a>
 				<a href="#{request.contextPath}/Renew.web">Renew member</a>
 				<a href="#{request.contextPath}/EventList.web">Events</a>
 				<a href="#{request.contextPath}/MailingList.web">Mailings</a>
 			</ui:fragment>
+			<a href="#{request.contextPath}/About.web">About</a>
 		</nav>
 
 		<div class="site-account">
 			<h:form styleClass="inline-form">
-				<a href="#{request.contextPath}/About.web">About</a>
 				<h:outputLink value="#{request.contextPath}/Login.web" rendered="#{not identity.loggedIn}">Log in</h:outputLink>
 				<h:outputText styleClass="welcome" value="Hi, #{identity.loggedInUser.firstName}" rendered="#{identity.loggedIn}"/>
 				<h:commandLink action="#{identity.logout}" value="Log out" rendered="#{identity.loggedIn}"/>
