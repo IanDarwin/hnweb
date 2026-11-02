@@ -141,7 +141,7 @@ class PasswordChangeFlowTest {
 		var r = step1("nobody@example.test");
 		assertEquals(UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART1_URL + "?error=member", r.location);
 		assertEquals(0, greenMail.getReceivedMessages().length);
-		assertEquals(0, ((Number) em.createQuery("select count(t) from PwChangeToken t").getSingleResult()).intValue());
+		assertEquals(0, ((Number) em.createQuery("select count(t) from PwChangeToken t", Number.class).getSingleResult()).intValue());
 	}
 
 	@Test
