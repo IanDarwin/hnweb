@@ -49,11 +49,11 @@ class MemberTest {
 	void isExpiredFalse() {
 		final int curYear = LocalDate.now().getYear();
 		member.setExpiryYear(curYear);
-		var d = LocalDate.of(curYear, Config.RENEWAL_MONTH - 1, 1);
+		var d = LocalDate.of(curYear, Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH) - 1, 1);
 		assertFalse(YearCalcs.isExpired(member, d));
-		var e = LocalDate.of(curYear, Config.RENEWAL_MONTH, 1);
+		var e = LocalDate.of(curYear, Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH), 1);
 		assertFalse(YearCalcs.isExpired(member, e));
-		var f = LocalDate.of(curYear, Config.RENEWAL_MONTH + 1, 1);
+		var f = LocalDate.of(curYear, Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH) + 1, 1);
 		assertTrue(YearCalcs.isExpired(member, f));
 	}
 

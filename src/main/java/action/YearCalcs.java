@@ -18,8 +18,9 @@ public class YearCalcs {
 	public static int getCurrentMembershipYear(LocalDate now) {
 		int yearNow = now.getYear();
 		int monthNow = now.getMonthValue();
-		return (monthNow >= Config.RENEWAL_MONTH) ? yearNow + 1 : yearNow;
+		return monthNow >= Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH) ? yearNow + 1 : yearNow;
 	}
+
 	/** Find out what today's current membership year is */
 	public static int getCurrentMembershipYear() {
 		return getCurrentMembershipYear(LocalDate.now());
@@ -27,8 +28,9 @@ public class YearCalcs {
 
 	/** If a member joins today, what membership year does their membership run to?*/
 	public static int getNewMemberExpiryYear(LocalDate now) {
-		if (now.getMonthValue()>=Config.RENEWAL_MONTH)
+		if (now.getMonthValue() >= Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH)) {
 			return now.getYear() + 1;
+		}
 		return getCurrentMembershipYear(now);
 	}
 
@@ -73,8 +75,9 @@ public class YearCalcs {
 		// Not currently greater than exp year, so might be in it, must
 		// check if we are currently past the expiry month.
 		if (now.getYear() == m.getExpiryYear() &&
-				now.getMonth().getValue() > Config.RENEWAL_MONTH)
+				now.getMonth().getValue() > Config.getIntProperty(Config.PROPNAME_RENEWAL_MONTH)) {
 			return true;
+		}
 		// Otherwise we are not yet in the expiry year.
 		return false;
 	}

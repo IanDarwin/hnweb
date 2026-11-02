@@ -1,6 +1,7 @@
 package outreach;
 
 import jakarta.mail.Session;
+import model.Config;
 
 /**
  * Test-only bridge into package {@code outreach}: MailMan's static {@code props} and its
@@ -15,11 +16,11 @@ public class MailManTestSupport {
 	 * e.g. one pointed at a GreenMail SMTP server.
 	 */
 	public static MailMan mailManUsing(Session mailSession) {
-		// MailMan.props is static and shared; other tests (MailManTest) clear it,
+		// MailMan.props is static and shared; other tests (MailManTest) reload it,
 		// so set what we need each time.
-		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, FROM);
-		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_SUBJECT_PREFIX, "[HN-test]");
-		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_UNSUBSCRIBE, "n/a");
+		Config.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, FROM);
+		Config.setProperty(MailMan.PROPNAME_MAIL_SUBJECT_PREFIX, "[HN-test]");
+		Config.setProperty(MailMan.PROPNAME_MAIL_UNSUBSCRIBE, "n/a");
 		return new MailMan() {
 			{ this.session = mailSession; }	// protected field: legal in a subclass
 		};

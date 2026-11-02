@@ -110,7 +110,7 @@ public class MemberArchived {
             // t.setCause(ex);
             throw t;
         }
-        // Do NOT clear the ID field
+        // Do NOT reload the ID field
         // id = 0L;
     }
 

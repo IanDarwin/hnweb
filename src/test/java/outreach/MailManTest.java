@@ -2,7 +2,6 @@ package outreach;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import jakarta.mail.Multipart;
 import jakarta.mail.internet.InternetAddress;
@@ -10,6 +9,7 @@ import jakarta.mail.internet.MimeMessage;
 
 import action.LoginAction;
 import data.MemberDAO;
+import model.Config;
 import model.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class MailManTest {
 		loginAction = new LoginAction();
 		loginAction.setMemberDAO(lister);
 		loginAction.setLoggedInUser(member);
-		MailMan.props.clear();
+		Config.reload();
 	}
 
 	@Test
@@ -66,6 +66,7 @@ class MailManTest {
 	void createMessage() throws Exception {
 		List<String> recipients = Arrays.asList("a@b.c");
 		final String messageSender = "from@dom.ain";
+		Config.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, messageSender);
 		final MimeMessage actual = sender.createMessage(messageSender,
 				A_MESSAGE_SUBJECT,
 				HTML_HELLO_WORLD,
@@ -78,9 +79,9 @@ class MailManTest {
 
 	@Test
 	void createMessageWithNoReply() throws Exception {
-		List<String> recipients = Arrays.asList("a@b.c");
+		List<String> recipients = List.of("a@b.c");
 		final String NO_REPLY_ADDR = "slugs@junglegarden.moc";
-		MailMan.props.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, NO_REPLY_ADDR);
+		Config.setProperty(MailMan.PROPNAME_MAIL_SMTP_FROM, NO_REPLY_ADDR);
 		final MimeMessage actual = sender.createMessage("from@dom.ain",
 				A_MESSAGE_SUBJECT,
 				HTML_HELLO_WORLD,

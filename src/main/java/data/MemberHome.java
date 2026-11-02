@@ -42,12 +42,6 @@ public class MemberHome implements Serializable {
 	// Name of page to go to (MemberList.xhtml). 
 	private static final String LIST_PAGE = "/MemberList";
 
-	/**
-	 * This should be externalized as it depends on our club's policies:
-	 * NEW MEMBERS who sign up on or after September 1 get next year's membership
-	 */
-	public final static int RENEWAL_MONTH = 9;
-
 	@Inject private MemberDAO memberDAO;
 
 	List<Member> members;

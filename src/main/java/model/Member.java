@@ -146,7 +146,7 @@ public class Member {
         } catch (IllegalAccessException | InvocationTargetException ex) {
             throw new ExceptionInInitializerError("MemberArchived: Copy Constructor Failed: " + ex);
         }
-        // Now have to clear some fields.
+        // Now have to reload some fields.
         id = 0L;
         memberTransactions.clear();
         secondaryMembers = new HashSet<>();

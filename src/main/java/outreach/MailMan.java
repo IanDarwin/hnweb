@@ -22,6 +22,7 @@ import jakarta.mail.internet.MimeMultipart;
 
 import action.LoginAction;
 import data.MemberDAO;
+import model.Config;
 import model.Member;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
@@ -41,8 +42,6 @@ import org.primefaces.model.file.UploadedFile;
 public class MailMan implements Serializable {
 
 	private static final String HEADER_REPLY_TO = "Reply-To";
-
-	public static final String CONFIG_PROPERTIES_NAME = "/config.properties";
 
 	public static final String PROPNAME_MAIL_SMTP_HOST = "mail.smtp.host";
 
@@ -79,24 +78,6 @@ public class MailMan implements Serializable {
 		System.out.println("MailMan.MailMan()");
 	}
 
-	static final Properties props;
-
-	static {
-		try (InputStream is = MailMan.class.getResourceAsStream(CONFIG_PROPERTIES_NAME)) {
-			if (is == null) {
-				throw new IllegalArgumentException(
-					"File " + CONFIG_PROPERTIES_NAME + " not on CLASSPATH for " +
-							MailMan.class.getName());
-			}
-			props = new Properties();
-			props.load(is);
-			props.store(System.out, "Dump of MailMan config properties");
-		} catch (IOException e) {
-			throw new ExceptionInInitializerError(
-				"CANTHAPPEN: IOException in close of resource " + CONFIG_PROPERTIES_NAME);
-		}
-	}
-	
 	protected void addFacesMessage(String message) {
 		final FacesContext facesContext = FacesContext.getCurrentInstance();
 		if (facesContext == null) {
@@ -218,10 +199,10 @@ public class MailMan implements Serializable {
 		System.out.println("MailMan.sendMessageToSome()");
 		List<Member> all = lister.findAll();
 		List<String> emails = selectListMembers(all, ch);
-		final String mailHostProperty = props.getProperty(PROPNAME_MAIL_SMTP_HOST);
+		final String mailHostProperty = Config.getProperty(PROPNAME_MAIL_SMTP_HOST);
 		if (mailHostProperty == null) {
 			throw new IllegalStateException(
-				PROPNAME_MAIL_SMTP_HOST + " not set in " + CONFIG_PROPERTIES_NAME);
+				PROPNAME_MAIL_SMTP_HOST + " not in config.properties");
 		}
 		return sendMessage(
 				emails, 
@@ -256,13 +237,13 @@ public class MailMan implements Serializable {
 			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
-		String fromAddress = props.getProperty(PROPNAME_MAIL_SMTP_FROM);
+		String fromAddress = Config.getProperty(PROPNAME_MAIL_SMTP_FROM);
 		if (identity != null && identity.isLoggedIn()) {
 			Member loggedIn = identity.getLoggedInUser();
 			notNull("your email address", loggedIn.getName());
 			fromAddress = loggedIn.getName() + " <" + loggedIn.getEmail() + ">";
 		}
-		notNull("message_subject", props.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX) + " " + message_subject);
+		notNull("message_subject", Config.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX) + " " + message_subject);
 		notNull("message_body", message_body);
 		
 		// Get the Mail Session object
@@ -313,7 +294,7 @@ public class MailMan implements Serializable {
 		// create a message
 		MimeMessage mesg = new MimeMessage(session);
 
-		String noReplyAddress = props.getProperty(PROPNAME_MAIL_SMTP_FROM);
+		String noReplyAddress = Config.getProperty(PROPNAME_MAIL_SMTP_FROM);
 		if (noReplyAddress == null) {	// Simple mode
 			final InternetAddress fromInternetAddress = new InternetAddress(fromAddress);
 			mesg.setFrom(fromInternetAddress);
@@ -341,7 +322,7 @@ public class MailMan implements Serializable {
 		}
 
 		// The Subject
-		String prefix = props.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX);
+		String prefix = Config.getProperty(PROPNAME_MAIL_SUBJECT_PREFIX);
 		if (prefix != null) {
 			messageSubject = prefix + " " + messageSubject;
 		}
@@ -354,7 +335,7 @@ public class MailMan implements Serializable {
         BodyPart htmlPart = new MimeBodyPart();
 		// Will often have been pasted from some kinda WP software w/ smartquotes &c
 		htmlBody += "<p>Unsubscribe: " +
-			props.getProperty(PROPNAME_MAIL_UNSUBSCRIBE);
+			Config.getProperty(PROPNAME_MAIL_UNSUBSCRIBE);
         htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);

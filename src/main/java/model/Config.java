@@ -1,34 +1,91 @@
 package model;
 
+import java.io.InputStream;
+import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Properties;
 
-import jakarta.persistence.*;
-
-@Entity
 public class Config implements Serializable {
+
+	private static final Properties props;
+
+	protected static final String CONFIG_PROPERTIES_NAME = "/config.properties";
+
+	static {
+		props = new Properties();
+		loadProps();
+	}
+
+	private static void loadProps() {
+		try (InputStream is = 
+			Config.class.getResourceAsStream(CONFIG_PROPERTIES_NAME)) {
+			if (is == null) {
+				throw new IllegalArgumentException(
+					"File " + CONFIG_PROPERTIES_NAME + " not on CLASSPATH.");
+			}
+			props.load(is);
+			props.store(System.out, "Dump of config properties");
+		} catch (IOException e) {
+			throw new ExceptionInInitializerError(
+				"CANTHAPPEN: IOException in close of resource " + CONFIG_PROPERTIES_NAME);
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 
+	public static String getProperty(String key) {
+		return props.getProperty(key);
+	}
+
+	public static void setProperty(String k, String v) {
+		props.setProperty(k, v);
+	}
+
+	/** Only for use by Testing! */
+	public static void reload() {
+		loadProps();
+	}
+
+	public static int getIntProperty(String key) {
+		return getIntProperty(key, null);
+	}
+
+	public static int getIntProperty(String key, Integer dflt) {
+		var s = props.getProperty(key);
+		if (s == null) {
+			if (dflt != null) {
+				return dflt;
+			} else {
+				throw new IllegalStateException(key + " not found in properties and no default");
+			}
+		} else {
+			return Integer.parseInt(s);
+		}
+	}
+
+	public static double getDoubleProperty(String key, Double dflt) {
+		var s = props.getProperty(key);
+		if (s == null) {
+			if (dflt != null) {
+				return dflt;
+			} else {
+				throw new IllegalStateException(key + " not found in properties and no default");
+			}
+		} else {
+			return Integer.parseInt(s);
+		}
+	}
+
+	// Most PROPTNAME_xxx are defined in the class that uses them.
+	// Only props used in multiple classes should be defined here.
+
 	/**
-	 * Membership year runs from Sept 1 to Aug 31. All memberships
+	 * HN Membership year runs from Sept 1 to Aug 31. All memberships
 	 * are due to renew starting in this month.
 	 */
-	public final static int RENEWAL_MONTH = 9;
+	public final static String PROPNAME_RENEWAL_MONTH = "datetime.renewalmonth";
 
-	/**
-	 * But: "New memberships after March 1 extend to the following year"
-	 */
-	final static int RENEWAL_FREE_YEAR_MONTH = 3;
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	long id;
-
-	String clubName;
-
-	LocalDate yearStarts, yearEnds;
-
-	int currentMemberYear;
+	final static int RPROPNAME_ENEWAL_FREE_YEAR_MONTH = 3;
 
 }
-	
