@@ -18,6 +18,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.RuntimeDelegate;
+import model.Config;
 import model.Member;
 import model.PwChangeToken;
 import org.junit.jupiter.api.AfterEach;
@@ -87,6 +88,7 @@ class PasswordChangeFlowTest {
 		emf.close();
 		greenMail.stop();
 		RuntimeDelegate.setInstance(savedDelegate);
+		Config.reload();	// undo the mail.* properties MailManTestSupport set
 	}
 
 	@Test

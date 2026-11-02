@@ -43,6 +43,7 @@ public class Config implements Serializable {
 
 	/** Only for use by Testing! */
 	public static void reload() {
+		props.clear();
 		loadProps();
 	}
 
