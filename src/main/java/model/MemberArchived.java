@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 
 @Entity
+@DiscriminatorValue("MemberArchived")
 public class MemberArchived extends MemberBase {
 
     @Column(name = "archiveddate")
@@ -14,10 +15,7 @@ public class MemberArchived extends MemberBase {
 
     @Column(name = "archivedreason")
     private String archivedReason;
-
-    @Column(name = "notes")
-    private String notes;
-
+    
     public MemberArchived(String reason) {
         archivedDate = LocalDate.now(); // Do this "now", avoid NPE later
         archivedReason = reason;
