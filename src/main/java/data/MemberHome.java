@@ -161,14 +161,6 @@ public class MemberHome implements Serializable {
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	
-	@Transactional
-	public String undelete() {
-		memberDAO.undelete(id);
-		endConversation();
-		invalidateMemberListCache();
-		return getListPage() + WebConstants.FORCE_REDIRECT;
-	}
-	
 	public Member getInstance() {
 		return instance;
 	}

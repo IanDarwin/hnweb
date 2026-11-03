@@ -1,6 +1,7 @@
 package data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -90,54 +91,32 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 	//////////////// DELETE METHODS /////////////////
 
-	// delete() is inherited, but uses these:
+	// delete() is inherited, but ours is special
 
-	@Override
-	public void preDelete(Member member) {
-		logger.log(Level.INFO, "preDelete(" + member + ")");
-		// Remove transactions for this user
-		// Do this by hand as some TXes may not be linked properly
-		entityManager.createQuery(
-				"SELECT t FROM MemberTransaction t where t.member = :member", MemberTransaction.class)
-				.setParameter("member", member)
-				.getResultList()
-				.forEach(entityManager::remove);
-
-		// Remove secondaries, if any, before primary
-//		for (Member sm : member.getSecondaryMembers()) {
-//			entityManager.remove(entityManager.merge(sm));
-//		}
+	public void delete(Member m) {
+		System.out.println("Archiving " + m);
+		entityManager.flush();		// send any pending changes to m before we go around JPA
+		var query = entityManager.createNativeQuery(
+			"update member set type = 'MemberArchived', archivedDate = ? where id = ?");
+		query.setParameter(1, LocalDate.now());
+		query.setParameter(2, m.getId());
+		int ret = query.executeUpdate();
+		System.out.println("delete: Native update returned " + ret);
+		// Changed the type w/o telling JPA, so evict it.
+		entityManager.detach(m);
 	}
 
-	@Override
-	protected void postDelete(Member instance) {
-		logger.log(Level.INFO, "postDelete(" + instance + ")");
-		final MemberArchived newMemberArchived = new MemberArchived(instance);
-		System.out.println("newMemberArchived = " + newMemberArchived);
-		entityManager.persist(newMemberArchived);
-	}
-
+	/** Undelete the Member */
 	// Beware the hall of the necromancer!
+	void unDelete(MemberArchived m) {
 
-	/** For members only, we keep an "archived" version of some fields;
-	 * this method lets us undelete, given the archivedMember's pkey.
-	 * @param id The primary key of the archived member
-	 */
-	public void undelete(long id) {
-		if (id < 1) {
-			throw new IllegalArgumentException("Can't undelete id " + id);
-		}
-		// Dead records don't have MemberTransactions, so we can just restore
-		MemberArchived instance = entityManager.find(MemberArchived.class, id);
-		if (instance == null) {
-			throw new IllegalArgumentException("MemberArchived " + id + " not found.");
-		}
-		System.out.println("Trying to necromance " + instance + " with id " + id);
-		entityManager.remove(instance);
+		System.out.println("Un-archiving " + m);
 		entityManager.flush();
-		entityManager.persist(new Member(instance));
-		entityManager.flush();	// So it prints with updated id
-		System.out.printf("Restored %s from archive!\n", instance);
+		var query = entityManager.createNativeQuery("update member set type = 'Member', archivedDate = null where id = ?");
+		query.setParameter(1, m.getId());
+		int ret = query.executeUpdate();
+		System.out.println("unDelete: Native query returned " + ret);
+		entityManager.detach(m);	// same reason as in delete(): now it is really a Member again
 	}
 }
 

@@ -21,16 +21,6 @@ class MemberTest {
 	}
 
 	@Test
-	void copyConstructor() {
-		MemberArchived memberArchived = new MemberArchived();
-		memberArchived.setFirstName("Thelmius");
-		memberArchived.setLastName("Aquaddapodox");
-		var member = new Member(memberArchived);
-		assertEquals("Thelmius", member.getFirstName());
-		assertEquals("Aquaddapodox", member.getLastName());
-	}
-
-	@Test
 	void getName2() {
 		member.setFirstName("Thelmius");
 		member.setLastName("Aquaddapodox");

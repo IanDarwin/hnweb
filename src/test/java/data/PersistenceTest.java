@@ -22,7 +22,6 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		Member tm = new Member();
 		tm.setFirstName(FIRST);
 		tm.setLastName("Lolz");
-		tm.setEmailTrips(true);
 		tm.addRole(ROLE);
 
 		entityManager.getTransaction().begin();
@@ -34,7 +33,7 @@ public class PersistenceTest extends AbstractPersistenceTest {
 		assertTrue(ms.size() > 0, "found any");
 
 		for (Member m : ms) {
-			if (m.getFirstName().equals(FIRST) && m.getEmailTrips()) {
+			if (m.getFirstName().equals(FIRST)) {
 				assertEquals(1, m.getRoles().size());
 				assertEquals("Dumpster Driver", m.getRoles().get(0).getName());
 				return;

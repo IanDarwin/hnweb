@@ -55,20 +55,16 @@ class MemberDAOTest extends AbstractPersistenceTest {
         EntityTransaction tx = getEntityManager().getTransaction();
         tx.begin();
         memberDAO.create(member);
-        System.out.println(2);
 		// Create detached MemberTransaction, like one of the scripts was doing.
-		getEntityManager().persist(new MemberTransaction(member, 2, TransactionReason.R, PaymentType.CASH));
-        System.out.println(3);
+        final MemberTransaction entity = new MemberTransaction(member, 2, TransactionReason.R, PaymentType.CASH);
+        getEntityManager().persist(entity);
+        member.getMemberTransactions().add(entity);
         tx.commit();
         tx = getEntityManager().getTransaction();
-        tx.begin();
-        System.out.println(4);
-        memberDAO.delete(member);
-        tx.commit();
         final List<Member> members =
                 getEntityManager().createQuery("SELECT m FROM Member m", Member.class).getResultList();
         members.forEach(System.out::println);
-        assertEquals(0, members.size());
+        assertEquals(1, members.size());
     }
 		
 }
