@@ -7,6 +7,8 @@ import java.util.Properties;
 
 public class Config implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private static final Properties props;
 
 	protected static final String CONFIG_PROPERTIES_NAME = "/config.properties";
@@ -31,7 +33,11 @@ public class Config implements Serializable {
 		}
 	}
 
-	private static final long serialVersionUID = 1L;
+	/** Only public for use by Testing! */
+	public static void reload() {
+		props.clear();
+		loadProps();
+	}
 
 	public static String getProperty(String key) {
 		return props.getProperty(key);
@@ -41,10 +47,9 @@ public class Config implements Serializable {
 		props.setProperty(k, v);
 	}
 
-	/** Only for use by Testing! */
-	public static void reload() {
-		props.clear();
-		loadProps();
+	/** Optimization */
+	public static String orgName() {
+		return props.getProperty("orgName", "UNNAMED - CLUBLIST");
 	}
 
 	public static int getIntProperty(String key) {

@@ -25,4 +25,10 @@ public class ConfigTest {
         Config.setProperty("soup", "123");
         assertEquals(123, Config.getIntProperty("soup"));
     }
+
+    @Test
+    public void testOrgName() {
+        Config.setProperty("orgName", "Nerds Anonymous");
+        assertEquals(Config.orgName(), "Nerds Anonymous");
+    }
 }
