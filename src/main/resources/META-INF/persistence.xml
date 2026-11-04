@@ -22,9 +22,6 @@
 			<property name="jakarta.persistence.provider"
 				value="org.hibernate.jpa.HibernatePersistenceProvider"/>
 
-			<!-- Properties for Dialect (brand of database) -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-
 			<!-- Properties controlling database setup -->
 			<property name="jakarta.persistence.schema-generation.database.action" 
 				value="update"/>
