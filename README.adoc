@@ -16,6 +16,10 @@ One thing to beware of is that there is both a "Role" membership and an executiv
 The former is the traditional EE security role, established in the MemberRole class (member_roles table).
 The latter is club-specific, and controlled by the "position" field in the Member table.
 
+Also, in the `Member` table, there is both a `type` field, which is either `Member` or `MemberArchived`
+(treat as invisible to the two concrete subclasses in the table),
+and a `MemberType` column, which is e.g., Family, Secondary, MailOnly, etc.
+
 One of the issues is how to handle family memberships. In our club, some of the families are
 sufficiently internet-savvy that they have 2, 3 or 4 email accounts (two parents, one or two kids)
 whereas some actually have one for all. The way I handle families is to arbitrarily designate one
@@ -28,7 +32,7 @@ that should be fixed. Be careful with splitnames, and back up the database first
 
 == Deploying this for your own club
 
-This is nowhere near user-friendly, but if you are know your way around
+This is nowhere near user-friendly, but if you know your way around
 Java Enterprise servers, this will get you going.
 
 Note that in all editing operations, you *must* use a "plain text" editor 
