@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /// Test the Config properties code
-
+/// Beware of ordering dependencies;
+/// these tests modify the static Config.props.
 public class ConfigTest {
 
     @BeforeEach
