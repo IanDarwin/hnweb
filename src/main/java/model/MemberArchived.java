@@ -10,6 +10,22 @@ import java.time.LocalDate;
 @DiscriminatorValue("MemberArchived")
 public class MemberArchived extends MemberBase {
 
+    public String getArchivedReason() {
+        return archivedReason;
+    }
+
+    public void setArchivedReason(String archivedReason) {
+        this.archivedReason = archivedReason;
+    }
+
+    public LocalDate getArchivedDate() {
+        return archivedDate;
+    }
+
+    public void setArchivedDate(LocalDate archivedDate) {
+        this.archivedDate = archivedDate;
+    }
+
     @Column(name = "archiveddate")
     private LocalDate archivedDate;
 

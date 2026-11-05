@@ -23,6 +23,10 @@ public class Member extends MemberBase{
 
 	private static final long serialVersionUID = 92899228338972L;
 
+    // For app-managed security - only Members, not MemberArchived elements, can be in roles
+	@ElementCollection(fetch=FetchType.EAGER)
+	private List<MemberRole> roles = new ArrayList<>();
+
 	// CONSTRUCTOS
     public Member() {
         // empty
@@ -118,6 +122,18 @@ public class Member extends MemberBase{
 	@Transient
 	public boolean isExecutive() {
 		return getPosition() != null && getPosition().length() > 0;
+	}
+
+    /** For app-managed security */
+    public List<MemberRole> getRoles() {
+        return roles;
+    }
+    public void setRoles(List<MemberRole> roles) {
+        this.roles = roles;
+    }
+
+	public void addRole(MemberRole role) {
+		roles.add(role);
 	}
 
 }

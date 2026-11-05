@@ -114,10 +114,6 @@ public abstract class MemberBase {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<MemberTransaction> memberTransactions = new ArrayList<>();
 
-	// For app-managed security - only Members, not MemberArchived elements, can be in roles
-	@ElementCollection(fetch=FetchType.EAGER)
-	private List<MemberRole> roles = new ArrayList<>();
-
 	// CONSTRUCTORS
 
 	/** 
@@ -138,17 +134,6 @@ public abstract class MemberBase {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public List<MemberRole> getRoles() {
-        return roles;
-    }
-    public void setRoles(List<MemberRole> roles) {
-        this.roles = roles;
-    }
-
-	public void addRole(MemberRole role) {
-		roles.add(role);
-	}
 
     public String getAddress() {
         return address;
