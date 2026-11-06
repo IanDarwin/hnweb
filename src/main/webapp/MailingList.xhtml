@@ -33,11 +33,6 @@
 	<h:form id="messageForm" enctype="multipart/form-data">
 	<p:panel>
 		<f:facet name="header">Mail a short note</f:facet>
-		<p>
-		N.B. If pasting in from Windows or Mac or the web, replace all quote characters with plain quote (' or ")
-		and replace all dashes with minus sign ('-').
-		<b>Really ugly characters may ensue if you skip this step!</b>
-		</p>
 		<h:panelGrid columns='3'>
 
 			Subject:
@@ -71,7 +66,6 @@
 		<h:commandButton value="TEST - Send To Self Only" action="#{mailMan.sendMessageToMe()}"/>
 		<h:commandButton value="Send email to Executive members only " action="#{mailMan.sendMessageToExec}"/>
 		<h:commandButton value="Send Newsletter to Paid-up Members only" action="#{mailMan.sendMessageToPaidUp()}"/>
-		<h:commandButton value="Send to Trips Email List" disabled="true"/>
 		<h:commandButton value="Send email to **entire list**" action="#{mailMan.sendMessageToAll}"/>
 		<h:commandButton value="Send nags to expired members only " action="#{mailMan.sendMessageToExpired}"/>
 	</p:panel>
