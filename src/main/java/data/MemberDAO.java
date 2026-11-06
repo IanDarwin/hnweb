@@ -59,6 +59,10 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		return entityManager.find(Member.class, id);
 	}
 
+	public MemberArchived findArchivedById(Long id) {
+		return entityManager.find(MemberArchived.class, id);
+	}
+
 	public Optional<Member> findByEmailAndPassword(String email, String password) {
 		return Optional.of(entityManager.createQuery(
 						"SELECT m FROM Member m WHERE m.email = :email AND m.password = :password", Member.class)
@@ -92,6 +96,8 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 	//////////////// DELETE METHODS /////////////////
 
 	// delete() is inherited, but ours is special
+	// Since Member and MemberArchive are in the same table,
+	// we just have to flip the 'type' column.
 
 	public void delete(Member m) {
 		System.out.println("Archiving " + m);
@@ -112,7 +118,8 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 		System.out.println("Un-archiving " + m);
 		entityManager.flush();
-		var query = entityManager.createNativeQuery("update member set type = 'Member', archivedDate = null where id = ?");
+		var query = entityManager.createNativeQuery(
+			"update member set type = 'Member', archivedDate = null, archivedReason = null where id = ?");
 		query.setParameter(1, m.getId());
 		int ret = query.executeUpdate();
 		System.out.println("unDelete: Native query returned " + ret);
