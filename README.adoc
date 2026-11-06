@@ -1,12 +1,8 @@
 = hnweb - Club Membership List
 
-Modified version for Orangeville "Headwaters Nature."
-
 Tracks members for a small non-profit club.
 
-STATUS:
-	Member Mailing has serious charset issues - 
-	Check the widget for charset options?
+Full version originally built for Orangeville, Ontario "Headwaters Nature" Club.
 
 This shows some basic functionality of JakartaEE-Persistence in a JSF environment.
 
@@ -22,7 +18,8 @@ and a `MemberType` column, which is e.g., Family, Secondary, MailOnly, etc.
 
 One of the issues is how to handle family memberships. In our club, some of the families are
 sufficiently internet-savvy that they have 2, 3 or 4 email accounts (two parents, one or two kids)
-whereas some actually have one for all. The way I handle families is to arbitrarily designate one
+whereas some have one for both or all people in the family.
+The way I have handled families is to arbitrarily designate one
 as the "family master" and all the others as "secondaries" - in JPA/Hibernate terms, a one-to-many
 from Member to Member. Payments are attributed to the master member.
 

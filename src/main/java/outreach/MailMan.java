@@ -269,7 +269,7 @@ public class MailMan implements Serializable {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			addFacesMessage("Final sending step failed, probably unable to connect to mail server");
+			addFacesMessage("Sending failed, check the mail server settings in config.properties");
 			return false;
 		}
 	}
@@ -307,12 +307,12 @@ public class MailMan implements Serializable {
 		}
 
 		// Additional list headers
-		mesg.addHeader("List-Id", "Headwaters Nature <hn.darwinsys.com>");
+		mesg.addHeader("List-Id", Config.orgName() + "<hn.darwinsys.com>");
 		// Needed to get past Google, Yahoo/Rogers, etc.:
 		mesg.addHeader("List-Unsubscribe", "https://darwinsys.com/unsub/hn");
 		mesg.addHeader("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
 
-		// Send yourself a copy as the (only) 'To' address
+		// Send yourself a copy as the 'To' address, the only 'To' for privacy reasons
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
 
 		// TO Addresses - may be a lot! But send as BCC as usual for privacy.

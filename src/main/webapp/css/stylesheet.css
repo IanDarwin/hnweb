@@ -1,5 +1,5 @@
 /*
- * Headwaters Nature club membership site.
+ * Club membership site, originally for Headwaters Nature.
  *
  * Sits on top of the PrimeFaces "saga" theme (see web.xml) and overrides only
  * what we need. Selectors for PrimeFaces widgets are prefixed with "body" so
