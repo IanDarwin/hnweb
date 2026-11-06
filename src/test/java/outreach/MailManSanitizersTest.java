@@ -35,4 +35,11 @@ class MailManSanitizersTest {
 	void sanitizeToHTML() {
         assertEquals(EXPECT_HTML, MailMan.sanitizeToHtml(INPUT));
     }
+
+	@Test
+	void sanitizeMore() {
+		var input2 = "It’s – “quoted”…";
+		var expect2 = "It's -- \"quoted\"...";
+        assertEquals(expect2, MailMan.sanitizeToUtf8(input2));
+    }
 }
