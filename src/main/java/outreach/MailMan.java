@@ -359,22 +359,27 @@ public class MailMan implements Serializable {
 	static String sanitizeToHtml(String s) {
 		return s
 				.replaceAll("'","\\&apos;")  // Apostrophe into HTML,prob. unnecessary
+				.replaceAll("\u2013","\\&ndash;")  // "Smart" en dash
 				.replaceAll("\u2014","\\&mdash;")  // "Smart" em dash
 				.replaceAll("\u8212","\\&mdash;")  // Another "Smart" em dash
 				.replaceAll("\u2018","\\&apos;") // "Smart" open single quote
 				.replaceAll("\u2019","\\&apos;") // "Smart" close single quote
 				.replaceAll("\u201c","\\&quot;") // "Smart" open dquote
 				.replaceAll("\u201d","\\&quot;") // "Smart" close dquote
+				.replaceAll("\u2026", "...")
 				;
 	}
 
 	static String sanitizeToUtf8(String s) {
 		return s
+				.replaceAll("\u2013","--") // "Smart" en dash
 				.replaceAll("\u2014","--") // "Smart" em dash
-				.replaceAll("\u2018","\'") // "Smart" open quote
-				.replaceAll("\u2019","\'") // "Smart" close quote
+				.replaceAll("\u8212","--")  // Another "Smart" em dash
+				.replaceAll("\u2018","\'") // "Smart" open single quote
+				.replaceAll("\u2019","\'") // "Smart" close single quote
 				.replaceAll("\u201c","\"") // "Smart" open dquote
 				.replaceAll("\u201d","\"") // "Smart" close dquote
+				.replaceAll("\u2026","...") // Ellipsis
 				;
 	}
 
