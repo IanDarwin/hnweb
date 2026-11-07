@@ -7,6 +7,15 @@ import model.Member;
 @Named
 public class BadgeAction {
     boolean executive;
+    Member member;
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     public boolean isExecutive() {
         return executive;

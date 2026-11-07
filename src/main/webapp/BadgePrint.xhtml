@@ -21,7 +21,7 @@
 						the primary key for the browser and back again on submit.
 					-->
 					<p:autoComplete id="member"
-						value="#{renewAction.member}"
+						value="#{badgeAction.member}"
 						completeMethod="#{memberCompleteAction.completeMember}"
 						converter="#{memberConverter}"
 						var="_member" itemLabel="#{_member.lastnameFirstname}" itemValue="#{_member}"
@@ -37,12 +37,12 @@
 			<div class="field">
 				<p:outputLabel for="memberOrExec" value="Executive?"/>
 				<div class="control">
-					<h:selectBooleanCheckbox id="memberOrExec value="#{badgeAction.executive}"/>
+					<h:selectBooleanCheckbox id="memberOrExec" value="#{badgeAction.executive}"/>
 				</div>
 			</div>
 
 			<div class="actions">
-				<p:commandButton value="Add to badge queue" action="#{badgeAction.add}" ajax="false"/>
+				<p:commandButton value="Add to badge queue" action="#{badgeAction.add(_member)}" ajax="false"/>
 			</div>
 		</div>
 	</h:form>
