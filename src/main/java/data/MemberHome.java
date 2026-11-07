@@ -21,10 +21,7 @@ import jakarta.transaction.Transactional;
 import action.YearCalcs;
 import com.darwinsys.lang.StringHolder;
 
-import model.Country;
-import model.Member;
-import model.MemberTransaction;
-import model.MemberType;
+import model.*;
 import webtier.WebConstants;
 
 /**
@@ -159,6 +156,12 @@ public class MemberHome implements Serializable {
 		endConversation();
 		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
+	}
+
+	@Transactional
+	public String unDelete(MemberArchived m) {
+		memberDAO.unDelete(m);
+		return "/" + WebConstants.FORCE_REDIRECT;
 	}
 	
 	public Member getInstance() {

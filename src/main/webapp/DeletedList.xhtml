@@ -41,10 +41,7 @@
 
 		<p:column style="width: 10%">
 			<f:facet name="header">Actions</f:facet>
-			<h:outputLink value="DeletedView.web">
-				Details<br/>(not available yet)
-				<f:param name="memberId" value="#{member.id}"/>
-			</h:outputLink>
+			<p:commandButton value="Undelete" action="#{memberHome.unDelete(member)}"/>
 		</p:column>
 	</p:dataTable>
 	</p:panel>
