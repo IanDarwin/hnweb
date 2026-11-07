@@ -1,0 +1,50 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">Arrange for Badge Printing.</ui:define>
+
+<ui:define name="body">
+	<p>This will allow printing of name badges for meetings.</p>
+	<h:form id="nameBadgeForm" styleClass="sheet sheet-narrow">
+		<div class="form-grid">
+			<div class="field">
+				<p:outputLabel for="member" value="Member"/>
+				<div class="control">
+					<!--
+						itemValue must be the Member object itself: memberConverter turns it into
+						the primary key for the browser and back again on submit.
+					-->
+					<p:autoComplete id="member"
+						value="#{renewAction.member}"
+						completeMethod="#{memberCompleteAction.completeMember}"
+						converter="#{memberConverter}"
+						var="_member" itemLabel="#{_member.lastnameFirstname}" itemValue="#{_member}"
+						forceSelection="true" scrollHeight="260"
+						required="true" requiredMessage="Choose a member from the list."
+						placeholder="Start typing a last name"
+						effect="blind"/>
+					<p:message for="member"/>
+					<div class="hint">Type part of a last name, then pick the member from the list.</div>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="memberOrExec" value="Executive?"/>
+				<div class="control">
+					<h:selectBooleanCheckbox id="memberOrExec value="#{badgeAction.executive}"/>
+				</div>
+			</div>
+
+			<div class="actions">
+				<p:commandButton value="Add to badge queue" action="#{badgeAction.add}" ajax="false"/>
+			</div>
+		</div>
+	</h:form>
+</ui:define>
+</ui:composition>
