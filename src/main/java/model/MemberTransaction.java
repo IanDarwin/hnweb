@@ -18,8 +18,8 @@ import jakarta.persistence.*;
 public class MemberTransaction implements Serializable {
 
 	private static final long serialVersionUID = 4112042259125129308L;
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
-    @SequenceGenerator(name = "member_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_tx_id_gen")
+    @SequenceGenerator(name = "member_tx_id_gen", sequenceName = "member_tx_sequence", allocationSize = 1)
 	@Id
 	private long id;
 	@Enumerated(EnumType.STRING)

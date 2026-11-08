@@ -23,8 +23,8 @@ public abstract class MemberBase {
 	/////////////////////////////////////////////
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_id_gen")
-    @SequenceGenerator(name = "member_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberbase_id_gen")
+    @SequenceGenerator(name = "memberbase_id_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
