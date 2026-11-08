@@ -104,11 +104,12 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		entityManager.flush();		// send any pending changes to m before we go around JPA
 		int ret  = entityManager.createNativeQuery(
 			"update member set type = 'MemberArchived', archivedDate = ? where id = ?")
-				.asStatement()
 				.setParameter(1, LocalDate.now())
 				.setParameter(2, m.getId())
-				.execute();
-		System.out.println("delete: Native update returned " + ret);
+				.executeUpdate();
+		if (ret != 1) {
+			throw new IllegalStateException("delete: Native update returned " + ret);
+		}
 		// Changed the type w/o telling JPA, so evict it.
 		entityManager.detach(m);
 	}
@@ -121,10 +122,11 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		entityManager.flush();
 		int ret = entityManager.createNativeQuery(
 			"update member set type = 'Member', archivedDate = null, archivedReason = null where id = ?")
-				.asStatement()
 				.setParameter(1, m.getId())
-				.execute();
-		System.out.println("unDelete: Native query returned " + ret);
+				.executeUpdate();
+		if (ret != 1) {
+			throw new IllegalStateException("unDelete: Native update returned " + ret);
+		}
 		entityManager.detach(m);	// same reason as in delete(): now it is really a Member again
 	}
 }
