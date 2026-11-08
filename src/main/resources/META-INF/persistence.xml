@@ -29,6 +29,7 @@
 			<!-- Properties for Hibernate provider logging -->
 			<property name="hibernate.show_sql" value="false"/>
 			<property name="hibernate.format_sql" value="false"/>
+			<property name="hibernate.jpa.compliance.global_id_generators" value="false"/>
 		</properties>
 	</persistence-unit>
 </persistence>
