@@ -104,14 +104,14 @@ public class Member extends MemberBase{
      * Property will refer to the Secondary member(s).
      * @return The secondary members
      */
-    public Set<Member> getSecondaryMembers() {
+    public Set<MemberBase> getSecondaryMembers() {
         if (secondaryMembers == null) {
             secondaryMembers = new HashSet<>();
         }
         return secondaryMembers;
     }
 
-    public void setSecondaryMembers(Set<Member> secondaryMembers) {
+    public void setSecondaryMembers(Set<MemberBase> secondaryMembers) {
         this.secondaryMembers = secondaryMembers;
     }
 

@@ -15,6 +15,7 @@
 			<a href="#{request.contextPath}/About.web">About</a>
 			<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
 				<a href="#{request.contextPath}/MemberList.web">Member List</a>
+				<a href="#{request.contextPath}/DeletedList.web">Archived Member List</a>
 				<a href="#{request.contextPath}/MemberEdit.web">Add member</a>
 				<a href="#{request.contextPath}/Renew.web">Renew member</a>
 				<a href="#{request.contextPath}/EventList.web">Events</a>

@@ -41,7 +41,15 @@
 
 		<p:column style="width: 10%">
 			<f:facet name="header">Actions</f:facet>
-			<p:commandButton value="Undelete" action="#{memberHome.unDelete(member)}"/>
+			<p:commandButton value="Undelete" action="#{memberHome.unDelete(member)}" icon="ui-icon-trash"
+				styleClass="btn-danger">
+				<p:confirm header="Confirm undeletion" message="Really un-delete this member?" icon="ui-icon-alert" />
+			</p:commandButton>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
+			</p:confirmDialog>
 		</p:column>
 	</p:dataTable>
 	</p:panel>

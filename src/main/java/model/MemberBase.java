@@ -79,7 +79,7 @@ public abstract class MemberBase {
 
     /** Only if memberType is MemberType.Family */
     @OneToMany(mappedBy="masterMember", fetch = FetchType.EAGER)
-    protected Set<Member> secondaryMembers;
+    protected Set<MemberBase> secondaryMembers;
 
     @Column(name = "yearjoined")
     private Integer yearJoined;
@@ -231,6 +231,14 @@ public abstract class MemberBase {
         this.homePhone = homePhone;
     }
 
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+    }
+
     public MemberType getMemberType() {
         return memberType;
     }
@@ -305,33 +313,30 @@ public abstract class MemberBase {
 		return sb.toString();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
-
 	/**
-	 * NOTE! This is non-standard:
-	 * Only compares on ID, AND
-	 * No Entity can be equal to 'no entity' (id 0).
+	 * Identity is the database id. A new (not yet persisted) entity has no id, so it is
+	 * equal only to itself.
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
-			return false;
-		// Compare two Members or two MemberArchived, etc.
-		if (getClass() != obj.getClass())
-			return false;
-		Member other = (Member) obj;
-		if (id == 0 || other.getId() == 0) {
+		}
+		// Hibernate proxies are subclasses. Member and MemberArchived are
+		// the same row in the same table, so one id can't be both at once.
+		if (!(obj instanceof MemberBase other)) {
 			return false;
 		}
-		return getId() == other.getId();
+		// getId(), since on a Hibernate proxy the field isn't loaded
+		return getId() != null && getId().equals(other.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		// Null-safe. Caveat: it changes when a new entity is first persisted, so don't
+		// keep an unsaved member in a HashSet/HashMap across the save.
+		Long theId = getId();
+		return theId == null ? 0 : theId.hashCode();
 	}
 
 
