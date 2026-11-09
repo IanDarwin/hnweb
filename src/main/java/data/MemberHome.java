@@ -162,9 +162,9 @@ public class MemberHome implements Serializable {
 	}
 
 	@Transactional
-	public String unDelete(MemberArchived m) {
-		var id = m.getId();
-		memberDAO.unDelete(m);
+	public String unDelete(MemberArchived ma) {
+		var id = ma.getId();
+		memberDAO.unDelete(ma);
 		Member undead = memberDAO.findById(id);
 		System.out.println("undead = " + undead + ", secondaries = " + undead.getSecondaryMembers());
 		for (MemberBase mb : undead.getSecondaryMembers()) {
