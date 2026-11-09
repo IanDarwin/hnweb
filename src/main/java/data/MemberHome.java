@@ -164,7 +164,7 @@ public class MemberHome implements Serializable {
 	@Transactional
 	public String unDelete(MemberArchived m) {
 		memberDAO.unDelete(m);
-		for (MemberBase mb : instance.getSecondaryMembers()) {
+		for (MemberBase mb : m.getSecondaryMembers()) {
         	memberDAO.unDelete((MemberArchived) mb);
     	}
 		return getListPage() + WebConstants.FORCE_REDIRECT;

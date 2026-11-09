@@ -72,15 +72,6 @@ public abstract class MemberBase {
     @Column(name = "newslettermode")
     private Integer newsletterMode;
 
-    /** Only if memberType is MemberType.Secondary */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "masterMember_id")
-    protected Member masterMember;
-
-    /** Only if memberType is MemberType.Family */
-    @OneToMany(mappedBy="masterMember", fetch = FetchType.EAGER)
-    protected Set<MemberBase> secondaryMembers;
-
     @Column(name = "yearjoined")
     private Integer yearJoined;
 

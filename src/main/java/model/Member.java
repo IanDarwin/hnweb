@@ -27,6 +27,15 @@ public class Member extends MemberBase{
 	@ElementCollection(fetch=FetchType.EAGER)
 	private List<MemberRole> roles = new ArrayList<>();
 
+    /** Only if memberType is MemberType.Secondary */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "masterMember_id")
+    private Member masterMember;
+
+    /** Only if memberType is MemberType.Family */
+    @OneToMany(mappedBy = "masterMember", fetch = FetchType.EAGER)
+    private Set<Member> secondaryMembers;
+
 	// CONSTRUCTOS
     public Member() {
         // empty
@@ -104,14 +113,14 @@ public class Member extends MemberBase{
      * Property will refer to the Secondary member(s).
      * @return The secondary members
      */
-    public Set<MemberBase> getSecondaryMembers() {
+    public Set<Member> getSecondaryMembers() {
         if (secondaryMembers == null) {
             secondaryMembers = new HashSet<>();
         }
         return secondaryMembers;
     }
 
-    public void setSecondaryMembers(Set<MemberBase> secondaryMembers) {
+    public void setSecondaryMembers(Set<Member> secondaryMembers) {
         this.secondaryMembers = secondaryMembers;
     }
 
