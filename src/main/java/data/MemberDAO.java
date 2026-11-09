@@ -127,7 +127,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		if (ret != 1) {
 			throw new IllegalStateException("unDelete: Native update returned " + ret);
 		}
-		entityManager.detach(m);	// same reason as in delete(): now it is really a Member again
+		entityManager.detach(m);	// evict as in delete(): now it is really a Member again
 	}
 }
 
