@@ -69,17 +69,11 @@ public abstract class MemberBase {
     @Enumerated(EnumType.STRING)
     protected MemberType memberType;
 
-    @Column(name = "newslettermode")
-    private Integer newsletterMode;
-
     @Column(name = "yearjoined")
     private Integer yearJoined;
 
     @Column(name = "middle")
     protected String middle;
-
-    @Column(name = "email_trips")
-    private Boolean emailTrips;
 
     @Column(name = "expiryYear")
     private Integer expiryYear = 0;
@@ -236,14 +230,6 @@ public abstract class MemberBase {
 
     public void setMemberType(MemberType memberType) {
         this.memberType = memberType;
-    }
-
-    public Integer getNewsletterMode() {
-        return newsletterMode;
-    }
-
-    public void setNewsletterMode(Integer newsletterMode) {
-        this.newsletterMode = newsletterMode;
     }
 
     public Integer getYearJoined() {
