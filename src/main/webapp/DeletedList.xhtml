@@ -31,6 +31,10 @@
 			<h:outputText value="#{member.email}"/>
 		</p:column>
 		<p:column>
+			<f:facet name="header">MemberType</f:facet>
+			<h:outputText value="#{member.memberType.shortName}"/>
+		</p:column>
+		<p:column>
 			<f:facet name="header">Deleted Reason</f:facet>
 			<h:outputText value="#{member.archivedReason}"/>
 		</p:column>
@@ -42,12 +46,15 @@
 		<p:column style="width: 10%">
 			<f:facet name="header">Actions</f:facet>
 			<p:commandButton value="Undelete" action="#{memberHome.unDelete(member)}" icon="ui-icon-trash"
+							 rendered="#{member.memberType.shortName != 'FS'}"
 				styleClass="btn-danger">
 				<p:confirm header="Confirm undeletion" message="Really un-delete this member?" icon="ui-icon-alert" />
 			</p:commandButton>
+			<h:outputText value="Undelete #{member.masterMember} instead"
+						  rendered="#{member.memberType.shortName == 'FS'}"/>
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-				<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Yes, undelete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 				<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
 			</p:confirmDialog>
 		</p:column>
