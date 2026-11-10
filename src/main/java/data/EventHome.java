@@ -19,7 +19,7 @@ public class EventHome extends EntityHome<Event,Long> {
 	
 	private static final long serialVersionUID = 1L;
 
-	static final String LIST_PAGE = "EventList";
+	static final String LIST_PAGE = "/";
 	
 	public EventHome() {
 		System.out.println("EventHome.EventHome()");
