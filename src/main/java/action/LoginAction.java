@@ -58,7 +58,7 @@ public class LoginAction implements Serializable {
 	/** =================== The main login method =================== */
 	@Transactional
 	public String login() {
-		System.out.println("Login.login(" + email + ")");
+		System.out.println("Login.login() for " + email);
 		try {
 			final Optional<Member> memberOptional =
 					memberDAO.findByEmailAndPassword(email, DigestUtils.md5(password));
