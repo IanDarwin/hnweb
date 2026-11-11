@@ -1,0 +1,833 @@
+= hnweb: Club Membership Management — Software Requirements Specification
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:sectanchors:
+:source-highlighter: rouge
+:icons: font
+:revnumber: 0.1 (reverse-engineered draft)
+:revdate: 2026-11-10
+:source-commit: c63c613
+:table-caption: Table
+:xrefstyle: short
+
+[abstract]
+--
+This document specifies the requirements for the source code, page templates, configuration, tests,
+scripts and other files of the `hnweb` project (repository `IanDarwin/hnweb`, commit `{source-commit}`).
+It records what the system _does_ (and, where stated in the sources, what it is _meant_ to do),
+expressed as numbered requirements. It is not a record of what anyone originally asked for:
+where intent had to be inferred, or where the code disagrees with itself or with its own
+documentation, that is called out in <<gaps>> rather than silently resolved.
+--
+
+[#how-to-read]
+== How to read this document
+
+=== Status codes
+
+Every functional requirement carries a status, based on reading the code (nothing was executed to produce this document):
+
+[cols="1,4"]
+|===
+|Status |Meaning
+
+|*Done* |Implemented, and nothing in the sources suggests it is broken.
+|*Partial* |Implemented in part, or implemented with a known limitation (see the note).
+|*Stub* |Code or a page exists but the feature does not actually work yet.
+|*Defect* |The code appears to contradict the stated intent, or to be broken. Detailed in <<gaps>>.
+|*Planned* |Not implemented; named in `TODO.txt`, a page, or a comment.
+|===
+
+=== Requirement identifiers
+
+`FR-nn` functional, `BR-nn` business rule, `DR-nn` data, `IR-nn` interface, `NFR-nn` non-functional.
+Identifiers are stable within this document only; they are not used in the code.
+
+[#intro]
+== Introduction
+
+=== Purpose
+
+`hnweb` is a web application that lets the executive of a small non-profit nature club keep track of
+its membership: who belongs, what type of membership they have, when it expires, who has renewed and
+how they paid, and how to contact them. It also publishes the club's upcoming meetings and lets
+authorized people send e-mail to groups of members.
+
+It was built for the Headwaters Nature club (Orangeville, Ontario, Canada), is configured by an
+organization name, and is described in its README as a sample of Jakarta Persistence in a JSF environment.
+The TODO list includes generalizing it for use by other clubs.
+
+=== Scope
+
+In scope:
+
+* Member records, including family memberships and an archive ("deleted") state.
+* Login, role-based access, self-service password set/reset.
+* Annual membership renewal and a log of renewal transactions.
+* Meeting/event listing and administration.
+* Bulk e-mail to groups of members, with an optional attachment.
+* CSV/text extracts of the member list; name-badge preparation (stub).
+* A public-facing signup form with a small CGI backend.
+* Operator scripts for reporting and maintenance against the database.
+
+Out of scope (not implemented at present): online payment, a self-service member profile editor,
+a public signup flow that writes to the database, 
+and possibly multi-club (multi-tenant) operation.
+
+=== Definitions
+
+[horizontal]
+Member:: A person with a row in the `Member` table whose discriminator `type` is `Member` (active).
+Archived member:: A row whose `type` is `MemberArchived`. It is the same row, with the type flipped; see <<fr-archive>>.
+Family master:: The `Family` (FM) member who pays for the family. Secondary members point at the master.
+Secondary:: A `Secondary` (FS) member: an extra person on a family membership.
+Membership year:: The year from 1 September to 31 August, named for the calendar year in which it _ends_ (September 2026 to August 2027 is "2027").
+Expiry year:: The membership year through which a member is paid up. `0` means "never paid".
+Executive ("exec"):: A member whose `position` field is non-empty (president, treasurer, and so on).
+Admin:: A member with the `admin` role in the `member_roles` table.
+
+=== References
+
+* `README.adoc`, `TODO.txt`, `src/main/resources/config-sample.properties` in the repository.
+* `webapp/*.page.xml` files (the per-page access restrictions, a remnant of Seam 2 syntax; see <<fr-authz>>).
+
+[#overall]
+== Overall description
+
+=== Product perspective
+
+A server-side Jakarta EE web application (WAR) deployed to a Jakarta EE application server (WildFly in the README).
+Pages are Jakarta Faces (JSF) Facelets with PrimeFaces 13; persistence is JPA with Hibernate against a relational
+database (PostgreSQL in operation, per the scripts and the driver in the build; in-memory H2 in tests).
+
+[source]
+----
+                    +------------------------+
+ Browser ---HTTPS-->| hnweb WAR (WildFly)    |-----JDBC------> database ("hn")
+ (members,          |  JSF pages  *.web      |
+  executives,       |  PageFilter (auth)     |-----SMTP------> mail server
+  admins)           |  JAX-RS /api/...       |                 (java:jboss/mail/Default)
+                    +------------------------+
+ Browser ---POST /signup---> membership-mailer (separate C/kcgi CGI) ---SMTP---> club admin
+ Operator ---ssh/psql---> scripts/*  (reports, bulk fixes)
+----
+
+=== User classes
+
+[cols="1,3,3"]
+|===
+|Class |How identified |What they may do
+
+|Visitor (anonymous)
+|No login.
+|See the home page and upcoming events; view an event's details; read About and Privacy; see the signup form;
+set or reset their own password by e-mail token; log in.
+
+|Member
+|Logged in (any `Member` row with a password).
+|Everything a visitor can. Intended (not yet delivered) to update their own record and renew online.
+
+|Executive
+|Logged in, with a non-empty `position`; also granted the synthetic role `exec`.
+|View the member list and archived list, view any member, export CSV lists, send bulk e-mail, see the events list.
+
+|Admin
+|Logged in, with role `admin` in `member_roles`.
+|Everything an executive can, plus create/edit/archive/restore members, renew memberships, administer events and
+the transaction log, and prepare name badges.
+|===
+
+NOTE: The README tells deployers to create a user "in the role of `club_exec`", but the code checks the roles
+`admin` and the synthetic `exec` only. See <<gap-roles>>.
+
+=== Operating environment and constraints
+
+* Jakarta EE 11 API, Java 17 or later, JSF/Facelets with PrimeFaces 13 (theme "saga"), Hibernate ORM 7.
+* Application server supplies the JTA datasource `java:jboss/datasources/HnClubDataSource` and the mail session `java:jboss/mail/Default`.
+* All pages are served through the Faces servlet mapped to `*.web`; request and response encoding is UTF-8.
+* `config.properties` (on the classpath) supplies the organization name, mail settings and the renewal month.
+* The membership year is fixed at 1 September to 31 August by default; the renewal month is a property (`datetime.renewalmonth`, default 9).
+* Canadian context: provinces are the Canadian provinces and territories; amounts on the signup form are in Canadian dollars.
+
+=== Assumptions
+
+* An e-mail address uniquely identifies a member for the purposes of login and password reset (nothing enforces this; see <<gap-email-unique>>).
+* The club is small enough (hundreds of members) that lists are loaded whole and filtered in memory, and tables are not paged.
+* Executives and admins are trusted with all members' personal data.
+
+[#functional]
+== Functional requirements
+
+[#fr-auth]
+=== Authentication and sessions
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-01
+|A visitor shall be able to log in with an e-mail address and password. The password is hashed (MD5, via `DigestUtils.md5`) and compared with the stored value for a `Member` with that e-mail address. Archived members cannot log in.
+|Done
+
+|FR-02
+|A failed login shall show a message and return to the login page; it shall not reveal whether the e-mail address exists.
+|Done
+
+|FR-03
+|A successful login shall start an application session that expires after 2 hours of inactivity, and shall display "Logged in as <name>".
+|Done
+
+|FR-04
+|If the user was redirected to the login page from a protected page, a successful login shall return them to that page; otherwise to the home page. (The saved URL does not keep query parameters; `TODO.txt` calls this "useless half the time".)
+|Partial
+
+|FR-05
+|A logged-in user shall be able to log out, which invalidates the session and returns to the home page. The menu shows "Log in" or "Hi, <first name>" and "Log out" accordingly.
+|Done
+|===
+
+[#fr-authz]
+=== Authorization
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-06
+|Access control shall be enforced by a servlet filter (`PageFilter`) mapped to every request. For a request ending in `.web` it looks for a sibling `<Page>.page.xml` file. If none exists the page is open to everybody. If one exists, `login-required="true"` forces login, and its `<restrict>` element, an EL expression, must evaluate true or the user is sent to the "not privileged" page.
+|Done (see <<gap-csv-open>>)
+
+|FR-07
+|A user shall have role `admin` if a `member_roles` row says so. A user shall have role `exec` if their `position` field is non-blank. The `exec` role is computed at request time and never stored, so it disappears when the position is removed.
+|Done
+
+|FR-08
+|Requests whose URI contains `../` shall be refused.
+|Done
+
+|FR-09
+|Without logging in, a visitor may reach only the home page, the login page, and static resources (CSS, JS, templates, Faces resources, images, favicon); everything else under `.web` follows FR-06.
+|Done
+|===
+
+The restrictions declared by the `page.xml` files are:
+
+[cols="2,1,4"]
+|===
+|Page |Login |Restriction
+
+|`index`, `About`, `Privacy`, `Login`, `Schedule`, `ClubStats`, `ChangePassword1-3`, `SignupForm`
+|no
+|(no `page.xml`: open to all)
+
+|`EventView`
+|no
+|none (public)
+
+|`MemberList`, `DeletedList`, `MailingList`, `MailingListEmail`
+|yes
+|`admin` or executive
+
+|`CSVAll`, `CSVPaidUp`
+|(see <<gap-csv-open>>)
+|`admin` or executive was intended
+
+|`MemberView`
+|yes
+|the member themself, or an executive, or `admin`
+
+|`MemberEdit`, `Renew`, `BadgePrint`, `Exec`, `EventEdit`, `MemberTransactionList/Edit/View`
+|yes
+|`admin`
+
+|`EventList`
+|yes
+|`admin` or role `exec`
+|===
+
+The navigation menu shows the staff links (Member List, Archived Member List, Add member, Renew member, Events,
+Mailings) only to executives and admins; it is a convenience, not a security control.
+
+[#fr-password]
+=== Password set and reset
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-10
+|A visitor shall be able to request a password reset by entering their e-mail address on `ChangePassword1`. If exactly one member has that address, the system generates a random 20-character token (SecureRandom, alphanumeric), stores it with a timestamp, and e-mails it to the member, with the user-visible site name and the token in the message.
+|Done
+
+|FR-11
+|If the address matches no member (or more than one), the visitor shall be returned to step 1 with a message (`?error=member`) and no mail is sent.
+|Done (see <<gap-enumeration>>)
+
+|FR-12
+|On `ChangePassword2` the member shall paste the token and enter a new password twice. The page shall show the password rules as a live checklist, mark unmet rules, explain in text which rules are still unmet, show when the two entries differ, and keep the submit button disabled (and visibly pale) until the password meets all rules and both entries match.
+|Done
+
+|FR-13
+|A new password shall be at least 10 characters and contain at least one uppercase letter, one lowercase letter, one digit and one special character (anything other than a letter, digit or whitespace), using Unicode character classes. The server shall enforce exactly the rules the page's JavaScript shows; they live in two places (`UserPasswordChangeRest.meetsPasswordRules` and `js/changepassword.js`) and must be kept in step.
+|Done
+
+|FR-14
+|A token shall be valid for 60 minutes and for a single use. A token is consumed as soon as it is found, even if it turns out to be expired. A weak password is rejected _before_ the token is looked up, so the member can retry with the same token.
+|Done
+
+|FR-15
+|Every failure on step 2 (blank input, weak password, unknown, expired or already-used token, no unique member) shall return to step 2 with one generic message (`?error=token`); no JPA or internal detail is shown.
+|Done
+
+|FR-16
+|On success the member's stored password shall be replaced by the hash of the new password, and the member shall land on `ChangePassword3` ("We've made the password change you requested").
+|Done
+|===
+
+[#fr-members]
+=== Member records
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-20
+|An admin shall be able to add a member (`MemberEdit` with no id) and edit one (`MemberEdit?memberId=`). Editable fields: first name, middle initial, last name, member type, master member (secondaries only), e-mail, city, province (default Ontario), country (Canada or U.S.A.), home phone, mobile phone, expiry year ("Unpaid" or a year from last membership year to six years ahead), and club executive position.
+|Done
+
+|FR-21
+|First and last name shall be required. E-mail shall be required except for secondary members, and shall match a basic syntax check (`[\w.-]+@[\w.-]+\.\w+`; an empty value is accepted).
+|Done
+
+|FR-22
+|When a new member is saved with no expiry year, the expiry year shall be set per <<br-year>> for a member joining today. A master member is cleared for every type other than Secondary.
+|Done
+
+|FR-23
+|Creating a member shall also record a `MemberTransaction` of reason "N" (new) for 1 year. This happens for every member type, including mailing-list-only and secondary members, and records no payment type or new expiry year.
+|Partial (see <<gap-new-tx>>)
+
+|FR-24
+|Admins and executives shall be able to see all active members in a table (`MemberList`): name (a secondary shows "(w/ master's name)"), position, e-mail (as a mailto link), type, year joined, expiry year (coloured red if expired, green if current), phones and city. Admin sees an Edit link; every row has a View link.
+|Done
+
+|FR-25
+|`MemberView` shall show a member's name, type, expiry, city, province and country, phones, e-mail and position, to that member, an executive, or an admin.
+|Partial (see <<gap-memberview>>)
+
+|FR-26
+|Members shall be able to update their own record and no one else's.
+|Planned (`TODO.txt`; the home page says "coming next")
+|===
+
+[#fr-family]
+=== Family memberships
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-30
+|A family shall be represented as one `Family` master member and any number of `Secondary` members, each pointing at the master. One person pays; payments and transactions are attributed to the master.
+|Done
+
+|FR-31
+|A secondary member's membership status shall be derived from their master: for expiry, a secondary is expired when the master is. A secondary with no master shall be treated as expired and logged, so it gets attention.
+|Done
+
+|FR-32
+|A secondary does not need an e-mail address. The master-member picker on the edit page is enabled only when the type is Secondary, and shows all members.
+|Done
+|===
+
+[#fr-archive]
+=== Archiving ("delete") and restoring
+
+An archived member is the same database row with its discriminator flipped from `Member` to `MemberArchived`
+(single-table inheritance), so nothing is copied and no history is lost.
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-40
+|An admin shall be able to "delete" a member from the edit page after confirming. This shall archive the member, recording the archive date, and shall also archive that member's secondaries. The user then lands on the archived list.
+|Done
+
+|FR-41
+|Admins and executives shall see archived members in `DeletedList` with name, e-mail, type, reason and date archived.
+|Done
+
+|FR-42
+|Restoring a member shall flip the row back to `Member` and clear the archive date and reason. Restoring a family master shall also restore the secondaries that were archived with them, so that archive followed by restore returns the family exactly as it was.
+|Partial (in progress in recent commits; the master was restored but the secondaries were not, because the "secondaries" collection only ever contains active rows)
+
+|FR-43
+|A secondary whose master is still archived shall not be restorable on its own; the archived list tells the user to restore the master instead. A secondary whose master is active may be restored by itself.
+|Partial (the page hides Undelete for _every_ secondary, even one whose master is active, and its "restore the master instead" text refers to a master link that archived rows no longer expose)
+
+|FR-44
+|Archiving and restoring shall also invalidate the cached member list used by the edit page.
+|Partial (archive does; restore does not)
+|===
+
+[#fr-year]
+=== Membership year, expiry and renewal
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-50
+|An admin shall be able to renew a member (`Renew`): choose a non-secondary member by typing part of the last name (auto-complete), choose 1, 2 or 3 years, choose how they paid (cash, cheque or Interac e-transfer), and submit.
+|Done
+
+|FR-51
+|A renewal shall add a `MemberTransaction` (reason "R", the years, the payment type, today's date, the resulting expiry year) and set the member's expiry year per <<br-renew>>. On success the user shall see "<name> renewed through <year>." and land on the member's page; invalid input shall stay on the form with a message.
+|Done
+
+|FR-52
+|Renewing a family master shall also renew their secondaries.
+|Planned (a comment in `RenewAction`; today a secondary simply follows the master's expiry, see FR-31)
+|===
+
+[#fr-lists]
+=== Lists, extracts and statistics
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-60
+|Executives and admins shall be able to download the complete member list (`CSVAll`) and the paid-up list (`CSVPaidUp`) as CSV text, with a header explaining that the data is for the executive's duties only and showing the date it was generated. Columns: first name, last name, member type, [expiry year, all-members list only], position, city, province, e-mail, home, work and mobile phone.
+|Defect (open to anyone; see <<gap-csv-open>>; paid-up list calls a method that does not exist, see <<gap-findcurrent>>)
+
+|FR-61
+|Executives and admins shall be able to get a "First Last <e-mail>" list of current members (`MailingListEmail`).
+|Defect (same missing method)
+
+|FR-62
+|A `ClubStats` page shall show membership statistics.
+|Stub (it refers to a bean `personList` that does not exist; "More stats to come")
+
+|FR-63
+|Operators shall be able to produce statistics for a membership year from the command line (`scripts/stats`): total entries, ever-paid members, currently paid memberships by type, and more.
+|Done (script)
+|===
+
+[#fr-events]
+=== Events and calendar
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-70
+|The home page shall show upcoming events (from today on) to everyone: date, time text, title, "with <speaker>" (omitted when "T.B.A."), and a link to the event's details.
+|Done
+
+|FR-71
+|Anyone shall be able to view an event's details (title, date, start and end time, location, abstract, speaker and biography).
+|Done
+
+|FR-72
+|An admin shall be able to add, edit and delete events. Saving an existing event updates only the form's fields; "Delete" asks for confirmation. An event with no id is created.
+|Done
+
+|FR-73
+|Executives and admins shall see a table of upcoming events with View and Edit links. Past events are not listed anywhere.
+|Done (see <<gap-past-events>>)
+
+|FR-74
+|An admin shall be able to generate the next 12 months of regular meetings in one action. Meetings occur in the months January to April and September to November (not May to August or December), on the weekday and rule configured in `MeetingEventProducer`, at 19:00 to 21:00. The title is "Speaker's Night" (speaker "T.B.A."), except February, which is "Members' Night" ("Various Members").
+|Partial (see <<gap-event-times>>)
+
+|FR-75
+|A calendar page (`Schedule`) shall show the upcoming events graphically.
+|Stub (the page builds its model in a constructor that uses an injected bean; additions in the UI are not saved)
+|===
+
+[#fr-mail]
+=== Bulk e-mail
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-80
+|Executives and admins shall be able to compose a message on `MailingList` (subject, rich-text body via a text editor, optional single attachment of PDF, JPEG or PNG up to 10 MB) and send it to one of: themself only (test), the executive only, paid-up members, the entire list, or expired members ("nags").
+|Done
+
+|FR-81
+|Members without an e-mail address shall be skipped. Only active (not archived) members are ever mailed.
+|Done
+
+|FR-82
+|Mail shall be sent from a configured no-reply address, with a `Reply-To` of the logged-in sender (name and e-mail), to protect deliverability with large mail providers. If no no-reply address is configured, the mail is sent from the sender's own address. The sender is the only visible `To`; all recipients are blind-copied for privacy.
+|Done
+
+|FR-83
+|The subject shall be prefixed with the configured subject prefix. The body shall be sent as HTML with a configured unsubscribe notice appended, and standard list headers (`List-Id`, `List-Unsubscribe`, `List-Unsubscribe-Post`).
+|Partial (the list headers are hard-coded; see <<gap-hardcoded>>)
+
+|FR-84
+|"Smart" punctuation pasted from word processors (curly quotes, en and em dashes, ellipsis) shall be converted to plain ASCII equivalents so that the message does not arrive garbled.
+|Done (an earlier request-decoding fault that garbled the text before this step was fixed by setting UTF-8 as the request encoding)
+
+|FR-85
+|A confirmation message shall report how many people were mailed; failure to send shall report an error and stay on the page.
+|Done
+|===
+
+[#fr-misc]
+=== Other functions
+
+[cols="1,6,1"]
+|===
+|ID |Requirement |Status
+
+|FR-90
+|An admin shall be able to queue a member for name-badge printing, flagging executives.
+|Stub (`BadgeAction.add` only prints to the log; no queue or print output exists)
+
+|FR-91
+|Admins shall be able to list, view and edit the log of renewal transactions, newest first. (The edit page is a generic, unvalidated form; the view page is generic.)
+|Partial
+
+|FR-92
+|A public signup/renewal form shall collect: membership type (individual $30 or family $40), additional donation, new or renewal, names, e-mail (home or work), town, up to two phone numbers with their kind, interests, suggestions for speakers or trips, and consent to e-mail club notices. Submitting it shall e-mail the content, with the sender's IP address, to the club administrator through a separate CGI program (`membership-mailer`); the form does not itself create a member or take payment.
+|Done (as an e-mail notification only, per the program's own comments; the recipient is set in the program, which was not studied in detail)
+
+|FR-93
+|A printable PDF version of the form (`SignupPaperForm.pdf`) shall be offered for mail-in or in-person renewal.
+|Done
+
+|FR-94
+|"Exec" page shall offer the executive a place to resurrect a deleted member by entering an id.
+|Defect (it calls `memberHome.undelete`, which does not exist; superseded by the buttons on `DeletedList`)
+
+|FR-95
+|Every page shall carry a common header (club name, navigation, log in/out) and footer (About, Privacy), and use the organization name from configuration.
+|Done
+
+|FR-96
+|Errors shall show friendly pages for 404, 500 and expired sessions (`ViewExpiredException`).
+|Done
+|===
+
+[#business]
+== Business rules
+
+[#br-year]
+=== Membership year
+
+[horizontal]
+BR-01:: The membership year runs 1 September to 31 August and is named for the year it ends. In or after the renewal month (default September) the current membership year is the _next_ calendar year; before it, the current calendar year.
+BR-02:: A member joining today has an expiry year equal to the current membership year, except that someone joining in or after the renewal month gets `year + 1` (the same thing, restated in `getNewMemberExpiryYear`).
+BR-03:: A member is *expired* when the calendar year is past their expiry year, or when it is the expiry year and the month is after the renewal month (so there is a one-month grace period: a member with expiry year 2026 is still current through September 2026). A secondary is expired when their master is.
+
+[#br-renew]
+=== Renewal
+
+[horizontal]
+BR-04:: A renewal of _n_ years sets the new expiry year to `max(current expiry year, current membership year - 1) + n`.
+BR-05:: Consequence: a member who has lapsed gets one year bought as "the current membership year", not as an extension from their old expiry (for example, a member who expired in 2026, renewing for one year in October 2026, is paid through 2027); a member who is paid ahead keeps the years they have already paid.
+
+.Worked examples (from `YearCalcsTest`)
+[cols="1,1,1,1,1"]
+|===
+|Today |Expiry before |Years |Expiry after |Why
+
+|2026-10 |2026 |1 |2027 |lapsed: current year is 2027
+|2026-10 |2020 |1 |2027 |long lapsed: starts from now
+|2026-10 |2026 |2 |2028 |
+|2026-10 |2027 |1 |2028 |paid ahead: extend
+|2026-10 |2029 |1 |2030 |paid ahead: keep extra years
+|2026-03 |2025 |1 |2026 |before September the current year is 2026
+|===
+
+[horizontal]
+BR-06:: Payments are cash, cheque or Interac e-transfer at renewal; the system also knows credit card, debit card and unknown. Credit card numbers are never stored.
+BR-07:: A person is either an Individual, Family master, Family Secondary, Student, or Mail-Only (not a member; on the mailing list only). Expiry is not meaningful for Mail-Only people (not enforced; with expiry 0 they are never "paid-up").
+
+[#br-mail]
+=== Who gets which mailing
+
+[cols="1,4"]
+|===
+|Mailing |Recipients
+
+|Test |The sender only.
+|Executive |Active members with a non-empty `position`.
+|Paid-up |Active members whose expiry year's 31 August is still in the future.
+|Entire list |Every active member with an e-mail address, current and former.
+|Expired ("nags") |Active members whose expiry year is before the current calendar year.
+|===
+
+NOTE: The "paid-up" and "expired" rules use different definitions of the year. See <<gap-mail-rules>>.
+
+[#br-access]
+=== Access and privacy
+
+[horizontal]
+BR-08:: Only executives and admins may see other members' personal information (the Privacy page promises this).
+BR-09:: Only admins may change data (create, edit, archive, renew, events, transactions). Executives are read-only, but see <<gap-undelete-role>>.
+BR-10:: The club stores name, city, e-mail and phone numbers. It states that it no longer stores street addresses and never stores credit card numbers.
+BR-11:: Passwords are stored as hashes, never in the clear.
+
+[#data]
+== Data requirements
+
+=== Entities
+
+[cols="1,1,5"]
+|===
+|Entity |Table |Purpose and key attributes
+
+|`MemberBase` (abstract), `Member`, `MemberArchived`
+|`member`
+|One table, with discriminator column `type` ('Member' or 'MemberArchived'). Common fields: id, first name, middle, last name, e-mail, password (hash), member type, year joined, expiry year (0 = unpaid), position, address, address 2, city, province, postal code, country, home/cell/work phone, notes, creation and last-modified dates, version, and the list of renewal transactions. `Member` adds the roles (`member_roles`), the master member and the set of secondaries. `MemberArchived` adds archive date and archive reason.
+
+|`MemberTransaction`
+|`transaction`
+|One renewal or new-membership event: reason (R or N), payment type, member, date, number of years, resulting expiry year.
+
+|`MemberRole`
+|`member_roles`
+|A role name (for example `admin`) belonging to a member.
+
+|`Event`
+|`event`
+|A club meeting or outing: title, date, start and end time (text), free-text time label, location, abstract, speaker name and biography.
+
+|`PwChangeToken`
+|`pwchangetoken`
+|A password-reset token: e-mail, token, created time. Removed when used.
+|===
+
+=== Enumerations
+
+[cols="1,3"]
+|===
+|Enum |Values
+
+|`MemberType` |Individual (Ind), MailOnly (ML), Family (FM), Secondary (FS), Student (ST)
+|`PaymentType` |CASH, CHEQUE, CREDIT, DEBIT, ETRANSFER, UNKNOWN (stored by name; never rename a value)
+|`TransactionReason` |R (renewal), N (new)
+|`Country` |CA (Canada), US (USA), ZZ (Other)
+|===
+
+=== Data rules
+
+[horizontal]
+DR-01:: An archived member keeps every field, including the link to their master, so restoring is lossless.
+DR-02:: Member identity is the database id. Two member objects are equal only if both have an id and the ids match.
+DR-03:: Only `Member` rows (never archived rows) carry roles and master/secondary links in the object model.
+DR-04:: Dates are stored without time zone; event times are stored as text in "HH:mm" form.
+DR-05:: The schema is created and updated automatically at deployment (`schema-generation: update`), so a new deployment needs no hand-run DDL after the first run.
+
+[#interfaces]
+== External interfaces
+
+[horizontal]
+IR-01:: *Database.* A JTA datasource named `HnClubDataSource`. Hibernate is the JPA provider. Tests use in-memory H2.
+IR-02:: *Mail.* The Jakarta Mail session `java:jboss/mail/Default`. Properties in `config.properties`: `mail.smtp.host`, `mail.smtp.from` (no-reply address), `mail.subject.prefix`, `mail.unsubscribe`.
+IR-03:: *REST.* `POST /api/changePassword1` (form field `email`) and `POST /api/changePassword2` (form fields `token`, `newPassword`). Both answer with an HTTP 303 redirect to a `.web` page; there are no JSON endpoints.
+IR-04:: *Signup CGI.* `POST /signup` handled by the separate C program `membership-mailer` (kcgi), which e-mails the form fields to the club administrator.
+IR-05:: *Configuration.* `config.properties` (organization name `orgName`, mail properties, `datetime.renewalmonth`).
+IR-06:: *Operator scripts.* Shell and awk scripts in `scripts/` talk to the PostgreSQL database `hn` directly with `psql` (see <<ops>>).
+
+[#nfr]
+== Non-functional requirements
+
+[horizontal]
+NFR-01 (Security):: All data-changing and personal-data pages require login and a role (FR-06). Session timeout is 2 hours. Password reset uses unguessable single-use tokens (FR-14) and a uniform error for every failure (FR-15).
+NFR-02 (Security):: Passwords are stored as unsalted MD5. See <<gap-md5>>.
+NFR-03 (Privacy):: Credit card data is never stored; the Privacy page states what is kept and who sees it.
+NFR-04 (Usability):: A single modern, responsive layout (stylesheet `css/stylesheet.css`); forms show inline field messages; destructive actions ask for confirmation; the password page gives live feedback.
+NFR-05 (Internationalization):: Text is English only. Character encoding is UTF-8 end to end (request, response, and outgoing mail).
+NFR-06 (Deployability):: One WAR plus a datasource, a mail session and `config.properties`. README steps are acknowledged to be "nowhere near user-friendly". Moving to a stand-alone Quarkus service on port 8500 is a stated goal (`TODO.txt`).
+NFR-07 (Maintainability):: Per-page access rules live in small `page.xml` files rather than in code; business rules for dates are isolated in `YearCalcs`.
+NFR-08 (Testability):: Unit and integration tests run against H2 with no server: year calculations, login, member DAO, mail building and sanitizing, page-restriction parsing, the full password-reset flow (with an in-JVM SMTP server), and a well-formed-XML check on pages.
+NFR-09 (Performance):: No stated target. Lists are loaded in full and filtered in memory.
+NFR-10 (Availability / data safety):: No explicit requirement. Archiving rather than deleting is the main safeguard against accidental loss.
+
+[#ops]
+== Operator scripts (non-web functions)
+
+The `scripts/` directory holds the club administrator's command-line tools. They are part of how the system is used
+in practice, although they bypass the application's own rules.
+
+[cols="2,5,1"]
+|===
+|Script |Purpose |Notes
+
+|`memberlist`, `print-member-list` (and `make members`) |Compact hard-copy member listing for printing. |
+|`stats` |Membership statistics for the current membership year. |Uses `CURYEAR`
+|`expiry_year`, `execlist`, `allemails`, `newsletteremails`, `byid`, `byfirst`, `bylast`, `bycity` |Quick queries: who expires in a year, executive list, e-mail lists, look up by name/city/id. |
+|`gen_nametags_csv` |CSV of current and last year's members for name tags. |
+|`add2ml`, `add_secondary`, `bulkadds.awk`, `splitnames.awk` |Add a mailing-list person, add a family secondary, bulk load, split "A and B" entries into separate people. |Back up first (README)
+|`renew` |Command-line renewal. |Hard-wired to run only on the production host
+|`passwd` |Set a member's password (hashes with MD5). |
+|`anomalies` |Find secondaries with no master and blank positions. |
+|`nuke_by_id`, `undead`, `zombies`, `partly_deleted` |Old archive/restore tooling around a separate `member_archived` table. |Superseded; see <<gap-scripts>>
+|===
+
+[#gaps]
+== Known gaps, inconsistencies and open questions
+
+This section lists places where the code contradicts itself, its own documentation, or an evident intent.
+Each is based on reading the source; none was reproduced by running the application. They are ordered roughly by
+how much they matter. Items marked *Verify* are the most important to check against a running system.
+
+=== Security and privacy
+
+[#gap-csv-open]
+CSV exports may be open to anyone (*Verify*)::
+`PageFilter` looks for `<Page>.page.xml`. The CSV pages' restriction files are named `CSVAll.page.xhtml` and `CSVPaidUp.page.xhtml` (extension `.xhtml`, not `.xml`), so they are never found, and "no `page.xml`" means "no restrictions". If so, the complete member list with e-mail and phone numbers can be fetched without logging in. Renaming the two files to `.page.xml` should fix it.
+
+[#gap-xhtml-direct]
+Direct `.xhtml` requests (*Verify*)::
+The filter applies its rules only to URLs ending `.web`. If the container also serves or Faces-processes the same pages under their `.xhtml` names, those requests skip the access rules. Mapping the Faces servlet to `*.web` only, and disabling automatic `.xhtml` mapping, is the usual defence.
+
+[#gap-enumeration]
+Account enumeration::
+The reset form says "no such member" (`?error=member`) for an unknown address, which lets anyone test whether an address is a member. Login does not make that distinction. The usual practice is to show the same confirmation either way.
+
+[#gap-md5]
+Password hashing::
+Passwords are unsalted MD5. The Privacy page says they would be "very difficult to deconstruct (as of 2020)", which is no longer a safe claim. A salted, slow hash (Argon2, bcrypt or PBKDF2) with migration on next login is the standard replacement. `scripts/passwd` and `LoginAction` both depend on the MD5 scheme.
+
+[#gap-undelete-role]
+Restoring is not admin-only::
+`TODO.txt` says "Ensure Resurrected (and all data-changing) requires admin". `DeletedList` is open to executives and the Undelete button is not role-checked, so an executive can restore members.
+
+[#gap-memberview]
+`MemberView` restriction timing (*Verify*)::
+The rule "the member themself" compares the logged-in user with `memberHome.instance`, but `PageFilter` evaluates it before the page's view action has loaded that member. A plain member may therefore be refused their own page, or `memberHome.instance` may be some earlier user's record held in the conversation.
+
+[#gap-roles]
+Role names::
+README says `club_exec`; the code recognizes `admin` and a synthetic `exec` (from the position field).
+
+[#gap-email-unique]
+E-mail is not unique::
+Login and password reset both assume one member per e-mail address (and fail, or report "no member", if there are two) but nothing in the model or the edit form enforces it.
+
+=== Functional defects
+
+[#gap-findcurrent]
+Missing `findCurrent()`::
+`CSVPaidUp` and `MailingListEmail` call `memberDAO.findCurrent()`, which does not exist in `MemberDAO`; both pages will fail when evaluated.
+
+[#gap-event-times]
+Event times::
+`MeetingEventProducer` stores times as "1900" and "2100", but `Event.getStartDateTime()` splits on ":" and falls back to 12:00 with a `printf` that has a `%s` but no argument (which throws). Generated meetings also leave the free-text `times` field (shown on the home page) empty. The producer's comment says regular meetings are on the "3rd Tuesday" while the code passes `RecurringEventDatePicker.LAST`.
+
+[#gap-schedule]
+Calendar page::
+`ScheduleBean` reads upcoming events from an injected DAO inside its constructor, when the injection has not happened yet, and it labels every event "Monthly Meeting". It is unfinished.
+
+[#gap-past-events]
+Past events::
+The event list shows only upcoming events; there is no way to see or edit a past event.
+
+[#gap-new-tx]
+Initial transaction::
+Every new member, including mailing-list-only and secondary members, gets a "new" transaction for one year with no payment type and no resulting expiry year, which will look like a payment in the transaction log.
+
+[#gap-mail-rules]
+Mail recipient rules::
+* The "paid-up" rule uses the membership year (expiry year's 31 August); the "expired" rule uses the calendar year (expiry year before this calendar year). A member whose expiry year is this year, in October or later, is in neither group, and the date used by the paid-up rule is captured when the class is first loaded (`static LocalDate now`), so it goes stale on a long-running server.
+* Secondaries are judged on their own expiry year, not their master's, unlike the member list and `YearCalcs`.
+
+[#gap-hardcoded]
+Hard-coded club details::
+The mail's `List-Id` and `List-Unsubscribe` headers, the password-reset site address (`https://hn.darwinsys.com`), the reset subject ("HN Passord Reset", sic), the "Monthly Meeting" label, menu links and the signup form's address and fees are fixed in code or pages, which conflicts with the aim of reuse by other clubs.
+
+[#gap-newmember-rule]
+"After March 1" rule not implemented::
+The signup form says "New memberships after March 1 extend to the following year", and `Config` defines a constant for it, but it is unused and misnamed; a member joining in April 2027 gets expiry 2027 (this membership year), not 2028.
+
+[#gap-pages]
+Pages that do not work or are incomplete::
+`ClubStats` (missing bean), `Exec` (calls a missing method), `Schedule` (unfinished), `BadgePrint` (nothing happens), `MemberTransactionEdit` (raw text fields for enums and the member), "Add DeletedView" (a missing page, in `TODO.txt`).
+
+[#gap-family]
+Family handling still open::
+Restoring a master does not restore secondaries; renewal does not touch secondaries; CSV and member list do not show a secondary's master consistently (`TODO.txt`: "show master when displaying a secondary").
+
+[#gap-privacy-address]
+Street address::
+The Privacy page says street addresses are no longer stored, but the entity still has `address`, `address2` and `postcode` columns and `MemberHome` still contains a postal-code validator that no page uses.
+
+[#gap-scripts]
+Stale scripts::
+`nuke_by_id`, `undead`, `zombies` and `partly_deleted` refer to a `member_archived` table. The current design archives in the same table by changing `type`, so these scripts no longer match the schema. `add_secondary` uses a `member_type` column name that differs from the mapped `membertype`.
+
+=== Open questions for the owner
+
+. Should executives be allowed to restore archived members, or only admins (FR-42, BR-09)?
+. Is the one-month grace period (BR-03) intended, and should "paid-up" and "expired" mailings use it?
+. Should a new member who joins after 1 March be paid to the _following_ year (the form says so; the code does not)?
+. Should a family renewal automatically carry the secondaries (FR-52), or is "follow the master" enough?
+. Which of the stub pages (stats, calendar, badges) are still wanted?
+. Is members editing their own record, and online renewal and payment (Helcim, in `TODO.txt`), a firm goal? That changes the security model (members would need write access to their own row only).
+. What is the intended retention of archived people, and should they ever be purged?
+. Should the reset endpoint avoid disclosing whether an address is a member?
+. Is multi-club use a goal? If so, club name, mail headers, host name and fees need to become configuration.
+
+[#pages]
+== Appendix A: Page inventory
+
+[cols="2,2,4"]
+|===
+|Page |Access |Purpose
+
+|`index` |public |Welcome, news, upcoming events, links to forms.
+|`Login` |public |Log in; link to set/reset password.
+|`ChangePassword1/2/3` |public |Request token; paste token and set password; confirmation.
+|`About`, `Privacy` |public |Information.
+|`SignupForm` |public |Membership signup/renewal form (posts to the CGI).
+|`EventView` |public |Event details.
+|`Schedule` |public (stub) |Calendar.
+|`ClubStats` |public (stub) |Statistics.
+|`MemberView` |self, exec or admin |Member details.
+|`MemberList`, `DeletedList` |exec or admin |Active and archived member tables.
+|`MailingList` |exec or admin |Compose and send bulk mail.
+|`MailingListEmail`, `CSVAll`, `CSVPaidUp` |exec or admin (see gaps) |Text/CSV extracts.
+|`EventList` |exec or admin |Upcoming events table.
+|`MemberEdit`, `Renew`, `EventEdit`, `BadgePrint`, `Exec`, `MemberTransaction*` |admin |Data maintenance.
+|===
+
+== Appendix B: Items from `TODO.txt` not yet delivered
+
+* Members update their own record; move Renewal into the edit page or list buttons.
+* Search with "like"; make "position" a managed list (entity or enum) with its own maintenance page.
+* Jakarta Data to replace most DAOs; refactor the Home objects to share a base class.
+* Online signup with e-mail confirmation (post handler for the form); automatic welcome and thank-you e-mails; new members receive the latest newsletter.
+* Online payment (Helcim; Canadian dollars natively).
+* A pluggable message handler for `LoginAction`; saved-URL-after-login keeping parameters.
+* Event table column widths; a `DeletedView` page; "show master when displaying a secondary" in the mailing-list CSV.
+* A test that a non-privileged user cannot do privileged things.
+* Convert to a stand-alone Quarkus micro-service (listening on port 8500) and phase out WildFly.
+* Generalize for other nature clubs.
+
+== Appendix C: Existing automated tests
+
+[cols="2,4"]
+|===
+|Test class |Covers
+
+|`YearCalcsTest`, `MemberTest` |Membership year, expiry, renewal arithmetic, name building, copy constructor.
+|`LoginActionTest` |Good and bad login.
+|`MemberDAOTest`, `PersistenceTest`, `MemberCompletionTest` |Persistence and member auto-complete.
+|`MemberValidatorEmailTest` |E-mail syntax rule.
+|`MailManTest`, `MailManSanitizersTest`, `ChooserTest` |Mail message construction, smart-punctuation conversion, recipient choosers.
+|`PageViewFilterTest` |Parsing of `page.xml` restrictions.
+|`PasswordChangeFlowTest` |The whole reset flow against H2 and an in-JVM SMTP server: token mailed, wrong token, expiry, weak password, single use, unknown address.
+|`EventTest`, `MeetingEventProducerTest`, `ConfigTest` |Event dates, meeting generation, configuration.
+|`WellFormedXmlTest` |All pages are well-formed XML.
+|===
