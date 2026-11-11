@@ -114,20 +114,55 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		entityManager.detach(m);
 	}
 
-	/** Undelete the Member */
 	// Beware the hall of the necromancer!
+	/** Undelete the Member and, for a family master, the secondaries archived along with them */
 	public void unDelete(MemberArchived m) {
-
 		System.out.println("Un-archiving " + m);
 		entityManager.flush();
+
+		// A secondary can't come back before its master: it would point at a non-Member row
+		Long masterId = m.getMasterMemberId();
+		if (masterId != null && isArchived(masterId)) {
+			throw new IllegalStateException("Undelete the master (#" + masterId + ") first");
+		}
+
+		// Family archived together with this member: same master, same archive date.
+		// Read the date before it is cleared below.
+		LocalDate archivedOn = m.getArchivedDate();
+		var q = entityManager.createNativeQuery("select id from member where masterMember_id = ? "
+				+ "and type = 'MemberArchived'" + (archivedOn != null ? " and archivedDate = ?" : ""))
+				.setParameter(1, m.getId());
+		if (archivedOn != null) {
+			q.setParameter(2, archivedOn);
+		}
+		List<?> familyIds = q.getResultList();
+
+		flipToMember(m.getId());
+		entityManager.detach(m);
+		for (Object o : familyIds) {
+			Long famId = ((Number) o).longValue();
+			var fam = entityManager.find(MemberArchived.class, famId);
+			if (fam != null) {
+				entityManager.detach(fam);	// evict, as in delete(): it's a Member again
+			}
+			flipToMember(famId);
+		}
+	}
+
+	private void flipToMember(Long id) {
 		int ret = entityManager.createNativeQuery(
-			"update member set type = 'Member', archivedDate = null, archivedReason = null where id = ?")
-				.setParameter(1, m.getId())
+				"update member set type = 'Member', archivedDate = null, archivedReason = null where id = ?")
+				.setParameter(1, id)
 				.executeUpdate();
 		if (ret != 1) {
-			throw new IllegalStateException("unDelete: Native update returned " + ret);
+			throw new IllegalStateException("unDelete: Native update of #" + id + " returned " + ret);
 		}
-		entityManager.detach(m);	// evict as in delete(): now it is really a Member again
+	}
+
+	private boolean isArchived(Long id) {
+		List<?> types = entityManager.createNativeQuery("select type from member where id = ?")
+				.setParameter(1, id).getResultList();
+		return !types.isEmpty() && "MemberArchived".equals(types.get(0));
 	}
 }
 

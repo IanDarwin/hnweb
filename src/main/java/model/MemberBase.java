@@ -28,6 +28,11 @@ public abstract class MemberBase {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    /** Read-only: lets archived (non-Member) rows still say who their master was */
+    /// XXX Couldn't this just be in MemberBase?
+    @Column(name = "masterMember_id", insertable = false, updatable = false)
+    private Long masterMemberId;
+
     @Column(name = "address")
     private String address;
 
@@ -118,6 +123,11 @@ public abstract class MemberBase {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public Long getMasterMemberId() { // No setter here
+        return masterMemberId;
     }
 
     public String getAddress() {

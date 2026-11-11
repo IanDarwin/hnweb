@@ -161,15 +161,11 @@ public class MemberHome implements Serializable {
 		return "/DeletedList" + WebConstants.FORCE_REDIRECT;
 	}
 
+	/** Undelete - most of the work is done in the DAO */
 	@Transactional
 	public String unDelete(MemberArchived ma) {
-		var id = ma.getId();
-		memberDAO.unDelete(ma);
-		Member undead = memberDAO.findById(id);
-		System.out.println("undead = " + undead + ", secondaries = " + undead.getSecondaryMembers());
-		for (MemberBase mb : undead.getSecondaryMembers()) {
-        	memberDAO.unDelete((MemberArchived) mb);
-    	}
+		memberDAO.unDelete(ma);		// also restores a family master's secondaries
+		invalidateMemberListCache();
 		return getListPage() + WebConstants.FORCE_REDIRECT;
 	}
 	

@@ -13,6 +13,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import model.Member;
 import model.MemberArchived;
+import model.MemberBase;
+import model.MemberType;
 import org.hibernate.annotations.processing.Find;
 
 /**
@@ -39,5 +41,23 @@ public class DeletedList implements Serializable {
 				.setParameter("firstName", firstName)
 				.setParameter("lastName", lastName)
 				.getSingleResult());
+	}
+
+	/** Name of an archived secondary's master, whether or not the master is archived too */
+	public String masterName(MemberArchived ma) {
+		Long id = ma.getMasterMemberId();
+		if (id == null) {
+			return "(none)";
+		}
+		MemberBase master = entityManager.find(MemberBase.class, id);
+		return master == null ? "(unknown)" : master.getName();
+	}
+
+	/** True if this is a secondary whose master is still archived: undelete the master instead */
+	public boolean undeleteViaMaster(MemberArchived ma) {
+		if (ma.getMemberType() != MemberType.Secondary || ma.getMasterMemberId() == null) {
+			return false;
+		}
+		return entityManager.find(MemberBase.class, ma.getMasterMemberId()) instanceof MemberArchived;
 	}
 }

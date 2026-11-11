@@ -46,12 +46,12 @@
 		<p:column style="width: 10%">
 			<f:facet name="header">Actions</f:facet>
 			<p:commandButton value="Undelete" action="#{memberHome.unDelete(member)}" icon="ui-icon-trash"
-							 rendered="#{member.memberType.shortName != 'FS'}"
+				 rendered="#{not deletedList.undeleteViaMaster(member)}"
 				styleClass="btn-danger">
 				<p:confirm header="Confirm undeletion" message="Really un-delete this member?" icon="ui-icon-alert" />
 			</p:commandButton>
-			<h:outputText value="Undelete #{member.masterMember} instead"
-						  rendered="#{member.memberType.shortName == 'FS'}"/>
+			<h:outputText value="Undelete the master, #{deletedList.masterName(member)}, instead"
+			  rendered="#{deletedList.undeleteViaMaster(member)}"/>
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 				<p:commandButton value="Yes, undelete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
