@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -x
+
+java -cp ~/lib/darwinsys-api-1.9.0-SNAPSHOT.jar:. gen.java $*
