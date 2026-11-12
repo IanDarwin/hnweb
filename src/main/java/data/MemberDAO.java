@@ -100,12 +100,18 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 	// we just have to flip the 'type' column.
 
 	public void delete(Member m) {
-		System.out.println("Archiving " + m);
-		entityManager.flush();		// send any pending changes to m before we go around JPA
-		int ret  = entityManager.createNativeQuery(
-			"update member set type = 'MemberArchived', archivedDate = ? where id = ?")
+		delete(m, null);
+	}
+
+	public void delete(Member m, String reason) {
+		String why = (reason == null || reason.isBlank()) ? "Deleted" : reason.strip();
+		System.out.println("Archiving " + m + " because: " + why);
+		entityManager.flush();
+		int ret = entityManager.createNativeQuery(
+						"update member set type = 'MemberArchived', archivedDate = ?, archivedReason = ? where id = ?")
 				.setParameter(1, LocalDate.now())
-				.setParameter(2, m.getId())
+				.setParameter(2, why)
+				.setParameter(3, m.getId())
 				.executeUpdate();
 		if (ret != 1) {
 			throw new IllegalStateException("delete: Native update returned " + ret);

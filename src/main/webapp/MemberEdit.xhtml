@@ -175,17 +175,23 @@
 	<!-- Their own form, so Cancel and Delete never get stuck on validation of the fields above -->
 	<h:form styleClass="actions">
 		<p:commandButton value="Cancel" action="#{memberHome.cancel}" ajax="false" styleClass="btn-secondary"/>
-
-		<p:commandButton value="Delete member" action="#{memberHome.remove()}" icon="ui-icon-trash"
-			styleClass="btn-danger" rendered="#{not empty memberHome.id}">
-			<p:confirm header="Confirm deletion" message="Really delete this member?" icon="ui-icon-alert" />
-		</p:commandButton>
-
-		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-			<p:commandButton value="Yes, delete" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no btn-secondary" icon="ui-icon-close" />
-		</p:confirmDialog>
+		<p:commandButton value="Delete member" type="button" icon="ui-icon-trash" styleClass="btn-danger"
+						 rendered="#{not empty memberHome.id}" onclick="PF('deleteDlg').show()"/>
 	</h:form>
+
+	<p:dialog widgetVar="deleteDlg" header="Delete member" modal="true"
+			  closeOnEscape="true" resizable="false" showEffect="fade" hideEffect="fade">
+		<h:form>
+			<p:outputLabel for="reason" value="Reason (optional):"/>
+			<p:inputText id="reason" value="#{memberHome.archiveReason}" maxlength="200" size="40"/>
+			<div class="actions">
+				<p:commandButton value="Yes, delete" action="#{memberHome.remove}" ajax="false"
+								 icon="ui-icon-check" styleClass="btn-danger"/>
+				<p:commandButton value="No" type="button" onclick="PF('deleteDlg').hide()"
+								 icon="ui-icon-close" styleClass="btn-secondary"/>
+			</div>
+		</h:form>
+	</p:dialog>
 
 </ui:define>
 </ui:composition>

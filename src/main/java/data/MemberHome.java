@@ -64,7 +64,11 @@ public class MemberHome implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+	private String archiveReason;
+	public String getArchiveReason() { return archiveReason; }
+	public void setArchiveReason(String archiveReason) { this.archiveReason = archiveReason; }
+
 	/**
 	 * Cache this list to avoid too many re-creations.
 	 * @return The list of Members
@@ -155,7 +159,7 @@ public class MemberHome implements Serializable {
 		for (MemberBase mb : instance.getSecondaryMembers()) {
         	memberDAO.delete((Member)mb);
     	}
-    	memberDAO.delete(instance);
+    	memberDAO.delete(instance, archiveReason);
 		endConversation();
 		invalidateMemberListCache();
 		return "/DeletedList" + WebConstants.FORCE_REDIRECT;
