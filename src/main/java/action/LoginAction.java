@@ -55,6 +55,11 @@ public class LoginAction implements Serializable {
 		System.out.println("LoginAction.LoginAction()");
 	}
 
+	final static String FAIL_MESSAGE = """
+		Could not log you in using these credentials.
+		Please check your login credentials and try again.
+	""";
+
 	/** =================== The main login method =================== */
 	@Transactional
 	public String login() {
@@ -63,7 +68,7 @@ public class LoginAction implements Serializable {
 			final Optional<Member> memberOptional =
 					memberDAO.findByEmailAndPassword(email, DigestUtils.md5(password));
 			if (memberOptional.isEmpty()) {
-				printer.accept("Failed to log in as " + email);
+				printer.accept(FAIL_MESSAGE);
 				return "Login";
 
 			}
@@ -71,10 +76,6 @@ public class LoginAction implements Serializable {
 			HttpSession session = getHttpSession();
 			session.setAttribute(LoginConstants.LOGIN_MEMBER, loggedInUser);
 			session.setAttribute(LoginConstants.LOGIN_FLAG, this);
-
-			// XXX Maybe now tell the Container about it for e.g., logging and session times...
-			// using request.login(email, password);
-			// Except that EE wants a login and password to look up in a Realm, which we've already done.
 
 			printer.accept("Logged in as " + getLoggedInUser().getName());
 
@@ -94,13 +95,13 @@ public class LoginAction implements Serializable {
 
 		} catch (NoResultException nre) {
 			System.out.println("LoginAction.login():" + nre);
-			printer.accept("Login Failed for user " + email + "; user and/or password invalid.");
+			printer.accept(FAIL_MESSAGE);
             return "Login";
 		} catch (RuntimeException ex) {
 			System.out.println("LoginAction.login():" + ex);
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
 			r.printStackTrace();
-			printer.accept("Login Failed for user " + email + " due to " + ex);
+			printer.accept(FAIL_MESSAGE);
 			return "Login";
 		}
 	}
