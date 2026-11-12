@@ -672,7 +672,6 @@ in practice, although they bypass the application's own rules.
 |`renew` |Command-line renewal. |Hard-wired to run only on the production host
 |`passwd` |Set a member's password (hashes with MD5). |
 |`anomalies` |Find secondaries with no master and blank positions. |
-|`nuke_by_id`, `undead`, `zombies`, `partly_deleted` |Old archive/restore tooling around a separate `member_archived` table. |Superseded; see <<gap-scripts>>
 |===
 
 [#gaps]
@@ -684,17 +683,10 @@ how much they matter. Items marked *Verify* are the most important to check agai
 
 === Security and privacy
 
-[#gap-csv-open]
-CSV exports may be open to anyone (*Verify*)::
-`PageFilter` looks for `<Page>.page.xml`. The CSV pages' restriction files are named `CSVAll.page.xhtml` and `CSVPaidUp.page.xhtml` (extension `.xhtml`, not `.xml`), so they are never found, and "no `page.xml`" means "no restrictions". If so, the complete member list with e-mail and phone numbers can be fetched without logging in. Renaming the two files to `.page.xml` should fix it.
 
 [#gap-xhtml-direct]
 Direct `.xhtml` requests (*Verify*)::
 The filter applies its rules only to URLs ending `.web`. If the container also serves or Faces-processes the same pages under their `.xhtml` names, those requests skip the access rules. Mapping the Faces servlet to `*.web` only, and disabling automatic `.xhtml` mapping, is the usual defence.
-
-[#gap-enumeration]
-Account enumeration::
-The reset form says "no such member" (`?error=member`) for an unknown address, which lets anyone test whether an address is a member. Login does not make that distinction. The usual practice is to show the same confirmation either way.
 
 [#gap-md5]
 Password hashing::
@@ -765,7 +757,7 @@ The Privacy page says street addresses are no longer stored, but the entity stil
 
 [#gap-scripts]
 Stale scripts::
-`nuke_by_id`, `undead`, `zombies` and `partly_deleted` refer to a `member_archived` table. The current design archives in the same table by changing `type`, so these scripts no longer match the schema. `add_secondary` uses a `member_type` column name that differs from the mapped `membertype`.
+`add_secondary` uses a `member_type` column name that differs from the mapped `membertype`.
 
 === Open questions for the owner
 
@@ -776,7 +768,6 @@ Stale scripts::
 . Which of the stub pages (stats, calendar, badges) are still wanted?
 . Is members editing their own record, and online renewal and payment (Helcim, in `TODO.txt`), a firm goal? That changes the security model (members would need write access to their own row only).
 . What is the intended retention of archived people, and should they ever be purged?
-. Should the reset endpoint avoid disclosing whether an address is a member?
 . Is multi-club use a goal? If so, club name, mail headers, host name and fees need to become configuration.
 
 [#pages]
