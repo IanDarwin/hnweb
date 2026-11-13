@@ -65,8 +65,10 @@ public class LoginAction implements Serializable {
 	public String login() {
 		System.out.println("Login.login() for " + email);
 		try {
+			// Do hashing up front, for everyone, to prevent timing attacks
+			var cipher = DigestUtils.md5(password);
 			final Optional<Member> memberOptional =
-					memberDAO.findByEmailAndPassword(email, DigestUtils.md5(password));
+					memberDAO.findByEmailAndPassword(email, cipher);
 			if (memberOptional.isEmpty()) {
 				printer.accept(FAIL_MESSAGE);
 				return "Login";
