@@ -11,7 +11,9 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import model.PwChangeToken;
 import outreach.MailMan;
 
@@ -40,15 +42,15 @@ public class UserPasswordChangeRest {
     /** How long an emailed token stays valid */
     final static int TOKEN_MINUTES = 60;
 
-    final static String host = "https://hn.darwinsys.com";
+    @Context
+    UriInfo uriInfo;     // package-private so the test can set it
 	final static String PART1_URL = "ChangePassword1.web";
 	final static String PART2_URL = "ChangePassword2.web";
 	final static String PART3_URL = "ChangePassword3.web";
 
     @Inject
     MailMan mailMan;
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext EntityManager em;
 
     @Path("changePassword1")
     @POST
@@ -66,19 +68,18 @@ public class UserPasswordChangeRest {
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
         em.persist(new PwChangeToken(email, token));
-        String message = MESSAGE_TEMPLATE.formatted(email, host, token);
+        String message = MESSAGE_TEMPLATE.formatted(email, siteName(), token);
         try {
             mailMan.sendMessageTo(email, "HN Passord Reset", message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to email " + email, e);
         }
-        var redirectURI = URI.create(host + "/" + PART2_URL);
-        return Response.seeOther(redirectURI).build();
+        return Response.seeOther(page(PART2_URL)).build();
     }
 
     /** Back to step 1 with a generic message */
     private Response badMember() {
-        return Response.seeOther(URI.create(host + "/" + PART1_URL + "?error=member")).build();
+        return Response.seeOther(page(PART1_URL + "?error=member")).build();
     }
 
     @Path("changePassword2")
@@ -125,7 +126,7 @@ public class UserPasswordChangeRest {
 
         members.get(0).setPassword(DigestUtils.md5(newPassword)); // What we came for!
 
-        return Response.seeOther(URI.create(host + "/" + PART3_URL)).build();
+        return Response.seeOther(page(PART3_URL)).build();
     }
 
     // Same rules as js/changepassword.js, which must be kept in step with these.
@@ -149,7 +150,18 @@ public class UserPasswordChangeRest {
 
     /** Back to step 2 with a generic message */
     private Response badToken() {
-        return Response.seeOther(URI.create(host + "/" + PART2_URL + "?error=token")).build();
+        return Response.seeOther(page(PART2_URL + "?error=token")).build();
+    }
+
+    /** A page of this webapp, e.g. page("ChangePassword2.web"). The REST base is
+     *  http://host/ctx/api/, so "../" gets back to the context root. */
+    private URI page(String name) {
+        return uriInfo.getBaseUri().resolve("../" + name);
+    }
+
+    /** For the email: the site this request came in on */
+    private String siteName() {
+        return uriInfo.getBaseUri().getAuthority();
     }
 
     // Replace w/ $dsapi/genpwds

@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 import model.Config;
 import model.Member;
@@ -24,6 +25,7 @@ import model.PwChangeToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import outreach.MailManTestSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +46,7 @@ class PasswordChangeFlowTest {
 	static final String NEW_PASSWORD = "Defgh.45678";
 	/** md5 of NEW_PASSWORD, which is what LoginAction compares against */
 	static final String NEW_PASSWORD_MD5 = "be2925d601bdaec3bd41856882e54ccd";
-
+	static final String TEST_BASE = "http://test.example/hn/";
 	/** The token is the only <b>...</b> in the mail body */
 	static final Pattern TOKEN_IN_BODY = Pattern.compile("<b>([A-Za-z0-9]+)</b>");
 
@@ -69,6 +71,9 @@ class PasswordChangeFlowTest {
 		installFakeJaxRsRuntime();
 
 		rest = new UserPasswordChangeRest();
+		UriInfo ui = Mockito.mock(UriInfo.class);
+		Mockito.when(ui.getBaseUri()).thenReturn(URI.create(TEST_BASE + "api/"));
+		rest.uriInfo = ui;
 		rest.em = em;
 		rest.mailMan = MailManTestSupport.mailManUsing(Session.getInstance(mailProps));
 
@@ -96,7 +101,7 @@ class PasswordChangeFlowTest {
 		// Step 1: ask for a reset
 		Response1 r1 = step1(EMAIL);
 		assertEquals(303, r1.status);
-		assertEquals(UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART2_URL, r1.location);
+		assertEquals(TEST_BASE + UserPasswordChangeRest.PART2_URL, r1.location);
 
 		// The mail was really sent, to the right person
 		assertTrue(greenMail.waitForIncomingEmail(5000, 1), "no mail arrived");
@@ -111,7 +116,7 @@ class PasswordChangeFlowTest {
 		// Step 2 for real
 		var r2 = step2(token, NEW_PASSWORD);
 		assertEquals(303, r2.status);
-		assertEquals(UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART3_URL, r2.location);
+		assertEquals(TEST_BASE + UserPasswordChangeRest.PART3_URL, r2.location);
 		assertEquals(NEW_PASSWORD_MD5, storedPassword());
 
 		// Tokens are single-use
@@ -133,7 +138,7 @@ class PasswordChangeFlowTest {
 		}
 
 		// ...and the user can still finish with a good one
-		assertEquals(UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART3_URL,
+		assertEquals(TEST_BASE + UserPasswordChangeRest.PART3_URL,
 				step2(token, NEW_PASSWORD).location);
 		assertEquals(NEW_PASSWORD_MD5, storedPassword());
 	}
@@ -141,7 +146,7 @@ class PasswordChangeFlowTest {
 	@Test
 	void unknownEmailSendsNothing() throws Exception {
 		var r = step1("nobody@example.test");
-		assertEquals(UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART1_URL + "?error=member", r.location);
+		assertEquals(TEST_BASE + UserPasswordChangeRest.PART1_URL + "?error=member", r.location);
 		assertEquals(0, greenMail.getReceivedMessages().length);
 		assertEquals(0, ((Number) em.createQuery("select count(t) from PwChangeToken t", Number.class).getSingleResult()).intValue());
 	}
@@ -220,7 +225,7 @@ class PasswordChangeFlowTest {
 	}
 
 	static String tokenError() {
-		return UserPasswordChangeRest.host + "/" + UserPasswordChangeRest.PART2_URL + "?error=token";
+		return TEST_BASE + UserPasswordChangeRest.PART2_URL + "?error=token";
 	}
 
 	/** Check mail reached this address and pull the token out of its HTML body */
