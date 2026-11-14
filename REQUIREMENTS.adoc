@@ -710,21 +710,18 @@ Login and password reset both assume one member per e-mail address (and fail, or
 
 === Functional defects
 
-[#gap-findcurrent]
-Missing `findCurrent()`::
-`CSVPaidUp` and `MailingListEmail` call `memberDAO.findCurrent()`, which does not exist in `MemberDAO`; both pages will fail when evaluated.
-
 [#gap-event-times]
 Event times::
 `MeetingEventProducer` stores times as "1900" and "2100", but `Event.getStartDateTime()` splits on ":" and falls back to 12:00 with a `printf` that has a `%s` but no argument (which throws). Generated meetings also leave the free-text `times` field (shown on the home page) empty. The producer's comment says regular meetings are on the "3rd Tuesday" while the code passes `RecurringEventDatePicker.LAST`.
 
 [#gap-schedule]
 Calendar page::
-`ScheduleBean` reads upcoming events from an injected DAO inside its constructor, when the injection has not happened yet, and it labels every event "Monthly Meeting". It is unfinished.
+`ScheduleBean` reads upcoming events from an injected DAO inside its constructor, when the injection has not happened yet, and it labels every event "Monthly Meeting".
+It is unfinished.
 
 [#gap-past-events]
 Past events::
-The event list shows only upcoming events; there is no way to see or edit a past event.
+The event list shows only upcoming events; there is no way to see a past event.
 
 [#gap-new-tx]
 Initial transaction::
@@ -741,7 +738,8 @@ The mail's `List-Id` and `List-Unsubscribe` headers, the password-reset site add
 
 [#gap-newmember-rule]
 "After March 1" rule not implemented::
-The signup form says "New memberships after March 1 extend to the following year", and `Config` defines a constant for it, but it is unused and misnamed; a member joining in April 2027 gets expiry 2027 (this membership year), not 2028.
+The signup form says "New memberships after March 1 extend to the following year", and `Config` defines a constant for it,
+but it is unused and misnamed; a member joining in April 2027 gets expiry 2027 (this membership year), not 2028.
 
 [#gap-pages]
 Pages that do not work or are incomplete::
@@ -749,7 +747,7 @@ Pages that do not work or are incomplete::
 
 [#gap-family]
 Family handling still open::
-Restoring a master does not restore secondaries; renewal does not touch secondaries; CSV and member list do not show a secondary's master consistently (`TODO.txt`: "show master when displaying a secondary").
+CSV and member list do not show a secondary's master consistently (`TODO.txt`: "show master when displaying a secondary").
 
 [#gap-privacy-address]
 Street address::

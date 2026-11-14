@@ -17,6 +17,8 @@ import model.MemberTransaction;
 import model.MemberType;
 import model.TransactionReason;
 
+import static action.YearCalcs.getCurrentMembershipYear;
+
 /**
  * This is a basic DAO-like interface for use by JSF or EJB.
  */
@@ -86,6 +88,13 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		return entityManager.createQuery(
 				"SELECT m FROM Member m WHERE m.memberType <> :secondary ORDER BY m.lastName, m.firstName", Member.class)
 				.setParameter("secondary", MemberType.Secondary)
+				.getResultList();
+	}
+
+	public List<Member> findCurrent() {
+		return entityManager.createQuery(
+				"SELECT m FROM Member m WHERE m.expiryYear >= :curYear ORDER BY m.lastName, m.firstName", Member.class)
+				.setParameter("curYear", getCurrentMembershipYear())
 				.getResultList();
 	}
 

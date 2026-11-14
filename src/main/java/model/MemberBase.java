@@ -33,12 +33,6 @@ public abstract class MemberBase {
     @Column(name = "masterMember_id", insertable = false, updatable = false)
     private Long masterMemberId;
 
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "address2")
-    private String address2;
-
     @Column(name = "city")
     private String city;
 
@@ -52,11 +46,11 @@ public abstract class MemberBase {
     @Column(name = "firstname")
     protected String firstName;
 
+    @Column(name = "middle")
+    protected String middle;
+
     @Column(name = "lastname")
     protected String lastName;
-
-    @Column(name = "postcode")
-    private String postcode;
 
     @Column(name = "province")
     private String province;
@@ -76,9 +70,6 @@ public abstract class MemberBase {
 
     @Column(name = "yearjoined")
     private Integer yearJoined;
-
-    @Column(name = "middle")
-    protected String middle;
 
     @Column(name = "expiryYear")
     private Integer expiryYear = 0;
@@ -130,22 +121,6 @@ public abstract class MemberBase {
         return masterMemberId;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAddress2() {
-        return address2;
-    }
-
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
-
     public String getCity() {
         return city;
     }
@@ -193,14 +168,6 @@ public abstract class MemberBase {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
 
     public String getProvince() {
         return province;
