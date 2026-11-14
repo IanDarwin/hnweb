@@ -343,10 +343,10 @@ public class MailMan implements Serializable {
 
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
-		// Will often have been pasted from some kinda WP software w/ smartquotes &c
 		htmlBody += "<p>Unsubscribe: " +
 			Config.getProperty(PROPNAME_MAIL_UNSUBSCRIBE);
-        htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
+		// Will often have been pasted from some kinda WP software w/ smartquotes &c
+		htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
 
