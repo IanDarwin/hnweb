@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
+import com.darwinsys.lang.StringHolder;
 import jakarta.annotation.Resource;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Named;
@@ -26,6 +29,8 @@ import model.Config;
 import model.Member;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
+
+import static data.Validation.validateEmail;
 
 /**
  * Sends email on behalf of the club.
@@ -316,9 +321,14 @@ public class MailMan implements Serializable {
 		mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(fromAddress));
 
 		// TO Addresses - may be a lot! But send as BCC as usual for privacy.
+		StringHolder msgHolder = new StringHolder();
 		for (String message_recip : recipients) {
-			InternetAddress toAddress = new InternetAddress(message_recip);
-			mesg.addRecipient(Message.RecipientType.BCC, toAddress);
+			if (validateEmail(message_recip, msgHolder)) {
+				InternetAddress toAddress = new InternetAddress(message_recip);
+				mesg.addRecipient(Message.RecipientType.BCC, toAddress);
+			} else {
+				throw new IllegalArgumentException(message_recip + ": not a valid email?");
+			}
 		}
 
 		// The Subject
@@ -330,7 +340,7 @@ public class MailMan implements Serializable {
 
         // Now the message body, in HTML and in plain text
         Multipart mp = new MimeMultipart();
-        
+
         // Message comes in HTML from the JSF Editor pane
         BodyPart htmlPart = new MimeBodyPart();
 		// Will often have been pasted from some kinda WP software w/ smartquotes &c
@@ -339,7 +349,7 @@ public class MailMan implements Serializable {
         htmlPart.setContent(sanitizeToUtf8(htmlBody), "text/html");
 		htmlPart.addHeader("Content-Disposition", "inline");
         mp.addBodyPart(htmlPart);
-        
+
         // Toss in one attachment if there is one
         if (uploadContentType != null) {
         		BodyPart attachPart = new MimeBodyPart();

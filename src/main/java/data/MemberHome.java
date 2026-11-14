@@ -236,7 +236,7 @@ public class MemberHome implements Serializable {
 			country = Country.CA;
 		}
 		StringHolder messageHolder = new StringHolder();
-		valid = MemberValidator.validatePostCode(country, postCode, messageHolder);
+		valid = Validation.validatePostCode(country, postCode, messageHolder);
 		if (!valid) {
 			jsfContext.addMessage(
 					toValidate.getClientId(jsfContext),
@@ -253,7 +253,7 @@ public class MemberHome implements Serializable {
 		boolean valid = true;
 		String email = (String) userInputValue;
 		StringHolder messageHolder = new StringHolder();
-		valid = MemberValidator.validateEmail(email, messageHolder);
+		valid = Validation.validateEmail(email, messageHolder);
 		if (!valid) {
 			jsfContext.addMessage(
 					toValidate.getClientId(jsfContext),
