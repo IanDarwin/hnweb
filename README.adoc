@@ -49,5 +49,5 @@ Ditto for the email server config in the same file.
 
 == ToDo
 
-See the separate TODO file.
+Items to be done are in the Issues section at the top of the GH page.
 
