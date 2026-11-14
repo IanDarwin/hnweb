@@ -683,11 +683,6 @@ how much they matter. Items marked *Verify* are the most important to check agai
 
 === Security and privacy
 
-
-[#gap-xhtml-direct]
-Direct `.xhtml` requests (*Verify*)::
-The filter applies its rules only to URLs ending `.web`. If the container also serves or Faces-processes the same pages under their `.xhtml` names, those requests skip the access rules. Mapping the Faces servlet to `*.web` only, and disabling automatic `.xhtml` mapping, is the usual defence.
-
 [#gap-md5]
 Password hashing::
 Passwords are unsalted MD5. The Privacy page says they would be "very difficult to deconstruct (as of 2020)", which is no longer a safe claim. A salted, slow hash (Argon2, bcrypt or PBKDF2) with migration on next login is the standard replacement. `scripts/passwd` and `LoginAction` both depend on the MD5 scheme.
