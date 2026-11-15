@@ -27,6 +27,6 @@ mail.smtp.from="noreply@nowhere.moc"
 datetime.renewalmonth=9
 
 # Integration tests (web.*IT): the deployed test server, and an admin on it
-base=https://hn-test-server.domain
+base=http://hn-test-server.domain
 adminemail=luser@host
 adminpw=CHANGEME
