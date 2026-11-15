@@ -1,9 +1,8 @@
 package action;
 
-import jakarta.faces.application.FacesMessage;
+import com.darwinsys.security.DigestUtils;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -14,6 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import model.Member;
 import model.PwChangeToken;
 import outreach.MailMan;
 
@@ -22,9 +22,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.regex.Pattern;
-
-import com.darwinsys.security.DigestUtils;
-import model.Member;
 
 @Path("/")
 public class UserPasswordChangeRest {
