@@ -17,7 +17,8 @@ public class MemberListView implements Serializable {
 	private boolean loaded;
 
 	public void load() {
-		members = memberDAO.findAll();   // the slow part, now in the AJAX request
+		members = memberDAO.findAll();
+		members.sort((m1, m2) -> m1.getLastName().compareToIgnoreCase(m2.getLastName()));
 		loaded = true;
 	}
 	public boolean isLoaded() { return loaded; }

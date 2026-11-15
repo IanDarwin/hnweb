@@ -60,11 +60,11 @@
 	</error-page>
 	<error-page>
     	<exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
-    	<location>/errors/viewExpired.jsp</location>
+    	<location>/errors/viewExpired.web</location>
 	</error-page>
 	<error-page>
     	<error-code>500</error-code>
-    	<location>/errors/500.jsp</location>
+    	<location>/errors/500.xhtml</location>
 </error-page>
 
 </web-app>

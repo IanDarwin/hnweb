@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/layout.xhtml">
+
+    <ui:define name="title">500: Something went wrong</ui:define>
+
+    <ui:define name="content">
+        <p>
+		Well, that's just great! Something you did tripped over a bug in our server and we fell flat on our face.
+		You might want to try again, or start over with what you were doing.
+		</p>
+
+        <h:panelGroup rendered="#{not empty pfExceptionHandler.message}">
+            <p>Message: #{pfExceptionHandler.message}</p>
+        </h:panelGroup>
+
+        <p:button outcome="/index" value="Go to Homepage" icon="pi pi-home"/>
+    </ui:define>
+
+</ui:composition>
