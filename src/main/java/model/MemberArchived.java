@@ -1,7 +1,6 @@
 package model;
 
 import jakarta.persistence.*;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
