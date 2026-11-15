@@ -18,7 +18,7 @@ import model.TransactionReason;
 import webtier.WebConstants;
 
 /**
- * Backs Renew.xhtml.
+ * Backs admin/Renew.xhtml.
  * <p>
  * This is a request-scoped CDI bean, NOT a @Stateless EJB: it holds the
  * form's fields (member, years, payment type) between the setter calls and
@@ -76,7 +76,7 @@ public class RenewAction implements Serializable {
 	private String fail(String message) {
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
-		return null;
+		return null;	// Stay on page (try again?)
 	}
 
 	public Member getMember() {
