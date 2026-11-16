@@ -11,7 +11,7 @@
 		<nav class="site-nav" aria-label="Main">
 			<a href="https://onheadwatersnature.ca/">Club site</a>
 			<a href="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook group</a>
-			<a href="#{request.contextPath}/">Members Only</a>
+			<a href="#{request.contextPath}/">Members' Area</a>
 			<a href="#{request.contextPath}/About.web">About</a>
 			<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
 				<a href="#{request.contextPath}/admin/MemberList.web">Member List</a>

@@ -26,8 +26,11 @@
 			</h:panelGroup>
 
 			<p:dataTable var="member" value="#{memberListView.members}"
-				rendered="#{memberListView.loaded}" rows="50" paginator="true"
-				paginatorPosition="bottom">
+				rendered="#{memberListView.loaded}"
+				paginator="true" rows="25"
+				paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
+				rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
+				>
 
 		<p:column>
 			<a name="#p#{member.id}"/><!-- So post-editing can return to this row -->
