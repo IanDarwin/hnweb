@@ -140,6 +140,7 @@ class HttpLinkCrawlIT {
 				}
 				int hash = href.indexOf('#');
 				if (hash >= 0) href = href.substring(0, hash);
+				href = href.replaceAll(";jsessionid=[^?#]*", "");
 				if (href.isEmpty() || foundOn.containsKey(href)) {
 					continue;
 				}
