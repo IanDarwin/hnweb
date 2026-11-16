@@ -54,11 +54,11 @@
 		<!-- Last column: action buttons -->
 		<p:column style="width: 15%">
 			<f:facet name="header">Operations</f:facet>
-			<h:outputLink value="EventView.web">
+			<h:outputLink value="#{request.contextPath}/EventView.web">
 				View
 				<f:param name="eventId" value="#{_entity.id}"/>
 			</h:outputLink>
-			<h:outputLink value="EventEdit.web">
+			<h:outputLink value="#{request.contextPath}/admin/EventEdit.web">
 				Edit
 				<f:param name="eventId" value="#{_entity.id}"/>
 			</h:outputLink>

@@ -116,15 +116,22 @@ class HttpLinkCrawlIT {
 			if (DOWNLOAD.matcher(url).find()) {
 				continue;
 			}
-			String body = r.body();
-			var m = ERROR_TEXT.matcher(body);
+			String here = r.uri().toString();		// after any redirects
+			Document doc = Jsoup.parse(r.body(), here);
+
+			// PrimeFaces puts its error-page config (which names ViewExpiredException) in a <script> on
+			// every page, so look for error text only in what a visitor would see. Links are unaffected.
+			doc.select("script, style").remove();
+			String visible = doc.text();
+			var m = ERROR_TEXT.matcher(visible);
 			if (m.find()) {
-				problems.add("ERROR TEXT '" + m.group() + "' on " + url + "   <- linked from " + from);
+				int at = m.start();
+				String ctx = visible.substring(Math.max(0, at - 150), Math.min(visible.length(), at + 250));
+				problems.add("ERROR TEXT '" + m.group() + "' (HTTP " + r.statusCode() + ") on " + url
+						+ "   <- linked from " + from + "\n      ..." + ctx + "...");
 				continue;
 			}
 
-			String here = r.uri().toString();		// after any redirects
-			Document doc = Jsoup.parse(body, here);
 			for (var a : doc.select("a[href]")) {
 				String href = a.absUrl("href");
 				if (href.isEmpty() || href.startsWith("mailto:") || href.startsWith("javascript:")
@@ -160,29 +167,39 @@ class HttpLinkCrawlIT {
 		Client(HttpClient http) { this.http = http; }
 
 		HttpResponse<String> get(String url) throws IOException, InterruptedException {
-			return http.send(HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30)).GET().build(),
-				HttpResponse.BodyHandlers.ofString());
+			return http.send(HttpRequest.newBuilder(URI.create(url))
+					.timeout(Duration.ofSeconds(30))
+					.header("User-Agent", "Mozilla/5.0 (X11; OpenBSD) HttpLinkCrawlIT")
+					.header("Accept", "text/html,application/xhtml+xml,*/*;q=0.8")
+					.GET()
+					.build(),
+			HttpResponse.BodyHandlers.ofString());
 		}
 
 		HttpResponse<String> postForm(String url, Map<String, String> fields) throws IOException, InterruptedException {
 			String body = fields.entrySet().stream()
-				.map(e -> URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8) + "="
-					+ URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
-				.collect(Collectors.joining("&"));
-			return http.send(HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30))
-				.header("Content-Type", "application/x-www-form-urlencoded")
-				.POST(HttpRequest.BodyPublishers.ofString(body)).build(),
-				HttpResponse.BodyHandlers.ofString());
+					.map(e -> URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8) + "="
+							+ URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
+					.collect(Collectors.joining("&"));
+			return http.send(HttpRequest.newBuilder(URI.create(url))
+							.timeout(Duration.ofSeconds(30))
+							.header("Content-Type", "application/x-www-form-urlencoded")
+							.header("User-Agent", "Mozilla/5.0 (X11; OpenBSD) HttpLinkCrawlIT")
+							.header("Accept", "text/html,application/xhtml+xml,*/*;q=0.8")
+							.POST(HttpRequest.BodyPublishers.ofString(body))
+							.build(),
+					HttpResponse.BodyHandlers.ofString());
 		}
 	}
 
 	private static Client newClient() {
 		var cookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
 		return new Client(HttpClient.newBuilder()
-			.cookieHandler(cookies)
-			.followRedirects(HttpClient.Redirect.NORMAL)
-			.connectTimeout(Duration.ofSeconds(15))
-			.build());
+				.version(HttpClient.Version.HTTP_1_1)
+				.cookieHandler(cookies)
+				.followRedirects(HttpClient.Redirect.NORMAL)
+				.connectTimeout(Duration.ofSeconds(15))
+				.build());
 	}
 
 	/**
@@ -261,17 +278,5 @@ class HttpLinkCrawlIT {
 				+ "src/main/resources/config.properties (see config-sample.properties) or pass -Dit." + key + "=...");
 		}
 		return v.trim();
-	}
-
-	private static String fromLiveConfig(String key) {
-		Path live = Path.of("src/main/resources/config.properties");	// cwd is the project dir under Maven
-		if (!Files.isReadable(live)) return null;
-		var p = new Properties();
-		try (var is = new FileInputStream(live.toFile())) {
-			p.load(is);
-		} catch (IOException e) {
-			return null;
-		}
-		return p.getProperty(key);
 	}
 }
