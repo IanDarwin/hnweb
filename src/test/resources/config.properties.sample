@@ -7,8 +7,8 @@ orgName=Sample Club
 # Use 0.0.0.0 or 127.0.0.1 if mail server runs on same machine as web server.
 mail.smtp.host=0.0.0.0
 
-# Optional: prefix for subject on all group emails
-mail.subject.prefix=[MyClub]
+# Don't set this in testing as it breaks the MailMan tests
+# mail.subject.prefix=[MyClub]
 
 # REQUIRED: Unsubscribe policy, complete, e.g.
 # mail.unsubscribe=Send mail to unsubscribe@bleah.com
