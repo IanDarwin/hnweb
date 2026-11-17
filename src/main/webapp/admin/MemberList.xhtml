@@ -25,11 +25,12 @@
 				Loading members&#8230;
 			</h:panelGroup>
 
+			<!-- MemberList is big, so allow 50 rows -->
 			<p:dataTable var="member" value="#{memberListView.members}"
 				rendered="#{memberListView.loaded}"
-				paginator="true" rows="25"
+				paginator="true" rows="50"
 				paginatorTemplate="#{pfTableConstants.paginatorTemplate}"
-				rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate}"
+				rowsPerPageTemplate="#{pfTableConstants.rowsPerPageTemplate},50"
 				>
 
 		<p:column>
