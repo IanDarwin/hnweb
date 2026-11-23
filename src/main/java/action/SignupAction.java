@@ -78,7 +78,10 @@ public class SignupAction implements Serializable {
 		if (!consent) {
 			return fail("Please tick the box to let the club contact you; we can't sign you up without it.");
 		}
-		if (memberType == null || memberType == MemberType.Secondary) {
+		if (memberType == MemberType.Secondary) {
+			return fail("You can't add secondary members here; please contact the membership admin.");
+		}
+		if (memberType == null) {
 			return fail("Please choose a membership type.");
 		}
 
