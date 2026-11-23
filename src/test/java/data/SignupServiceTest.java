@@ -2,6 +2,7 @@ package data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
@@ -112,14 +113,24 @@ class SignupServiceTest extends AbstractPersistenceTest {
 
 	@Test
 	void anEmailThatBelongsToAMemberIsNotSignedUpAgain() {
-		// load-test-data.sql has p1@x.com
-		var begun = inTx(() -> service.begin(signup("p1@x.com")));
+		persistRealMember("rita@example.test");
+		var begun = inTx(() -> service.begin(signup("RITA@example.test")));	// case differs, still matches
 		getEntityManager().clear();
 
 		assertEquals(BeginStatus.ALREADY_MEMBER, begun.status());
 		assertNull(begun.token());
 		assertEquals(0, count("select count(m) from UnconfirmedMember m"));
 		assertEquals(0, count("select count(t) from ChangeToken t"));
+		assertEquals("Member", typeOf("rita@example.test"));
+	}
+
+	@Test
+	void removingOldSignupsNeverTouchesARealMemberWithTheSameEmail() {
+		persistRealMember("rita@example.test");
+		int deleted = inTx(() -> getEntityManager().createQuery(
+				"delete from UnconfirmedMember u where lower(u.email) = 'rita@example.test'").executeUpdate());
+		assertEquals(0, deleted);
+		assertEquals("Member", typeOf("rita@example.test"));
 	}
 
 	@Test
@@ -135,16 +146,14 @@ class SignupServiceTest extends AbstractPersistenceTest {
 		assertEquals("Unconfirmed", typeOf("nora@example.test"));
 	}
 
-	@Test
-	void removingOldSignupsNeverTouchesARealMemberWithTheSameEmail() {
-	// p1@x.com is a real Member in load-test-data.sql
-	int deleted = inTx(() -> getEntityManager().createQuery(
-		"delete from UnconfirmedMember u where lower(u.email) = 'p1@x.com'").executeUpdate());
-	assertEquals(0, deleted);
-	assertEquals("Member", typeOf("p1@x.com"));
-}
-
 	// ----- helpers -----
+
+	private void persistRealMember(String email) {
+		var m = new Member("Rita", null, "Real", email);
+		m.setMemberType(MemberType.Individual);
+		inTx(() -> { getEntityManager().persist(m); return null; });
+		getEntityManager().clear();
+	}
 
 	private String typeOf(String email) {
 		return (String) getEntityManager().createNativeQuery("select type from member where email = ?1")

@@ -77,7 +77,6 @@ class MemberArchiveRestoreTest extends AbstractPersistenceTest {
 		// All three are active again, with the archive details cleared...
 		for (Member m : new Member[] { master, sec1, sec2 }) {
 			assertEquals("Member", typeOf(m.getId()), m.getName());
-			dumpMemberTable(entityManager);
 			assertEquals(1, countWhere("id = ?1 and archiveddate is null and archivedreason is null", m.getId()), m.getName());
 		}
 		// ...and the family is wired together just as it was
