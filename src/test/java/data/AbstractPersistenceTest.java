@@ -20,12 +20,6 @@ public class AbstractPersistenceTest {
     void preTest0() {
 		System.out.println("AbstractPersistenceTest.preClass()");
 		emf = Persistence.createEntityManagerFactory("test");
-	}
-
-	// Each test deserves an EntityManager
-	@BeforeEach
-	void preTest1() {
-		System.out.println("AbstractPersistenceTest.preTest()");
 		entityManager = emf.createEntityManager();
 	}
 
@@ -37,12 +31,13 @@ public class AbstractPersistenceTest {
 	}
 
 	// General purpose Member list printer
-	public void dumpMemberTable(EntityManager em) throws SQLException {
+	public void dumpMemberTable(String message, EntityManager em) throws SQLException {
 		List<Object[]> rs = em
 			.createNativeQuery("select id, type, firstname,lastname,mastermember_id,archiveddate,archivedreason from member")
 			.getResultList();
+		System.out.println(message);
 		for (Object[] arr : rs) {
-			System.out.printf("%5d Type %20s Member %15s %15s MasterMemberId %4d Archived %s for %s\n",
+			System.out.printf("%5d Type %-15s Member %15s %-15s MasterMemberId %4d Archived %s for %s\n",
 							arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
 		}
 		System.out.flush();
