@@ -10,6 +10,12 @@ mail.smtp.host=0.0.0.0
 # Optional: prefix for subject on all group emails
 mail.subject.prefix=[MyClub]
 
+# Optional: URLs
+url.base=https://members.myclub.org
+url.mainsite=https://myclub.org
+url.fbgroup=https://www.facebook.com/groups/myclub
+
+
 # REQUIRED: Unsubscribe policy, complete, e.g.
 # mail.unsubscribe=Send mail to unsubscribe@bleah.com
 # mail.unsubscribe=Visit https://bleah.com/list/unsubscribe
