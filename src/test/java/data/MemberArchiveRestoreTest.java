@@ -2,12 +2,16 @@ package data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import model.Member;
+import model.Member;import model.Member;
 import model.MemberArchived;
 import model.MemberType;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +68,7 @@ class MemberArchiveRestoreTest extends AbstractPersistenceTest {
 	}
 
 	@Test
-	void restoringAMasterRestoresTheFamily() {
+	void restoringAMasterRestoresTheFamily() throws SQLException {
 		archiveFamily();
 
 		inTx(() -> memberDAO.unDelete(memberDAO.findArchivedById(master.getId())));
@@ -73,6 +77,7 @@ class MemberArchiveRestoreTest extends AbstractPersistenceTest {
 		// All three are active again, with the archive details cleared...
 		for (Member m : new Member[] { master, sec1, sec2 }) {
 			assertEquals("Member", typeOf(m.getId()), m.getName());
+			dumpMemberTable(entityManager);
 			assertEquals(1, countWhere("id = ?1 and archiveddate is null and archivedreason is null", m.getId()), m.getName());
 		}
 		// ...and the family is wired together just as it was
@@ -207,4 +212,13 @@ class MemberArchiveRestoreTest extends AbstractPersistenceTest {
 			throw e;
 		}
 	}
+
+	// Useful in debugging so make it public
+	public void dumpMemberTable(EntityManager em) throws SQLException {
+		List<Object[]> rs = em.createNativeQuery("select id, type, firstname,lastname,mastermember_id,archiveddate,archivedreason from member").getResultList();
+		for (Object[] arr : rs) {
+			System.out.printf("%5d Type %20s Member %15s %15s MasterMemberId %4d Archived %s for %s\n",
+					arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
+		}
+    }
 }

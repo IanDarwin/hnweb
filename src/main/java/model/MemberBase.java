@@ -40,7 +40,7 @@ public abstract class MemberBase {
     @Enumerated(EnumType.STRING)
     private Country country;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     protected String email;
 
     @Column(name = "firstname")

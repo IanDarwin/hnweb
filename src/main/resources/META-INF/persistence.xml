@@ -15,7 +15,7 @@
 		<class>model.MemberRole</class>
 		<class>model.MemberTransaction</class>
 		<class>model.Config</class>
-		<class>model.PwChangeToken</class>
+		<class>model.ChangeToken</class>
 
 		<properties>
 			<!-- Property for Provider ("JPA Driver") -->

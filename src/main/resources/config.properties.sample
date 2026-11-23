@@ -26,3 +26,12 @@ mail.smtp.from="noreply@nowhere.moc"
 # are due to renew starting in this month.
 datetime.renewalmonth=9
 
+# ONLINE PAYMENT
+# From a Helcim "API Access Configuration"
+helcim.apitoken=Some Enchange Evening
+# Optional, for testing
+helcim.apiurl=https://localhost:8080
+renewal.currency=CAD
+# Per-year fee by membership type; a type with no entry can't renew online
+renewal.fee.individual=30.00
+renewal.fee.family=40.00

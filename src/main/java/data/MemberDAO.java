@@ -4,18 +4,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 
-import model.Member;
-import model.MemberArchived;
-import model.MemberTransaction;
-import model.MemberType;
-import model.TransactionReason;
+import model.*;
 
 import static action.YearCalcs.getCurrentMembershipYear;
 
@@ -150,33 +145,43 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		if (archivedOn != null) {
 			q.setParameter(2, archivedOn);
 		}
-		List<?> familyIds = q.getResultList();
+		List<Long> familyIds = q.getResultList();
 
-		flipToMember(m.getId());
-		entityManager.detach(m);
-		for (Object o : familyIds) {
-			Long famId = ((Number) o).longValue();
+		flipToMember(m);	// Don't do this until after getting family members
+
+		for (Long famId: familyIds) {
 			var fam = entityManager.find(MemberArchived.class, famId);
 			if (fam != null) {
-				entityManager.detach(fam);	// evict, as in delete(): it's a Member again
+				flipToMember(fam);
 			}
-			flipToMember(famId);
 		}
 	}
 
-	private void flipToMember(Long id) {
+	private void flipToMember(MemberArchived m) {
+		m.setArchivedDate(null);
+		m.setArchivedReason(null);
+		entityManager.flush();
+		long id = m.getId();
+		flipMemberType(m, "Member");
+	}
+
+	void flipMemberType(MemberBase m, String newType) {
+		Long id = m.getId();
 		int ret = entityManager.createNativeQuery(
-				"update member set type = 'Member', archivedDate = null, archivedReason = null where id = ?")
-				.setParameter(1, id)
+				"update member set type = :type where id = :id")
+				.setParameter("type", newType)
+				.setParameter("id", id)
 				.executeUpdate();
 		if (ret != 1) {
-			throw new IllegalStateException("unDelete: Native update of #" + id + " returned " + ret);
+			throw new IllegalStateException("flipMemberType: Native update of #" + id + " to " + newType + " returned " + ret);
 		}
+		entityManager.detach(m);
 	}
 
 	private boolean isArchived(Long id) {
 		List<?> types = entityManager.createNativeQuery("select type from member where id = ?")
-				.setParameter(1, id).getResultList();
+				.setParameter(1, id)
+				.getResultList();
 		return !types.isEmpty() && "MemberArchived".equals(types.get(0));
 	}
 }

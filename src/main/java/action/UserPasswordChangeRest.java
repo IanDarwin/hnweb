@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import model.Member;
-import model.PwChangeToken;
+import model.ChangeToken;
 import outreach.MailMan;
 
 import java.net.URI;
@@ -64,7 +64,7 @@ public class UserPasswordChangeRest {
         }
         String token = randomString(20);
         System.out.println("In chP1, token = " + token);
-        em.persist(new PwChangeToken(email, token));
+        em.persist(new ChangeToken(email, token));
         String message = MESSAGE_TEMPLATE.formatted(email, siteName(), token);
         try {
             mailMan.sendMessageTo(email, "HN Passord Reset", message);
@@ -95,14 +95,14 @@ public class UserPasswordChangeRest {
         }
 
         // XXX Simplify to getSingleResultOrNull() when Wildfly version provides JPA 3.2 
-        var tokens = em.createQuery("SELECT pw FROM PwChangeToken pw WHERE pw.token = ?1", PwChangeToken.class)
+        var tokens = em.createQuery("SELECT pw FROM ChangeToken pw WHERE pw.token = ?1", ChangeToken.class)
                 .setParameter(1, token.trim())
                 .setMaxResults(2)
                 .getResultList();
         if (tokens.size() != 1) {
             return badToken();
         }
-        PwChangeToken pwToken = tokens.get(0);
+        ChangeToken pwToken = tokens.get(0);
 
         // Tokens are single-use: remove it now, whatever happens next
         em.remove(pwToken);

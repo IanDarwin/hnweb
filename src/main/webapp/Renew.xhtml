@@ -7,10 +7,62 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">(Coming soon) Renew Your Membership Online</ui:define>
+<ui:define name="pageTitle">Renew Your Membership Online</ui:define>
 <ui:define name="body">
-<p>
-    Whoa there! This page isn't written yet. It will someday allow you to renew your membership online. Thanks for your patience.
-</p>
+
+	<h:panelGroup rendered="#{not renewOnlineAction.eligible}">
+		<p>#{renewOnlineAction.problem}</p>
+		<p><a href="SignupPaperForm.pdf">Renew by mail or in person - PDF form</a></p>
+	</h:panelGroup>
+
+	<h:form id="payForm" styleClass="sheet sheet-narrow" rendered="#{renewOnlineAction.eligible}">
+		<div class="form-grid">
+
+			<div class="field">
+				<span class="label">Membership</span>
+				<div class="control">
+					<h:outputText value="#{renewOnlineAction.name}"/>
+					<h:outputText rendered="#{renewOnlineAction.viaMaster}" value=" (your family membership)"/>
+					<div class="hint">Currently runs through #{renewOnlineAction.expiryYear}.</div>
+				</div>
+			</div>
+
+			<div class="field">
+				<p:outputLabel for="numYears" value="Years to renew"/>
+				<div class="control">
+					<h:selectOneMenu id="numYears" value="#{renewOnlineAction.numYears}">
+						<f:selectItem itemLabel="1 year" itemValue="1"/>
+						<f:selectItem itemLabel="2 years" itemValue="2"/>
+						<f:selectItem itemLabel="3 years" itemValue="3"/>
+						<p:ajax update="total"/>
+					</h:selectOneMenu>
+				</div>
+			</div>
+
+			<div class="field">
+				<span class="label">Total</span>
+				<div class="control">
+					<h:outputText id="total" value="#{renewOnlineAction.total} #{renewOnlineAction.currency}"/>
+					<div class="hint">Payment is handled by Helcim. Your card details go directly to them; this site never sees or stores them.</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- The page script fills this in, and clicks the hidden button, when the payment succeeds -->
+		<h:inputHidden id="helcimResult" value="#{renewOnlineAction.result}"/>
+
+		<div class="actions">
+			<p:commandButton id="pay" value="Pay by card" icon="pi pi-credit-card"
+				action="#{renewOnlineAction.startPayment}" update="@form :messages"/>
+			<h:outputLink value="#{request.contextPath}/index.web" styleClass="btn-link">Cancel</h:outputLink>
+			<p:commandButton id="complete" action="#{renewOnlineAction.completePayment}" ajax="false"
+				style="display:none"/>
+		</div>
+	</h:form>
+
+	<script src="https://secure.helcim.app/helcim-pay/services/start.js"></script>
+	<script src="#{request.contextPath}/js/helcim-renew.js"></script>
+
 </ui:define>
 </ui:composition>

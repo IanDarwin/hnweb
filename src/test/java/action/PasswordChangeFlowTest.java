@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 import model.Config;
 import model.Member;
-import model.PwChangeToken;
+import model.ChangeToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -148,7 +148,7 @@ class PasswordChangeFlowTest {
 		var r = step1("nobody@example.test");
 		assertEquals(TEST_BASE + UserPasswordChangeRest.PART1_URL + "?error=member", r.location);
 		assertEquals(0, greenMail.getReceivedMessages().length);
-		assertEquals(0, ((Number) em.createQuery("select count(t) from PwChangeToken t", Number.class).getSingleResult()).intValue());
+		assertEquals(0, ((Number) em.createQuery("select count(t) from ChangeToken t", Number.class).getSingleResult()).intValue());
 	}
 
 	@Test
@@ -158,7 +158,7 @@ class PasswordChangeFlowTest {
 		String token = tokenFromMail(EMAIL);
 
 		// Pretend the email was requested well over an hour ago
-		inTxDo(() -> em.createQuery("update PwChangeToken t set t.created = :c")
+		inTxDo(() -> em.createQuery("update ChangeToken t set t.created = :c")
 				.setParameter("c", LocalDateTime.now().minusMinutes(UserPasswordChangeRest.TOKEN_MINUTES + 5))
 				.executeUpdate());
 		em.clear();	// bulk update bypasses the persistence context; drop the stale cached token
@@ -266,7 +266,7 @@ class PasswordChangeFlowTest {
 
 	long tokenCount(String token) {
 		em.clear();
-		return em.createQuery("select count(t) from PwChangeToken t where t.token = ?1", Long.class)
+		return em.createQuery("select count(t) from ChangeToken t where t.token = ?1", Long.class)
 				.setParameter(1, token).getSingleResult();
 	}
 

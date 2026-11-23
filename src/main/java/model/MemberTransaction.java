@@ -34,6 +34,8 @@ public class MemberTransaction implements Serializable {
 	private Date dateRenewed = new Date();
 	private int numYears;
 	private int newExpiryYear;
+	@Column(name = "external_ref", unique = true, length = 80)
+	private String externalRef;
 	
 	public MemberTransaction() {
 		// Required for JPA
@@ -95,4 +97,7 @@ public class MemberTransaction implements Serializable {
 	public void setNewExpiryYear(int year) {
 		this.newExpiryYear = year;
 	}
+
+	public String getExternalRef() { return externalRef; }
+	public void setExternalRef(String externalRef) { this.externalRef = externalRef; }
 }

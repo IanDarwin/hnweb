@@ -602,7 +602,7 @@ BR-11:: Passwords are stored as hashes, never in the clear.
 |`event`
 |A club meeting or outing: title, date, start and end time (text), free-text time label, location, abstract, speaker name and biography.
 
-|`PwChangeToken`
+|`ChangeToken`
 |`pwchangetoken`
 |A password-reset token: e-mail, token, created time. Removed when used.
 |===

@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class PwChangeToken {
+@Table(name="pwchangetoken") // Previous entity name
+public class ChangeToken {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	Long id;
@@ -13,11 +14,11 @@ public class PwChangeToken {
     String token;
     LocalDateTime created;
 
-	public PwChangeToken() {
+	public ChangeToken() {
 		// Empty, needed for JPA
 	}
 
-    public PwChangeToken(String email, String token) {
+    public ChangeToken(String email, String token) {
         this.email = email;
         this.token = token;
     }
