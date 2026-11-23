@@ -240,6 +240,14 @@ public abstract class MemberBase {
 		this.password = password;
 	}
 
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
 	///////////////////////////////////
 	// Methods for all types of members
 	///////////////////////////////////

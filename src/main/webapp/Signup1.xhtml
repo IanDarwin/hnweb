@@ -4,16 +4,16 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">#{config.orgName} Signup Form</ui:define>
+<ui:define name="pageTitle">#{config.orgName} Membership Signup</ui:define>
 <ui:define name="body">
 
 	<p:panel>
 		<img style="height:3.256cm;width:2.725cm;" alt="Club Logo"
 			src="images/mclaren-bluebird-right-facing_med_hr.jpg"/>
-		<p>#{config.orgName} Membership Signup Form</p>
 
 		<p>Thank you for your continued support!
 			Your membership fee and any additional donation help fund our projects all year round.
@@ -21,123 +21,130 @@
 			New memberships after March 1 extend to the following year.
 		</p>
 		<p>
-			<span>If you don't want to submit this form to our computer, or you
-			need additional space, feel free to print it off and bring it to the next meeting.
-			Alternately, email the filled-out PDF form to ian@darwinsys.com and e-transfer your payment
-			to treasurer@onheadwaters.ca.
-			Or just bring the printed form and payment to our regular meetings (see the web site
+			Fill in this form and we'll email you a link to confirm your address.
+			Then please pay by e-transfer to treasurer@onheadwaters.ca, by cheque payable to
+			<em>#{config.orgName}</em>, or in person at one of our regular meetings (see the web site
 			<a href="https://onheadwatersnature.ca/">https://onheadwatersnature.ca/</a>).
-			</span>
+			If you'd rather not use the web form, you can
+			<a href="SignupPaperForm.pdf">print the PDF form</a> and bring it to the next meeting.
 		</p>
-
-		<p >If you wish to pay by cheque,
-			please make your cheque payable to <em>#{config.orgName}</em>.
-		</p>
-
-		<p>Thank you!</p>
 	</p:panel>
 
-<form method="post" action="/signup">
+	<h:form id="signupForm" styleClass="sheet">
+		<div class="form-grid">
 
-	<table>
+			<div class="field">
+				<p:outputLabel for="memberType" value="Membership type"/>
+				<div class="control">
+					<h:selectOneRadio id="memberType" value="#{signupAction.memberType}" layout="pageDirection">
+						<f:selectItem itemLabel="Individual - $30" itemValue="Individual"/>
+						<f:selectItem itemLabel="Family - $40" itemValue="Family"/>
+						<f:selectItem itemLabel="Mailing list only (no fee)" itemValue="MailOnly"/>
+					</h:selectOneRadio>
+				</div>
+			</div>
 
-	<tr>
-    <td>Membership Type: *</td>
-    <td>
-		<input type="radio" id="indiv" name="type" value="individual"/>
-        <label for="indiv">Individual $30.</label>
-        <input type="radio" id="fam" name="type" value="family"/>
-        <label for="fam">Family $40.&nbsp;</label></td>
-        <input type="radio" id="mlonly" name="type" value="mlonly"/>
-        <label for="mlonly">Mailing list only</label></td>
-	<td>	
-		<label for="donation">Additional Donation $</label>
-		<input type="text" id="donation" name="donation" size="5"/>.
-	</td>
-	</tr>
-	<tr>
-    <td style="text-align:right;">*</td>
-    <td><input type="radio" id="new" name="new_or_renew" value="new"/>
-        <label for="new">New</label>
-        <input type="radio" id="renew" name="new_or_renew" value="renew"/>
-        <label for="renew">Renewal</label>
-    </td>
-    </tr>
-	</table>
+			<div class="field">
+				<p:outputLabel for="donation" value="Additional donation $ (optional)"/>
+				<div class="control">
+					<h:inputText id="donation" value="#{signupAction.donation}" size="6"/>
+					<p:message for="donation"/>
+				</div>
+			</div>
 
-	<br/>
+			<div class="field">
+				<p:outputLabel for="firstName" value="First name"/>
+				<div class="control">
+					<h:inputText id="firstName" value="#{signupAction.firstName}" size="40"
+						required="true" requiredMessage="Please enter your first name."/>
+					<p:message for="firstName"/>
+				</div>
+			</div>
 
-    <p>
-        <label for="names">First Name: *</label>
-        <input type="text" id="firstName" size="40" required="true"/>
-    </p>
-    <p>
-        <label for="names">Last Name: *</label>
-        <input type="text" id="lastName" size="40" required="true"/>
-    </p>
-	<br/>
+			<div class="field">
+				<p:outputLabel for="lastName" value="Last name"/>
+				<div class="control">
+					<h:inputText id="lastName" value="#{signupAction.lastName}" size="40"
+						required="true" requiredMessage="Please enter your last name."/>
+					<p:message for="lastName"/>
+				</div>
+			</div>
 
-    <p>
-        <label for="email">Email* </label>
-        <input id="email" type="text" size="40" required="true"/>
-        <input type="radio" id="home" name="email_home_or_work" value="home"/>
-        <label for="home">Home</label>
-        <input type="radio" id="work" name="email_home_or_work" value="work"/>
-        <label for="work">Work</label>
-    </p>
-    <br/>
+			<div class="field">
+				<p:outputLabel for="email" value="Email"/>
+				<div class="control">
+					<h:inputText id="email" value="#{signupAction.email}" size="40"
+						required="true" requiredMessage="Please enter your email address."
+						pt:type="email" pt:autocomplete="email"/>
+					<p:message for="email"/>
+					<div class="hint">We'll send a confirmation link to this address.</div>
+				</div>
+			</div>
 
-    <p>Contact information
-    </p>
-    <br/>
+			<div class="field">
+				<p:outputLabel for="city" value="Town/City"/>
+				<div class="control">
+					<h:inputText id="city" value="#{signupAction.city}" size="30"/>
+				</div>
+			</div>
 
-    <p>
-        <label for="town">Town/City</label>
-        <input type='text' id='town' name='town' size="30"/> Ontario Canada.
-    </p>
-    <br/>
-    <p>
-        <input type="radio" id="phone1_home" name="email_home_or_work_1" value="home"/>
-        <label for="phone1_home">Home</label>
-        <input type="radio" id="phone1_mobile" name="email_home_or_work_1" value="mobile"/>
-        <label for="phone1_mobile">Mobile Phone</label>
-        <input type="radio" id="phone1_work" name="email_home_or_work_1" value="work"/>
-        <label for="phone1_work">Work</label>
-        <label for="phone2">Home Phone (10 digits)</label>
-		<input id="phone2" name="phone2" size="20"/>
-        <input type="radio" id="phone2_home" name="email_home_or_work_2" value="home"/>
-        <label for="phone2_mobile">Work Phone</label>
-        <input type="radio" id="phone2_work" name="email_home_or_work_2" value="work"/>
-        <label for="phone2_work">Work</label>
-    </p>
-    <br/>
+			<div class="field">
+				<p:outputLabel for="homePhone" value="Home phone (optional)"/>
+				<div class="control">
+					<h:inputText id="homePhone" value="#{signupAction.homePhone}" size="20" pt:type="tel"/>
+				</div>
+			</div>
 
-    <p>
-        <label for="interests">Interests (enter as many as apply): </label>
-		<br/>
-        <textarea id="interests" name="interests" rows="4" cols="50"></textarea>
-    </p>
+			<div class="field">
+				<p:outputLabel for="cellPhone" value="Cell phone (optional)"/>
+				<div class="control">
+					<h:inputText id="cellPhone" value="#{signupAction.cellPhone}" size="20" pt:type="tel"/>
+				</div>
+			</div>
 
-	<br/>
+			<div class="field">
+				<p:outputLabel for="workPhone" value="Work phone (optional)"/>
+				<div class="control">
+					<h:inputText id="workPhone" value="#{signupAction.workPhone}" size="20" pt:type="tel"/>
+				</div>
+			</div>
 
-    <p>
-        <label for="suggestions">Do you have any suggestions for speakers/programs or for field trips?</label>
-		<br/>
-        <textarea id="suggestions" name="suggestions" rows="4" cols="50"></textarea>
-    </p>
+			<div class="field">
+				<p:outputLabel for="interests" value="Interests (as many as apply)"/>
+				<div class="control">
+					<h:inputTextarea id="interests" value="#{signupAction.interests}" rows="4" cols="50"/>
+				</div>
+			</div>
 
-	<br/>
+			<div class="field">
+				<p:outputLabel for="suggestions" value="Suggestions for speakers, programs or field trips?"/>
+				<div class="control">
+					<h:inputTextarea id="suggestions" value="#{signupAction.suggestions}" rows="4" cols="50"/>
+				</div>
+			</div>
 
-    <p>
-		By signing up or renewing, I authorize the Club to contact me by email
-		and/or by telephone, only in conjunction with scheduled club events.
-    </p>
+			<!-- Honeypot: people never see this, robots fill in every field -->
+			<div style="position:absolute;left:-9999px;" aria-hidden="true">
+				<label for="signupForm:website">Leave this empty</label>
+				<h:inputText id="website" value="#{signupAction.website}" pt:tabindex="-1" pt:autocomplete="off"/>
+			</div>
 
-    <p>
-        <input type="submit" value="Submit your information"/>
-    </p>
+			<div class="field">
+				<span class="label"></span>
+				<div class="control">
+					<h:selectBooleanCheckbox id="consent" value="#{signupAction.consent}"/>
+					<label for="signupForm:consent">I authorize the club to contact me by email
+						and/or telephone, only in connection with club events and business.</label>
+				</div>
+			</div>
 
-</form>
+		</div>
+
+		<div class="actions">
+			<h:commandButton id="submit" value="Sign up" action="#{signupAction.signup1}"/>
+			<h:outputLink value="#{request.contextPath}/index.web" styleClass="btn-link">Cancel</h:outputLink>
+		</div>
+	</h:form>
 
 </ui:define>
 </ui:composition>

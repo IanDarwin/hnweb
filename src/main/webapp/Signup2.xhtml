@@ -1,0 +1,27 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Signup, step 2: the page the emailed link opens, e.g. Signup2.web?token=...
+  The viewAction confirms the signup and, on success, redirects to the thank-you page.
+  If we're still here, it didn't work: the template shows the reason.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="token" value="#{signupAction.token}"/>
+		<f:viewAction action="#{signupAction.confirm}"/>
+	</f:metadata>
+</ui:define>
+
+<ui:define name="pageTitle">Confirm your signup</ui:define>
+<ui:define name="body">
+	<p>We couldn't confirm your signup from that link.</p>
+	<p><a href="Signup1.web">Sign up again</a> or <a href="index.web">go to the home page</a>.</p>
+</ui:define>
+</ui:composition>

@@ -13,6 +13,9 @@
 			<a href="https://www.facebook.com/groups/ontarioheadwatersnature/">Facebook group</a>
 			<a href="#{request.contextPath}/">Members' Area</a>
 			<a href="#{request.contextPath}/About.web">About</a>
+			<ui:fragment rendered="not #{identity.loggedIn}">
+				<a href="#{request.contextPath}/Signup1.web">New Member Signup</a>
+			</ui:fragment>
 			<ui:fragment rendered="#{identity.loggedInUser.isExecutive() or identity.hasRole('admin')}">
 				<a href="#{request.contextPath}/admin/MemberList.web">Member List</a>
 				<a href="#{request.contextPath}/admin/DeletedList.web">Archived Member List</a>

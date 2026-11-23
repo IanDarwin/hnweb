@@ -95,7 +95,7 @@ public class UserPasswordChangeRest {
         }
 
         // XXX Simplify to getSingleResultOrNull() when Wildfly version provides JPA 3.2 
-        var tokens = em.createQuery("SELECT pw FROM ChangeToken pw WHERE pw.token = ?1", ChangeToken.class)
+        var tokens = em.createQuery("SELECT pw FROM ChangeToken pw WHERE pw.token = ?1 AND (pw.purpose IS NULL OR pw.purpose = 'PASSWORD')", ChangeToken.class)
                 .setParameter(1, token.trim())
                 .setMaxResults(2)
                 .getResultList();

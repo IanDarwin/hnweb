@@ -1,0 +1,29 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- Signup finished: step=sent after the form, step=confirmed after the emailed link -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/template.xhtml">
+
+<ui:define name="pageTitle">#{param.step eq 'confirmed' ? 'Thank you!' : 'Check your email'}</ui:define>
+<ui:define name="body">
+
+	<h:panelGroup rendered="#{param.step eq 'confirmed'}">
+		<p>Thank you, your signup is confirmed and you're on our list!</p>
+		<p>If you chose a paid membership, please pay by e-transfer to treasurer@onheadwaters.ca,
+			by cheque, or at our next meeting; your membership is marked paid once the treasurer records it.</p>
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{param.step ne 'confirmed'}">
+		<p>Almost done! We've sent an email to the address you gave us.
+			Please click the link in it to confirm your signup. The link works for 3 days.</p>
+		<p>No email after a few minutes? Check your spam folder, or <a href="Signup1.web">sign up again</a>.</p>
+	</h:panelGroup>
+
+	<p><a href="index.web">Home</a></p>
+
+</ui:define>
+</ui:composition>

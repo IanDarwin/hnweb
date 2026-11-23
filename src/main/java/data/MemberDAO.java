@@ -165,7 +165,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		flipMemberType(m, "Member");
 	}
 
-	void flipMemberType(MemberBase m, String newType) {
+	public void flipMemberType(MemberBase m, String newType) {
 		Long id = m.getId();
 		int ret = entityManager.createNativeQuery(
 				"update member set type = :type where id = :id")

@@ -7,21 +7,30 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="pwchangetoken") // Previous entity name
 public class ChangeToken {
+	public static final String PURPOSE_PASSWORD = "PASSWORD";
+	public static final String PURPOSE_SIGNUP = "SIGNUP";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	Long id;
     String email;
     String token;
     LocalDateTime created;
+	String purpose;     // null in older rows means PASSWORD
+
 
 	public ChangeToken() {
 		// Empty, needed for JPA
 	}
 
     public ChangeToken(String email, String token) {
-        this.email = email;
-        this.token = token;
+        this(email, token, PURPOSE_PASSWORD);
     }
+	public ChangeToken(String email, String token, String purpose) {
+		this.email = email;
+		this.token = token;
+		this.purpose = purpose;
+	}
 
 	@PrePersist
 	public void ensureTimeStamp() {
@@ -53,4 +62,8 @@ public class ChangeToken {
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
+
+	public String getPurpose() {
+		return purpose;
+	}
 }
