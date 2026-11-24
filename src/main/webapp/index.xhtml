@@ -7,18 +7,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/template/template.xhtml">
 
-<ui:define name="pageTitle">Welcome to #{config.orgName}!</ui:define>
+<ui:define name="pageTitle">Welcome to #{config.orgName} Members Site!</ui:define>
 <ui:define name="body">
 
 	<p:panel>
 
 	<p:panel>
-		<h:outputText value="&lt;b&gt;News/Plans&lt;/b&gt; We've refreshed the look of this site.
+		<b>News/Plans: </b>
+		We've refreshed the look of this members-only site.
 		New members can sign up online, and arrange to pay later.
-		Plus, you can set or reset your own password, from the login page.
-		Finally, we're considering how to do online updates, registrations and renewals.
+		Plus, existing members can set or reset your own password, from the login page.
+		We plan to let you update your contact info online.
+		Finally, we're considering how to do online payments and renewals.
 		Watch this space for more details!
-		" escape="false"/>
+		<br/>
+		<b>N.B. </b>
+		This site does not replace the main club site (see link at top).
 	</p:panel>
 
 	<p:dataTable var="evt" value="#{eventList.findUpcoming()}">
@@ -46,9 +50,9 @@
 	<br/>
 	<a href="ChangePassword1.web">Create or Change your password</a>
 	<br/>
-	<a href="MemberView.web">Update your own details (coming next) (login required)</a>
+	<a href="/">Update your own details (coming next) (login required)</a>
 	<br/>
-	<a href="Renew.web">Renew your Membership Online (coming later) (login required)</a>
+	<a href="/">Renew your Membership Online (coming later) (login required)</a>
 
 	</p:panel>
 </ui:define>
