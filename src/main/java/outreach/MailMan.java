@@ -103,9 +103,8 @@ public class MailMan implements Serializable {
 			addFacesMessage("Are you sure you logged in?");
 			return;
 		}
-		if (sendMessage(Collections.singletonList(identity.getLoggedInUser().getEmail()), subject, messageBody)) {
-			addFacesMessage("Message sent to your email, please proof-read.");
-		}
+		sendMessage(Collections.singletonList(identity.getLoggedInUser().getEmail()), subject, messageBody);
+		addFacesMessage("Message sent to your email, please proof-read.");
 		// Must stay on same page here!
 	}
 
@@ -145,13 +144,8 @@ public class MailMan implements Serializable {
 	 */
 	public String sendMessageTo(String email, String subject, String body) throws MessagingException {
 		System.out.println("MailMan.sendMessageTo(" + email + ")");
-		var ret = sendMessage(List.of(email), subject, body);
-		if (ret) {
-			return "/";
-		} else {
-			addFacesMessage("Unable to send message!");
-			return null;
-		}
+		sendMessage(List.of(email), subject, body);
+		return "Message sent";
 	}
 
 	/** This has to be just right: // XXX Move to a class for membership calculations
@@ -209,9 +203,13 @@ public class MailMan implements Serializable {
 			throw new IllegalStateException(
 				PROPNAME_MAIL_SMTP_HOST + " not in config.properties");
 		}
-		return sendMessage(
-				emails, 
-				subject, messageBody) ? emails.size() : 0;
+		try {
+			sendMessage(emails, subject, messageBody);
+			return emails.size();
+		} catch (MailSendException e) {
+			addFacesMessage(e.getMessage());	// admins should see why
+			return 0;
+		}
 	}
 
 	/**
@@ -238,7 +236,7 @@ public class MailMan implements Serializable {
 	/** 
 	 * Send the message.
 	 */
-	private boolean sendMessage(
+	private void sendMessage(
 			List<String> emails, 
 			String message_subject, String message_body) throws MessagingException {
 		System.out.println("MailMan.sendMessage()");
@@ -271,11 +269,8 @@ public class MailMan implements Serializable {
 		// Finally, send the message!
 		try {
 			Transport.send(mesg);
-			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			addFacesMessage("Sending failed, check the mail server settings in config.properties");
-			return false;
+			throw new MailSendException("Sending failed, check the mail server settings in config.properties", e);
 		}
 	}
 

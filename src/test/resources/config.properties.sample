@@ -12,8 +12,8 @@ mail.smtp.host=0.0.0.0
 
 # Optional: URLs
 url.base=https://members.myclub.org
-url.mainsite=https://myclub.org
-url.fbgroup=https://www.facebook.com/groups/myclub
+url-mainsite=https://myclub.org
+url-fbgroup=https://www.facebook.com/groups/myclub
 
 # REQUIRED: Unsubscribe policy, complete, e.g.
 # mail.unsubscribe=Send mail to unsubscribe@bleah.com
