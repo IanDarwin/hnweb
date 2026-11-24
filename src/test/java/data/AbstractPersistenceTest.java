@@ -2,6 +2,7 @@ package data;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Supplier;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -42,4 +43,5 @@ public class AbstractPersistenceTest {
 		}
 		System.out.flush();
     }
+
 }

@@ -1,0 +1,19 @@
+# Config file for StatsBean.java / Statistics.web
+# Line Format: Description|SQL Query
+1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)|SELECT COUNT(id) FROM member;
+
+1a Total who have EVER been full (paid Individual or Family) Members|select count(id) from member where expiryyear is not null and expiryyear != 0 and membertype in ('Individual','Family');
+
+2 Counting total CURRENTLY-PAID memberships of all types (Indivs, Families)|select count(id) from member where membertype in ('Individual','Family') and expiryyear >= ${CURYEAR};
+
+2a Of those, Individual paid-up memberships|SELECT COUNT(id) FROM member WHERE membertype = 'Individual' AND expiryyear >= ${CURYEAR};
+
+2b Of those, Family (master) paid-up memberships for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CURYEAR};
+
+2c Secondary Family memberships for ${CURYEAR}|SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' AND (SELECT count(mm) FROM member mm WHERE (id = m.mastermember_id AND mm.expiryyear >= 2025)) = 1;
+
+3 Count of last-year members who did NOT renew (yet)|SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear = ${LASTYEAR};
+
+3b Count of members who have not renewed for multiple years|SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear < ${LASTYEAR};
+
+4 Count of mailing-list-only entries|SELECT count(id) from member where membertype NOT IN ('Individual','Family','Secondary') OR (membertype = 'Individual' AND expiryyear = 0);
