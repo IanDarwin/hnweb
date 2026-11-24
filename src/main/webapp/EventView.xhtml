@@ -22,35 +22,35 @@
 		<f:facet name="header">Event Detail</f:facet>
 		<p:panel>
 
-		<h:outputText value="Title:"/>
+		<h:outputText style="font-weight: bold;" value="Title:"/>
 		<h:outputText id="titleTF" value="#{eventHome.instance.title}"/>
 
 		<br/>
 		
-		<h:outputText value="Date:"/>
+		<h:outputText style="font-weight: bold;" value="Date:"/>
 		<h:outputText id="dateTF" value="#{eventHome.instance.date}"/>
 		&nbsp;
-		<h:outputText value="Time:"/>
+		<h:outputText style="font-weight: bold;" value="Time:"/>
 		<h:outputText id="timesTF" value="#{eventHome.instance.startTime} - #{eventHome.instance.endTime}"/>
 
 		<br/>
 
-		<h:outputText value="Location:"/>
+		<h:outputText style="font-weight: bold;" value="Location:"/>
 		<h:outputText id="locationTF" value="#{eventHome.instance.location}"/>
 
 		<br/>
 
-		<h:outputText value="Event Details:"/>
+		<h:outputText style="font-weight: bold;" value="Event Details:"/>
 		<h:outputText id="eventAbstractTF" value="#{eventHome.instance.eventAbstract}"/>
 
 		<br/>
 
-		<h:outputText value="Speaker:"/>
+		<h:outputText style="font-weight: bold;" value="Speaker:"/>
 		<h:outputText id="speakerNameTF" value="#{eventHome.instance.speakerName}"/>
 
 		<br/>
 
-		<h:outputText value="Speaker's Bio:"/>
+		<h:outputText style="font-weight: bold;" value="Speaker Bio:"/>
 		<h:outputText id="speakerBioTF" value="#{eventHome.instance.speakerBio}"/>
 
 		</p:panel>
