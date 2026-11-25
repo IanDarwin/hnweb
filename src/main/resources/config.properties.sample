@@ -26,6 +26,9 @@ mail.unsubscribe=Send mail to unsubscribe@bleah.com
 # (common mailing list management practice)
 mail.smtp.from="noreply@nowhere.moc"
 
+# OPTIONAL: a note to add at the top of the Statistics page
+stats_note=These stats may be of interest, or not.
+
 # MONTH/YEAR CALCS
 # Our Membership year runs from Sept 1 to Aug 31. All memberships
 # are due to renew starting in this month.
