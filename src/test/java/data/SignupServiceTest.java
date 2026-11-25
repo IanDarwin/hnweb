@@ -164,19 +164,4 @@ class SignupServiceTest extends AbstractPersistenceTest {
 	private long count(String jpql) {
 		return getEntityManager().createQuery(jpql, Long.class).getSingleResult();
 	}
-
-	private <T> T inTx(Supplier<T> s) {
-		EntityTransaction tx = getEntityManager().getTransaction();
-		tx.begin();
-		try {
-			T result = s.get();
-			tx.commit();
-			return result;
-		} catch (RuntimeException e) {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			throw e;
-		}
-	}
 }

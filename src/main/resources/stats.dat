@@ -1,19 +1,26 @@
 # Config file for StatsBean.java / Statistics.web
-# Line Format: Description|SQL Query
-1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)|SELECT COUNT(id) FROM member;
+# Line Format: Description|SQL Query (one COUNT per line)
+# ${CURYEAR} and ${LASTYEAR} are filled in for you (membership years, so they roll over each September).
+# The member table also holds archived and unconfirmed rows; type = 'Member' means real, current members.
 
-1a Total who have EVER been full (paid Individual or Family) Members|select count(id) from member where expiryyear is not null and expiryyear != 0 and membertype in ('Individual','Family');
+1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)|SELECT COUNT(id) FROM member WHERE type = 'Member'
 
-2 Counting total CURRENTLY-PAID memberships of all types (Indivs, Families)|select count(id) from member where membertype in ('Individual','Family') and expiryyear >= ${CURYEAR};
+1a Total who have EVER been full (paid Individual or Family) Members|SELECT COUNT(id) FROM member WHERE type = 'Member' AND expiryyear IS NOT NULL AND expiryyear != 0 AND membertype IN ('Individual','Family')
 
-2a Of those, Individual paid-up memberships|SELECT COUNT(id) FROM member WHERE membertype = 'Individual' AND expiryyear >= ${CURYEAR};
+2 Counting total CURRENTLY-PAID memberships of all types (Indivs, Families) for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype IN ('Individual','Family') AND expiryyear >= ${CURYEAR}
 
-2b Of those, Family (master) paid-up memberships for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE membertype = 'Family' and expiryyear >= ${CURYEAR};
+2a Of those, Individual paid-up memberships|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype = 'Individual' AND expiryyear >= ${CURYEAR}
 
-2c Secondary Family memberships for ${CURYEAR}|SELECT COUNT(id) FROM member m WHERE m.membertype = 'Secondary' AND (SELECT count(mm) FROM member mm WHERE (id = m.mastermember_id AND mm.expiryyear >= 2025)) = 1;
+2b Of those, Family (master) paid-up memberships for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype = 'Family' AND expiryyear >= ${CURYEAR}
 
-3 Count of last-year members who did NOT renew (yet)|SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear = ${LASTYEAR};
+2c Secondary Family memberships for ${CURYEAR}|SELECT COUNT(id) FROM member m WHERE m.type = 'Member' AND m.membertype = 'Secondary' AND (SELECT COUNT(mm.id) FROM member mm WHERE mm.id = m.mastermember_id AND mm.type = 'Member' AND mm.expiryyear >= ${CURYEAR}) = 1
 
-3b Count of members who have not renewed for multiple years|SELECT count(id) from member where membertype in ('Individual','Family') and expiryyear < ${LASTYEAR};
+3 Count of last-year members who did NOT renew (yet)|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype IN ('Individual','Family') AND expiryyear = ${LASTYEAR}
 
-4 Count of mailing-list-only entries|SELECT count(id) from member where membertype NOT IN ('Individual','Family','Secondary') OR (membertype = 'Individual' AND expiryyear = 0);
+3b Count of members who have not renewed for multiple years|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype IN ('Individual','Family') AND expiryyear < ${LASTYEAR}
+
+4 Count of mailing-list-only entries|SELECT COUNT(id) FROM member WHERE type = 'Member' AND (membertype NOT IN ('Individual','Family','Secondary') OR (membertype = 'Individual' AND expiryyear = 0))
+
+5 Online signups waiting to confirm their email|SELECT COUNT(id) FROM member WHERE type = 'Unconfirmed'
+
+6 Archived (deleted) members|SELECT COUNT(id) FROM member WHERE type = 'MemberArchived'

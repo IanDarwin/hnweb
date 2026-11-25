@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -44,4 +45,23 @@ public class AbstractPersistenceTest {
 		System.out.flush();
     }
 
+	// Allow tests to run something in a transaction without so much ceremony
+	protected void inTx(Runnable r) {
+		inTx(() -> { r.run(); return null; });
+	}
+
+	protected <T> T inTx(Supplier<T> s) {
+		EntityTransaction tx = getEntityManager().getTransaction();
+		tx.begin();
+		try {
+			T result = s.get();
+			tx.commit();
+			return result;
+		} catch (RuntimeException e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			throw e;
+		}
+	}
 }

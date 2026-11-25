@@ -191,24 +191,4 @@ class MemberArchiveRestoreTest extends AbstractPersistenceTest {
 		}
 		return ((Number) q.getSingleResult()).longValue();
 	}
-
-	// Stand-ins for the container's @Transactional: the DAO must be called inside a transaction
-	private void inTx(Runnable r) {
-		inTx(() -> { r.run(); return null; });
-	}
-
-	private <T> T inTx(Supplier<T> s) {
-		EntityTransaction tx = getEntityManager().getTransaction();
-		tx.begin();
-		try {
-			T result = s.get();
-			tx.commit();
-			return result;
-		} catch (RuntimeException e) {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			throw e;
-		}
-	}
 }
