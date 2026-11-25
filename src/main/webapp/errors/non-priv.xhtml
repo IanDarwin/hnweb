@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+				template="/template/template.xhtml">
+
+    <ui:define name="title">Something went wrong</ui:define>
+
+    <ui:define name="body">
+        <p>
+		We could not complete your request. It appears that our system
+		does not think you have permission to access that resource.
+		If this is an error, please contact the membership administrator
+		and accept our apologies for the inconvenience.
+		</p>
+
+        <h:panelGroup rendered="#{not empty pfExceptionHandler.message}">
+            <p>Message: #{pfExceptionHandler.message}</p>
+        </h:panelGroup>
+
+        <p:button outcome="/index" value="Go to Homepage" icon="pi pi-home"/>
+    </ui:define>
+
+</ui:composition>
