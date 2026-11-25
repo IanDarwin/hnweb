@@ -3,11 +3,11 @@
 # ${CURYEAR} and ${LASTYEAR} are filled in for you (membership years, so they roll over each September).
 # The member table also holds archived and unconfirmed rows; type = 'Member' means real, current members.
 
-1 Total entries (includes indivs, family members, unpaid mailing-list-onlies, &c)|SELECT COUNT(id) FROM member WHERE type = 'Member'
+1 Total entries (includes individuals, family members, unpaid mailing-list-onlies, &c)|SELECT COUNT(id) FROM member WHERE type = 'Member'
 
 1a Total who have EVER been full (paid Individual or Family) Members|SELECT COUNT(id) FROM member WHERE type = 'Member' AND expiryyear IS NOT NULL AND expiryyear != 0 AND membertype IN ('Individual','Family')
 
-2 Counting total CURRENTLY-PAID memberships of all types (Indivs, Families) for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype IN ('Individual','Family') AND expiryyear >= ${CURYEAR}
+2 Counting total CURRENTLY-PAID memberships of all types (Individuals, Families) for ${CURYEAR}|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype IN ('Individual','Family') AND expiryyear >= ${CURYEAR}
 
 2a Of those, Individual paid-up memberships|SELECT COUNT(id) FROM member WHERE type = 'Member' AND membertype = 'Individual' AND expiryyear >= ${CURYEAR}
 
