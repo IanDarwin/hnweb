@@ -38,6 +38,8 @@
 				rendered="#{stat.name.contains('deleted')}">List</h:outputLink>
 		</p:column>
 	</p:dataTable>
+
+		<p>Updated as of #{memberDAO.lastUpdated()}</p>
 	</p:panel>
 </ui:define>
 </ui:composition>
