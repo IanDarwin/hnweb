@@ -30,7 +30,8 @@
 		<h:outputText value=""/>
 		
 		<h:outputText value="Date:"/>
-		<p:calendar  id="dateTF" value="#{eventHome.instance.date}" pattern="EEEE, dd MMM, yyyy" navigator="true" showButtonPanel="true"/>
+		<p:calendar  id="dateTF" value="#{eventHome.instance.date}"
+			pattern="yyyy-mm-dd" navigator="true" showButtonPanel="true"/>
 		<h:message id='dateMessage' for='dateTF'/>
 
 		<h:outputText value="Start Time (24h clock, e.g., 12:30):"/>
