@@ -118,10 +118,11 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 		System.out.println("Archiving " + m + " because: " + why);
 		entityManager.flush();
 		int ret = entityManager.createNativeQuery(
-						"update member set type = 'MemberArchived', archivedDate = ?, archivedReason = ? where id = ?")
+						"update member set type = 'MemberArchived', lastModified = ?, archivedDate = ?, archivedReason = ? where id = ?")
 				.setParameter(1, LocalDate.now())
-				.setParameter(2, why)
-				.setParameter(3, m.getId())
+				.setParameter(2, LocalDate.now())
+				.setParameter(3, why)
+				.setParameter(4, m.getId())
 				.executeUpdate();
 		if (ret != 1) {
 			throw new IllegalStateException("delete: Native update returned " + ret);
@@ -174,8 +175,9 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 	public void flipMemberType(MemberBase m, String newType) {
 		Long id = m.getId();
 		int ret = entityManager.createNativeQuery(
-				"update member set type = :type where id = :id")
+				"update member set type = :type, lastModified = :lastMod where id = :id")
 				.setParameter("type", newType)
+				.setParameter("lastMod", LocalDate.now())
 				.setParameter("id", id)
 				.executeUpdate();
 		if (ret != 1) {
