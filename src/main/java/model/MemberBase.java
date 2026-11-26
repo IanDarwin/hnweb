@@ -86,10 +86,8 @@ public abstract class MemberBase {
     @Column(name = "notes")
     private String notes;
 
-    @Temporal(TemporalType.DATE)
     private LocalDate creation;
 
-    @Temporal(TemporalType.DATE)
     private LocalDate lastModified;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

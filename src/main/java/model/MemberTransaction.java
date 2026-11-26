@@ -1,7 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.enterprise.inject.Model;
 import jakarta.persistence.*;
@@ -29,9 +29,8 @@ public class MemberTransaction implements Serializable {
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="member_id")
 	private Member member;
-	@Temporal(TemporalType.DATE)
 	@Column(name="date")
-	private Date dateRenewed = new Date();
+	private LocalDate dateRenewed = LocalDate.now();
 	private int numYears;
 	private int newExpiryYear;
 	@Column(name = "external_ref", unique = true, length = 80)
@@ -77,10 +76,10 @@ public class MemberTransaction implements Serializable {
 		this.member = member;
 	}
 
-	public Date getDateRenewed() {
+	public LocalDate getDateRenewed() {
 		return dateRenewed;
 	}
-	public void setDateRenewed(Date renewalDate) {
+	public void setDateRenewed(LocalDate renewalDate) {
 		this.dateRenewed = renewalDate;
 	}
 
