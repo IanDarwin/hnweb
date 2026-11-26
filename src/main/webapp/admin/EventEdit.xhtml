@@ -29,7 +29,7 @@
 		<h:outputText id="idTF" value="#{eventHome.instance.id}"/>
 		<h:outputText value=""/>
 		
-		<h:outputText value="Date:"/>
+		<h:outputText value="Date: (ISO format: yyyy-MM-dd)"/>
 		<p:calendar  id="dateTF" value="#{eventHome.instance.date}"
 			pattern="yyyy-MM-dd" navigator="true" showButtonPanel="true"/>
 		<h:message id='dateMessage' for='dateTF'/>
