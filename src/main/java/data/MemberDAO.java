@@ -95,7 +95,7 @@ public class MemberDAO extends GenericDAO<Member> implements Serializable {
 
 	public LocalDate lastUpdated() {
 		return entityManager.createQuery(
-				"SELECT max(m.lastModified) FROM Member m", LocalDate.class)
+				"SELECT max(m.lastModified) FROM MemberBase m", LocalDate.class)
 				.getSingleResult();
 	}
 
