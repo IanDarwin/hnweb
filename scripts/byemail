@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for email
+do
+
+	llmail=$(echo $email | tr A-Z a-z)
+
+	psql -d hn -c \
+	"select id,firstname,lastname,email,membertype,expiryyear from member where lower(email) = '"$llmail"' order by id"
+
+done
