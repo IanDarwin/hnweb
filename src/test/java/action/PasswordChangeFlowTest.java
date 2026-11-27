@@ -44,8 +44,8 @@ class PasswordChangeFlowTest {
 	static final String EMAIL = "flow.tester@example.test";
 	static final String OLD_PASSWORD = "*";
 	static final String NEW_PASSWORD = "Defgh.45678";
-	/** md5 of NEW_PASSWORD, which is what LoginAction compares against */
-	static final String NEW_PASSWORD_MD5 = "be2925d601bdaec3bd41856882e54ccd";
+	/** sha256 of NEW_PASSWORD, which is what LoginAction compares against */
+	static final String NEW_PASSWORD_HASH = "c3678bd652af489fe45d947c10ac0eb81a21d5ed045db79a50d2a150ee217c3a";
 	static final String TEST_BASE = "http://test.example/hn/";
 	/** The token is the only <b>...</b> in the mail body */
 	static final Pattern TOKEN_IN_BODY = Pattern.compile("<b>([A-Za-z0-9]+)</b>");
@@ -117,12 +117,12 @@ class PasswordChangeFlowTest {
 		var r2 = step2(token, NEW_PASSWORD);
 		assertEquals(303, r2.status);
 		assertEquals(TEST_BASE + UserPasswordChangeRest.PART3_URL, r2.location);
-		assertEquals(NEW_PASSWORD_MD5, storedPassword());
+		assertEquals(NEW_PASSWORD_HASH, storedPassword());
 
 		// Tokens are single-use
 		assertEquals(0, tokenCount(token));
 		assertEquals(tokenError(), step2(token, "Another.Pass99").location);
-		assertEquals(NEW_PASSWORD_MD5, storedPassword());
+		assertEquals(NEW_PASSWORD_HASH, storedPassword());
 	}
 
 	@Test
@@ -140,7 +140,7 @@ class PasswordChangeFlowTest {
 		// ...and the user can still finish with a good one
 		assertEquals(TEST_BASE + UserPasswordChangeRest.PART3_URL,
 				step2(token, NEW_PASSWORD).location);
-		assertEquals(NEW_PASSWORD_MD5, storedPassword());
+		assertEquals(NEW_PASSWORD_HASH, storedPassword());
 	}
 
 	@Test
