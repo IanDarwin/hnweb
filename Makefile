@@ -1,6 +1,8 @@
 install:
+	echo "Everything committed? [^C if not!]"; read answer
 	git pull
-	git tag -a V$$(isodate) -m Deployed
+	git tag -a V$$(isodatedatetime) -m Deployed
+	git push --tag
 	mwd
 
 # Run Integration tests
