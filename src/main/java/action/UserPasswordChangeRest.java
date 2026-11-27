@@ -67,7 +67,7 @@ public class UserPasswordChangeRest {
         em.persist(new ChangeToken(email, token));
         String message = MESSAGE_TEMPLATE.formatted(email, siteName(), token);
         try {
-            mailMan.sendMessageTo(email, "HN Passord Reset", message);
+            mailMan.sendMessageTo(email, "HN Password Reset", message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to email " + email, e);
         }
