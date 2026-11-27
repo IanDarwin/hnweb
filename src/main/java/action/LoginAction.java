@@ -51,8 +51,7 @@ public class LoginAction implements Serializable {
 	}
 	
 	public LoginAction() {
-		// Just for debugging...
-		System.out.println("LoginAction.LoginAction()");
+		// Empty required constructor
 	}
 
 	final static String FAIL_MESSAGE = """
@@ -93,12 +92,12 @@ public class LoginAction implements Serializable {
 				session.removeAttribute(LoginConstants.TARGET_URI_KEY);
 				return redirTarget + WebConstants.FORCE_REDIRECT;
 			}
-			return "/index.web" + WebConstants.FORCE_REDIRECT;
+			return LoginConstants.HOME_PAGE + WebConstants.FORCE_REDIRECT;
 
 		} catch (NoResultException nre) {
 			System.out.println("LoginAction.login():" + nre);
 			printer.accept(FAIL_MESSAGE);
-            return "Login";
+            return "/Login";
 		} catch (RuntimeException ex) {
 			System.out.println("LoginAction.login():" + ex);
 			Throwable exc, r = ((exc = ex.getCause()) == null ? ex : exc);
