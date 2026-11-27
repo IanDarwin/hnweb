@@ -1,5 +1,6 @@
 install:
 	git pull
+	git tag -a V$$(isodate) -m Deployed
 	mwd
 
 # Run Integration tests
