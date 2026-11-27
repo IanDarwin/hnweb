@@ -121,7 +121,7 @@ public class UserPasswordChangeRest {
             return badToken();
         }
 
-        members.get(0).setPassword(DigestUtils.md5(newPassword)); // What we came for!
+        members.get(0).setPassword(DigestUtils.sha256(newPassword)); // What we came for!
 
         return Response.seeOther(page(PART3_URL)).build();
     }
