@@ -125,10 +125,16 @@ public class PageFilter implements Filter {
 				return;
 			}
 			
-			final String JSF_PAGE_EXT = ".web";		// XXX get from JSF
+			final String JSF_PAGE_EXT = ".web",		// Track with web.xml
+				XHTML_PAGE_EXT = ".xhtml";
+			String pagePath = null;
 			if (requestURI.endsWith(JSF_PAGE_EXT)) {
-
-				String pagePath = requestURI.replace(JSF_PAGE_EXT, ".page.xml");
+				pagePath = requestURI.replace(JSF_PAGE_EXT, ".page.xml");
+			}
+			if (requestURI.endsWith(XHTML_PAGE_EXT)) {
+				pagePath = requestURI.replace(XHTML_PAGE_EXT, ".page.xml");
+			}
+			if (pagePath != null) {
 				final String contextPath = servletContext.getContextPath();
 				pagePath = pagePath.replace(contextPath, "");
 				if (DEBUG) {
