@@ -86,9 +86,9 @@ public abstract class MemberBase {
     @Column(name = "notes")
     private String notes;
 
-    private LocalDate creation;
+    private LocalDate creation = LocalDate.now();
 
-    private LocalDate lastModified;
+    private LocalDate lastModified = LocalDate.now();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<MemberTransaction> memberTransactions = new ArrayList<>();
